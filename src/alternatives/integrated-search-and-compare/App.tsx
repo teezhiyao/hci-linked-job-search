@@ -1,7 +1,7 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
-const STORAGE_KEY = "integrated-search-compare-v1";
+const STORAGE_KEY = "integrated-search-compare-v2";
 
 export const studyContent = {
   label: "Interactive prototype",
@@ -13,23 +13,23 @@ export const studyContent = {
     },
     {
       title: "Goal",
-      text: "Starting from the search results, find and save one job that is worth pursuing.",
+      text: "Find and save the only job that satisfies every required criterion. Before deciding, compare it with at least two other plausible jobs. Use the preferred experience range as a secondary consideration.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
-  mainTask: "Starting from the search results, find and save one job that is worth pursuing.",
+  mainTask: "Find and save the only job that satisfies every required criterion after comparing three plausible candidates.",
   tasks: [
     {
-      title: "Discover suitable results",
-      description: "Use search and filters to identify results that appear compatible with your priorities.",
+      title: "Identify three candidates",
+      description: "Review the results and identify the three jobs that come closest to satisfying the required criteria.",
     },
     {
-      title: "Compare from search",
-      description: "Select two or three promising results and compare the information that distinguishes them.",
+      title: "Find the complete match",
+      description: "Compare the three candidates and determine which single job satisfies every required criterion. Treat the experience range as preferred rather than required.",
     },
     {
-      title: "Save one result",
-      description: "Save the strongest option and explain what supported your choice and what uncertainty remains.",
+      title: "Save your answer",
+      description: "Save that job as your final answer. The task is complete when your selected listing shows the Saved state.",
     },
   ],
 };
