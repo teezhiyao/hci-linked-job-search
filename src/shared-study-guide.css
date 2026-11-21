@@ -141,6 +141,31 @@
   font-size: 11px;
 }
 
+.study-guide .main-task {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: #f1f3f5;
+}
+
+.study-guide .main-task span {
+  display: block;
+  margin-bottom: 4px;
+  color: #53606d;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.study-guide .main-task p {
+  margin: 0;
+  color: #30363c;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
 .study-guide .progress-track {
   height: 4px;
   margin-bottom: 22px;

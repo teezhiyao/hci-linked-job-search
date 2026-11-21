@@ -5,17 +5,36 @@ const STORAGE_KEY = "integrated-search-compare-v1";
 
 export const studyContent = {
   label: "Interactive prototype",
-  projectName: "Integrated search and compare",
+  projectName: "Enhanced search workspace",
   overview: [
-    { title: "About this prototype", text: "[Replace with the prototype description.]" },
-    { title: "Your scenario", text: "[Replace with the participant scenario.]" },
-    { title: "Before you begin", text: "[Replace with evaluation instructions.]" },
+    {
+      title: "About this prototype",
+      text: "This workspace brings consistent job details, personal requirements, hiring activity, and previous interactions into the search results. It explores whether job seekers can judge compatibility and credibility without repeatedly opening full listings or losing their place.",
+    },
+    {
+      title: "Your scenario",
+      text: "You are looking for a software-development role in Singapore. You prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; no more than three years of required experience; and recent evidence that the employer is still hiring.",
+    },
+    {
+      title: "Before you begin",
+      text: "Think aloud as you work. Use only the information provided, and treat missing information as something you may need to consider. There is no single correct job—the study evaluates the interface, not your job-search ability.",
+    },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
+  mainTask: "Find one job that you would be willing to investigate further and decide whether it is worth pursuing.",
   tasks: [
-    { title: "[Task 1 title]", description: "[Replace with the first task description.]" },
-    { title: "[Task 2 title]", description: "[Replace with the second task description.]" },
-    { title: "[Task 3 title]", description: "[Replace with the third task description.]" },
+    {
+      title: "Review the search results",
+      description: "Examine the available roles and determine which results appear compatible with your priorities. Notice any missing, outdated, or previously reviewed information that affects your judgment.",
+    },
+    {
+      title: "Investigate promising options",
+      description: "Narrow the results to a small set of promising roles and examine the information you need to distinguish between them.",
+    },
+    {
+      title: "Choose a role to pursue",
+      description: "Select the strongest option, save it, and be prepared to explain which information supported your choice and what uncertainty remains.",
+    },
   ],
 };
 
@@ -594,9 +613,13 @@ function StudyGuide({
             </>
           ) : (
             <>
+              <div className="main-task">
+                <span>Main task</span>
+                <p>{studyContent.mainTask}</p>
+              </div>
               <div className="progress-row">
                 <span>
-                  Task {state.activeTask + 1} of {studyContent.tasks.length}
+                  Subtask {state.activeTask + 1} of {studyContent.tasks.length}
                 </span>
                 <strong>
                   {done}/{studyContent.tasks.length} complete
@@ -606,7 +629,7 @@ function StudyGuide({
                 <span style={{ width: `${(done / studyContent.tasks.length) * 100}%` }} />
               </div>
               <article className="task-card">
-                <span className="task-number">TASK {state.activeTask + 1}</span>
+                <span className="task-number">SUBTASK {state.activeTask + 1}</span>
                 <h2>{task.title}</h2>
                 <p>{task.description}</p>
                 <p className="self-report">Completion is self-reported.</p>

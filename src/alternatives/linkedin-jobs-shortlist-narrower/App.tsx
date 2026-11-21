@@ -33,17 +33,34 @@ type AppState = {
 
 const studyContent = {
   eyebrow: "Interactive prototype.",
-  projectName: "Shortlist narrowing",
+  projectName: "Two-job comparison screen",
   overview: {
-    about: "[Replace with the prototype description.]",
-    scenario: "[Replace with the participant scenario.]",
-    before: "[Replace with evaluation instructions.]",
+    about:
+      "This workflow presents shortlisted jobs in small comparisons and preserves each decision in a review history. It explores whether choosing between two jobs at a time reduces comparison effort while still helping job seekers remember and revise earlier decisions.",
+    scenario:
+      "You have collected several software-development roles in Singapore and now need a manageable final shortlist. You prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; no more than three years of required experience; and recent evidence that the employer is still hiring.",
+    before:
+      "Think aloud as you make each decision. Use only the information provided, and choose review later when the information is insufficient. There is no single correct shortlist—the study evaluates the comparison process.",
   },
   disclaimer: "All job information in this prototype is fictional.",
+  mainTask:
+    "Narrow the saved jobs to the two opportunities you would most want to investigate further.",
   tasks: [
-    { title: "[Task 1 title]", description: "[Replace with the first task description.]" },
-    { title: "[Task 2 title]", description: "[Replace with the second task description.]" },
-    { title: "[Task 3 title]", description: "[Replace with the third task description.]" },
+    {
+      title: "Review the starting shortlist",
+      description:
+        "Familiarize yourself with the saved roles and begin the narrowing process when you are ready.",
+    },
+    {
+      title: "Make pairwise decisions",
+      description:
+        "Work through the comparisons until two roles remain strongest. Keep both or defer a decision when the available information does not support a confident choice.",
+    },
+    {
+      title: "Review an earlier decision",
+      description:
+        "Open the review history, revisit at least one comparison, and change or confirm the decision before finalizing your two preferred roles.",
+    },
   ],
 };
 
@@ -576,9 +593,13 @@ export default function App() {
               </div>
             ) : (
               <div>
+                <div className="main-task">
+                  <span>Main task</span>
+                  <p>{studyContent.mainTask}</p>
+                </div>
                 <div className="progress-row">
                   <span>
-                    Task {taskIndex + 1} of {studyContent.tasks.length}
+                    Subtask {taskIndex + 1} of {studyContent.tasks.length}
                   </span>
                   <strong>
                     {completedTasks.length}/{studyContent.tasks.length} complete
@@ -592,7 +613,7 @@ export default function App() {
                   />
                 </div>
                 <article className="task-card">
-                  <span className="task-number">TASK {taskIndex + 1}</span>
+                  <span className="task-number">SUBTASK {taskIndex + 1}</span>
                   <h2>{studyContent.tasks[taskIndex].title}</h2>
                   <p>{studyContent.tasks[taskIndex].description}</p>
                   <p className="self-report">Completion is self-reported.</p>

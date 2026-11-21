@@ -57,20 +57,37 @@ type AppState = {
 
 const studyContent = {
   eyebrow: "Interactive prototype.",
-  projectName: "Shortlisted job comparison",
+  projectName: "Shortlist comparison table",
   fictionalNotice: "All job data in this prototype is fictional.",
   overview: {
     aboutTitle: "About this prototype",
-    about: "[Replace with the prototype description.]",
+    about:
+      "This persistent comparison workspace aligns shortlisted jobs against the same requirements. It explores whether standardized categories, visible evidence, decision states, and reasons for passing help job seekers assess trade-offs and resume an evaluation across sessions.",
     scenarioTitle: "Your scenario",
-    scenario: "[Replace with the participant scenario.]",
+    scenario:
+      "You previously shortlisted several software-development roles in Singapore. You prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; no more than three years of required experience; and recent evidence that the employer is still hiring.",
     beforeTitle: "Before you begin",
-    before: "[Replace with evaluation instructions.]",
+    before:
+      "Think aloud as you compare the roles. Use only the information provided, and treat missing information as part of the decision. There is no single correct answer—the study evaluates how the workspace supports your reasoning.",
   },
+  mainTask:
+    "Review your shortlist and decide which one or two jobs are strongest enough to remain under consideration.",
   tasks: [
-    { title: "[Task 1 title]", description: "[Replace with the first task description.]" },
-    { title: "[Task 2 title]", description: "[Replace with the second task description.]" },
-    { title: "[Task 3 title]", description: "[Replace with the third task description.]" },
+    {
+      title: "Check your priorities",
+      description:
+        "Review the requirements used in the comparison and adjust them if they do not represent the priorities in the scenario.",
+    },
+    {
+      title: "Compare the shortlisted jobs",
+      description:
+        "Identify the strongest candidates and the important trade-offs among them. Inspect supporting evidence where you need more confidence.",
+    },
+    {
+      title: "Record your decision",
+      description:
+        "Leave one or two roles as considering and mark the remaining roles as passed. Record a reason when it helps preserve why you made the decision.",
+    },
   ],
 };
 
@@ -586,9 +603,13 @@ function StudyGuide({
           </div>
         ) : (
           <div className="guide-content">
+            <div className="main-task">
+              <span>Main task</span>
+              <p>{studyContent.mainTask}</p>
+            </div>
             <div className="progress-row">
               <span>
-                Task {state.taskIndex + 1} of {studyContent.tasks.length}
+                Subtask {state.taskIndex + 1} of {studyContent.tasks.length}
               </span>
               <strong>
                 {completed}/{studyContent.tasks.length} complete
@@ -598,7 +619,7 @@ function StudyGuide({
               <span style={{ width: `${(completed / studyContent.tasks.length) * 100}%` }} />
             </div>
             <article className="task-card">
-              <span className="task-number">TASK {state.taskIndex + 1}</span>
+              <span className="task-number">SUBTASK {state.taskIndex + 1}</span>
               <h2>{studyContent.tasks[state.taskIndex].title}</h2>
               <p>{studyContent.tasks[state.taskIndex].description}</p>
               <p className="self-report">Completion is self-reported.</p>
