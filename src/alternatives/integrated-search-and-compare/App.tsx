@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { CUSTOMER_SUPPORT_JOBS, SUPPORT_SCENARIO, getStudyDomain } from "../../study-domains";
+import { CUSTOMER_SUPPORT_JOBS, getStudyDomain } from "../../study-domains";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
 const DOMAIN = getStudyDomain();
@@ -11,12 +11,8 @@ export const studyContent = {
   projectName: "Enhanced search workspace",
   overview: [
     {
-      title: "Scenario",
-      text: DOMAIN === "support" ? SUPPORT_SCENARIO : "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
-    },
-    {
-      title: "Goal",
-      text: "Find and save the only job that meets every required criterion. Use experience as a secondary preference.",
+      title: "Scenario and goal",
+      text: "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Find and save the only job that meets every required criterion, using no more than three years of experience as a secondary preference.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",

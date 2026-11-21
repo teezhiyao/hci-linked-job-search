@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { CUSTOMER_SUPPORT_JOBS, SUPPORT_SCENARIO, getStudyDomain } from "../../study-domains";
+import { CUSTOMER_SUPPORT_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
 
@@ -40,9 +40,7 @@ const studyContent = {
   projectName: "Pairwise shortlist narrowing",
   overview: {
     scenario:
-      DOMAIN === "support" ? SUPPORT_SCENARIO : "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
-    goal:
-      "Use two-job decisions to leave only the job that meets every required criterion as Kept.",
+      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Use two-job decisions to leave only the job that meets every required criterion as Kept, using no more than three years of experience as a secondary preference.",
   },
   disclaimer: "All job information in this prototype is fictional.",
   submission:
@@ -547,12 +545,8 @@ export default function App() {
           <StudyGroupNotice />
           <div className="guide-content">
             <section className="guide-section">
-              <h2>Scenario</h2>
+              <h2>Scenario and goal</h2>
               <p>{studyContent.overview.scenario}</p>
-            </section>
-            <section className="guide-section">
-              <h2>Goal</h2>
-              <p>{studyContent.overview.goal}</p>
             </section>
             <section className="guide-section combined-tasks">
               <h2>Task</h2>

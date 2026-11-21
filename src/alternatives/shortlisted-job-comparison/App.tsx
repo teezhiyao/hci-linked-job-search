@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { CUSTOMER_SUPPORT_JOBS, SUPPORT_SCENARIO, getStudyDomain } from "../../study-domains";
+import { CUSTOMER_SUPPORT_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
 
@@ -61,11 +61,9 @@ const studyContent = {
   projectName: "Shortlist comparison table",
   fictionalNotice: "All job data in this prototype is fictional.",
   overview: {
-    scenarioTitle: "Scenario",
+    scenarioTitle: "Scenario and goal",
     scenario:
-      DOMAIN === "support" ? SUPPORT_SCENARIO : "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
-    goalTitle: "Goal",
-    goal: "Use the comparison table to leave only the job that meets every required criterion under consideration.",
+      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Use the comparison table to leave only the job that meets every required criterion under consideration, using no more than three years of experience as a secondary preference.",
   },
   submission:
     "When you finish, record the job left under consideration and your answers in PeerSurvey. This prototype does not collect your response.",
@@ -579,7 +577,6 @@ function StudyGuide({
             title={studyContent.overview.scenarioTitle}
             text={studyContent.overview.scenario}
           />
-          <GuideSection title={studyContent.overview.goalTitle} text={studyContent.overview.goal} />
           <section className="guide-section combined-tasks">
             <h2>Task</h2>
             {studyContent.tasks.map((task, index) => (
