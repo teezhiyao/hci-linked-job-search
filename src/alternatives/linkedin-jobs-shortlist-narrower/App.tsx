@@ -35,12 +35,10 @@ const studyContent = {
   eyebrow: "Interactive prototype.",
   projectName: "Pairwise shortlist narrowing",
   overview: {
-    about:
-      "Reduce a large shortlist through a sequence of two-job decisions, with postponement, reasons, and review history.",
     scenario:
       "You casually saved nine software-development roles and now need a manageable shortlist. Prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; no more than three years of required experience; and recent hiring evidence.",
-    before:
-      "Think aloud as you make each decision. Use only the information provided, and choose review later when the information is insufficient. There is no single correct shortlist—the study evaluates the comparison process.",
+    goal:
+      "Use two-job decisions to narrow the nine saved jobs to the two opportunities you would investigate further.",
   },
   disclaimer: "All job information in this prototype is fictional.",
   mainTask:
@@ -575,16 +573,12 @@ export default function App() {
             {guideTab === "overview" ? (
               <div>
                 <section className="guide-section">
-                  <h2>About this prototype</h2>
-                  <p>{studyContent.overview.about}</p>
-                </section>
-                <section className="guide-section">
-                  <h2>Your scenario</h2>
+                  <h2>Scenario</h2>
                   <p>{studyContent.overview.scenario}</p>
                 </section>
                 <section className="guide-section">
-                  <h2>Before you begin</h2>
-                  <p>{studyContent.overview.before}</p>
+                  <h2>Goal</h2>
+                  <p>{studyContent.overview.goal}</p>
                 </section>
                 <div className="fictional-note">
                   <strong>Study note</strong>

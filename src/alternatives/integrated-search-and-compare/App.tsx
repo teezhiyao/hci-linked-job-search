@@ -8,16 +8,12 @@ export const studyContent = {
   projectName: "Enhanced search workspace",
   overview: [
     {
-      title: "About this prototype",
-      text: "Discover and evaluate jobs directly from search using standardized details, requirement checks, and a lightweight comparison drawer.",
-    },
-    {
-      title: "Your scenario",
+      title: "Scenario",
       text: "You have not created a shortlist yet. Search for a software-development role in Singapore that uses React, TypeScript, or Node.js, pays at least SGD 5,000 per month, is remote or hybrid with no more than two office days, requires no more than three years of experience, and has recent hiring evidence.",
     },
     {
-      title: "Before you begin",
-      text: "Think aloud as you work. Use only the information provided, and treat missing information as something you may need to consider. There is no single correct job—the study evaluates the interface, not your job-search ability.",
+      title: "Goal",
+      text: "Starting from the search results, find and save one job that is worth pursuing.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",

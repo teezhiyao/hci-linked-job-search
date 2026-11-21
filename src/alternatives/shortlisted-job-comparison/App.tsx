@@ -60,15 +60,11 @@ const studyContent = {
   projectName: "Shortlist comparison table",
   fictionalNotice: "All job data in this prototype is fictional.",
   overview: {
-    aboutTitle: "About this prototype",
-    about:
-      "Evaluate an existing shortlist all at once in a persistent table with aligned criteria, evidence, notes, and decision states.",
-    scenarioTitle: "Your scenario",
+    scenarioTitle: "Scenario",
     scenario:
       "You already shortlisted six software-development roles in Singapore. Compare them against your priorities: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; no more than three years of required experience; and recent hiring evidence.",
-    beforeTitle: "Before you begin",
-    before:
-      "Think aloud as you compare the roles. Use only the information provided, and treat missing information as part of the decision. There is no single correct answer—the study evaluates how the workspace supports your reasoning.",
+    goalTitle: "Goal",
+    goal: "Use the comparison table to reduce the six-job shortlist to one or two roles worth considering.",
   },
   mainTask:
     "Use the comparison table to reduce the six-job shortlist to one or two roles worth considering.",
@@ -585,16 +581,12 @@ function StudyGuide({
         {state.studyTab === "overview" ? (
           <div className="guide-content">
             <GuideSection
-              title={studyContent.overview.aboutTitle}
-              text={studyContent.overview.about}
-            />
-            <GuideSection
               title={studyContent.overview.scenarioTitle}
               text={studyContent.overview.scenario}
             />
             <GuideSection
-              title={studyContent.overview.beforeTitle}
-              text={studyContent.overview.before}
+              title={studyContent.overview.goalTitle}
+              text={studyContent.overview.goal}
             />
             <div className="fictional-note">
               <strong>Study note</strong>
