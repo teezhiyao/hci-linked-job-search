@@ -1,8 +1,10 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
+import { CUSTOMER_SUPPORT_JOBS, SUPPORT_SCENARIO, getStudyDomain } from "../../study-domains";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
-const STORAGE_KEY = "integrated-search-compare-v2";
+const DOMAIN = getStudyDomain();
+const STORAGE_KEY = `integrated-search-compare-v3-${DOMAIN}`;
 
 export const studyContent = {
   label: "Interactive prototype",
@@ -10,7 +12,7 @@ export const studyContent = {
   overview: [
     {
       title: "Scenario",
-      text: "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
+      text: DOMAIN === "support" ? SUPPORT_SCENARIO : "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
     },
     {
       title: "Goal",
@@ -45,7 +47,7 @@ type Job = {
   history: History;
 };
 
-const JOBS: Job[] = [
+const SOFTWARE_JOBS: Job[] = [
   {
     id: "J01",
     company: "Northstar Health",
@@ -198,6 +200,8 @@ const JOBS: Job[] = [
   },
 ];
 
+const JOBS: Job[] = DOMAIN === "support" ? CUSTOMER_SUPPORT_JOBS : SOFTWARE_JOBS;
+
 type Importance = "Required" | "Preferred";
 type ReqKey = "keywords" | "salary" | "arrangement" | "experience" | "eligibility" | "hiring";
 type Requirements = {
@@ -233,15 +237,15 @@ const reqNames: Record<ReqKey, string> = {
   hiring: "Recent hiring confirmation",
 };
 const INITIAL_REQUIREMENTS: Requirements = {
-  keywords: ["React", "TypeScript", "Node.js"],
+  keywords: DOMAIN === "support" ? ["Email", "Live chat"] : ["React", "TypeScript", "Node.js"],
   keywordMode: "Any",
-  salary: 5000,
+  salary: DOMAIN === "support" ? 4000 : 5000,
   currency: "SGD",
   payPeriod: "month",
   arrangements: ["Remote", "Hybrid"],
   maxOfficeDays: 2,
   minExperience: 0,
-  maxExperience: 3,
+  maxExperience: DOMAIN === "support" ? 2 : 3,
   eligibility: "Singapore",
   hiringDays: 14,
   enabled: {
@@ -1145,9 +1149,10 @@ export default function App() {
   const [guideVisible, setGuideVisible] = useState(true);
   const [guideWidth, setGuideWidth] = useState(300);
   const [overlay, setOverlay] = useState(() => window.innerWidth < 1100);
-  const [keywordInput, setKeywordInput] = useState("Software developer");
+  const defaultKeyword = DOMAIN === "support" ? "Customer support" : "Software developer";
+  const [keywordInput, setKeywordInput] = useState(defaultKeyword);
   const [locationInput, setLocationInput] = useState("Singapore");
-  const [query, setQuery] = useState({ keyword: "Software developer", location: "Singapore" });
+  const [query, setQuery] = useState({ keyword: defaultKeyword, location: "Singapore" });
   const [filters, setFilters] = useState({
     experience: "",
     arrangement: "",
@@ -1179,9 +1184,11 @@ export default function App() {
         const searchable = [j.title, ...j.responsibilities, ...j.technologies]
           .join(" ")
           .toLowerCase();
-        const broadSoftwareDeveloper = query.keyword.trim().toLowerCase() === "software developer";
+        const broadDomainSearch = ["software developer", "customer support"].includes(
+          query.keyword.trim().toLowerCase(),
+        );
         const keywordMatch =
-          broadSoftwareDeveloper ||
+          broadDomainSearch ||
           terms.length === 0 ||
           terms.every((t) => searchable.includes(t));
         const locationMatch =
@@ -1282,7 +1289,10 @@ export default function App() {
               {
                 key: "technology",
                 label: filters.technology || "Technology",
-                options: ["React", "TypeScript", "Node.js", "Python", "Java", "Vue", "C#"],
+                options:
+                  DOMAIN === "support"
+                    ? ["Email", "Live chat", "Phone", "Zendesk", "Ticketing"]
+                    : ["React", "TypeScript", "Node.js", "Python", "Java", "Vue", "C#"],
               },
               {
                 key: "history",

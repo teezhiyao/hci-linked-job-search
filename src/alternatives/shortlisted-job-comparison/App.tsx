@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
+import { CUSTOMER_SUPPORT_JOBS, SUPPORT_SCENARIO, getStudyDomain } from "../../study-domains";
+
+const DOMAIN = getStudyDomain();
 
 type Importance = "Required" | "Preferred";
 type CriterionKey = "keywords" | "pay" | "arrangement" | "experience" | "eligibility" | "hiring";
@@ -60,7 +63,7 @@ const studyContent = {
   overview: {
     scenarioTitle: "Scenario",
     scenario:
-      "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
+      DOMAIN === "support" ? SUPPORT_SCENARIO : "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
     goalTitle: "Goal",
     goal: "Use the comparison table to leave only the job that meets every required criterion under consideration.",
   },
@@ -75,7 +78,7 @@ const studyContent = {
   ],
 };
 
-const jobs: Job[] = [
+const softwareJobs: Job[] = [
   {
     id: "J01",
     company: "Northstar Health",
@@ -228,21 +231,45 @@ const jobs: Job[] = [
   },
 ];
 
+const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
+  id: job.id,
+  company: job.company,
+  title: job.title,
+  exp: job.experience,
+  technologies: job.technologies,
+  responsibilities: job.responsibilities,
+  pay: job.salary,
+  arrangement: job.arrangement,
+  officeDays: job.officeDays,
+  location: job.location,
+  eligibility: job.eligibility,
+  hiringDate: job.hiringDate,
+  initialHistory: job.history.applied
+    ? `Applied ${job.history.applied}`
+    : job.history.saved
+      ? `Saved ${job.history.saved}`
+      : job.history.viewed
+        ? `Viewed ${job.history.viewed}`
+        : "Unseen",
+}));
+
+const jobs = DOMAIN === "support" ? supportJobs : softwareJobs;
+
 const initialRequirements: Requirements = {
   keywords: {
     enabled: true,
     importance: "Required",
-    values: ["React", "TypeScript", "Node.js"],
+    values: DOMAIN === "support" ? ["Email", "Live chat"] : ["React", "TypeScript", "Node.js"],
     mode: "Any",
   },
-  pay: { enabled: true, importance: "Required", minimum: 5000, currency: "SGD", period: "month" },
+  pay: { enabled: true, importance: "Required", minimum: DOMAIN === "support" ? 4000 : 5000, currency: "SGD", period: "month" },
   arrangement: {
     enabled: true,
     importance: "Required",
     values: ["Remote", "Hybrid"],
     maxOfficeDays: 2,
   },
-  experience: { enabled: true, importance: "Preferred", maximum: 3 },
+  experience: { enabled: true, importance: "Preferred", maximum: DOMAIN === "support" ? 2 : 3 },
   eligibility: { enabled: true, importance: "Required", value: "Singapore" },
   hiring: { enabled: true, importance: "Required", freshness: 14 },
 };
@@ -292,7 +319,7 @@ const columnMeta: Record<string, { label: string; desired?: (r: Requirements) =>
   decision: { label: "Your decision" },
 };
 
-const STORAGE_KEY = "shortlisted-job-comparison-v2";
+const STORAGE_KEY = `shortlisted-job-comparison-v3-${DOMAIN}`;
 const fmtDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-GB", {
     day: "numeric",
@@ -674,7 +701,9 @@ function SearchView({
   setState: React.Dispatch<React.SetStateAction<AppState>>;
 }) {
   const [selectedId, setSelectedId] = useState("J01");
-  const [keyword, setKeyword] = useState("Software developer");
+  const [keyword, setKeyword] = useState(
+    DOMAIN === "support" ? "Customer support" : "Software developer",
+  );
   const [tech, setTech] = useState("All technologies");
   const [experience, setExperience] = useState("Any experience");
   const [arrangement, setArrangement] = useState("Any arrangement");
@@ -767,7 +796,7 @@ function SearchView({
         <section className="results-panel">
           <div className="results-heading">
             <div>
-              <h1>Software developer jobs</h1>
+              <h1>{DOMAIN === "support" ? "Customer support jobs" : "Software developer jobs"}</h1>
               <p>{filtered.length} results · Singapore</p>
             </div>
             <button aria-label="Set alert" className="toggle">

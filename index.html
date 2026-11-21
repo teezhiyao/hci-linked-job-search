@@ -24,13 +24,13 @@
   <body>
     <main>
       <h1>LinkedIn Job Search Design Alternatives</h1>
-      <p>Select a prototype to explore.</p>
+      <p>Complete the six tasks below in the assigned order.</p>
       <section class="assignment" aria-label="PeerSurvey study group">
         <span>Your PeerSurvey assignment</span>
         <strong id="study-group">Assigning study group…</strong>
         <small id="study-group-instruction">Keep this page open while your assignment loads.</small>
       </section>
-      <ul>
+      <ul id="prototype-list">
         <li>
           <a href="./integrated-search-and-compare/">
             <span>Alternative 1 · Discover</span>
@@ -72,10 +72,33 @@
         document.getElementById("study-group").textContent = `Study group ${group}`;
         document.getElementById("study-group-instruction").textContent =
           `Enter ${group} as your study-group number in PeerSurvey.`;
-        document.querySelectorAll("main a").forEach(link => {
-          const target = new URL(link.href, window.location.href);
+        const sequences = {
+          1: [["A","developer"],["B","support"],["C","developer"],["A","support"],["B","developer"],["C","support"]],
+          2: [["B","developer"],["C","support"],["A","developer"],["B","support"],["C","developer"],["A","support"]],
+          3: [["C","developer"],["A","support"],["B","developer"],["C","support"],["A","developer"],["B","support"]],
+          4: [["A","support"],["B","developer"],["C","support"],["A","developer"],["B","support"],["C","developer"]],
+          5: [["B","support"],["C","developer"],["A","support"],["B","developer"],["C","support"],["A","developer"]],
+          6: [["C","support"],["A","developer"],["B","support"],["C","developer"],["A","support"],["B","developer"]]
+        };
+        const prototypes = {
+          A: { path: "./integrated-search-and-compare/", name: "Enhanced search workspace", verb: "Find" },
+          B: { path: "./shortlisted-job-comparison/", name: "Shortlist comparison table", verb: "Compare" },
+          C: { path: "./linkedin-jobs-shortlist-narrower/", name: "Pairwise shortlist narrowing", verb: "Narrow" }
+        };
+        const list = document.getElementById("prototype-list");
+        list.innerHTML = "";
+        sequences[group].forEach(([prototypeKey, domain], index) => {
+          const prototype = prototypes[prototypeKey];
+          const target = new URL(prototype.path, window.location.href);
           target.searchParams.set("group", String(group));
+          target.searchParams.set("domain", domain);
+          target.searchParams.set("step", String(index + 1));
+          const item = document.createElement("li");
+          const link = document.createElement("a");
           link.href = target.href;
+          link.innerHTML = `<span>Step ${index + 1} · ${prototype.verb}</span>${prototype.name}<small>${domain === "support" ? "Customer-support task" : "Software-development task"}</small>`;
+          item.appendChild(link);
+          list.appendChild(item);
         });
       })();
     </script>

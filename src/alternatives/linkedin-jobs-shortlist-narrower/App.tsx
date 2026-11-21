@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
+import { CUSTOMER_SUPPORT_JOBS, SUPPORT_SCENARIO, getStudyDomain } from "../../study-domains";
+
+const DOMAIN = getStudyDomain();
 
 type Status = "pending" | "kept" | "aside" | "later";
 type View = "shortlist" | "search" | "narrow" | "history";
@@ -37,7 +40,7 @@ const studyContent = {
   projectName: "Pairwise shortlist narrowing",
   overview: {
     scenario:
-      "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
+      DOMAIN === "support" ? SUPPORT_SCENARIO : "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
     goal:
       "Use two-job decisions to leave only the job that meets every required criterion as Kept.",
   },
@@ -53,7 +56,7 @@ const studyContent = {
   ],
 };
 
-const jobs: Job[] = [
+const softwareJobs: Job[] = [
   {
     id: "J01",
     company: "Northstar Health",
@@ -186,6 +189,30 @@ const jobs: Job[] = [
   },
 ];
 
+const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
+  id: job.id,
+  company: job.company,
+  title: job.title,
+  experience: `${job.experience[0]}–${job.experience[1]} years`,
+  technologies: job.technologies,
+  responsibilities: job.responsibilities,
+  pay: job.salary ? `${job.salary[0].toLocaleString()}–${job.salary[1].toLocaleString()}` : "Not provided",
+  arrangement: `${job.arrangement}${job.officeDays !== null ? `, ${job.officeDays} office days/week` : ""}, ${job.location}`,
+  eligibility: job.eligibility,
+  hiring: job.hiringDate
+    ? `Employer confirmed open ${new Date(`${job.hiringDate}T12:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`
+    : null,
+  history: job.history.applied
+    ? `Applied ${job.history.applied}`
+    : job.history.saved
+      ? `Saved ${job.history.saved}`
+      : job.history.viewed
+        ? `Viewed ${job.history.viewed}`
+        : "Unseen",
+}));
+
+const jobs = DOMAIN === "support" ? supportJobs : softwareJobs;
+
 const initialShortlist = ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J09", "J10"];
 const initialState: AppState = {
   shortlist: initialShortlist,
@@ -301,7 +328,7 @@ function monogram(company: string) {
 
 function loadState(): AppState {
   try {
-    const raw = localStorage.getItem("shortlist-prototype-v2");
+    const raw = localStorage.getItem(`shortlist-prototype-v3-${DOMAIN}`);
     return raw ? { ...initialState, ...JSON.parse(raw) } : initialState;
   } catch {
     return initialState;
@@ -333,7 +360,7 @@ export default function App() {
   const dragStart = useRef<{ x: number; width: number } | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("shortlist-prototype-v2", JSON.stringify(state));
+    localStorage.setItem(`shortlist-prototype-v3-${DOMAIN}`, JSON.stringify(state));
   }, [state]);
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -490,7 +517,7 @@ export default function App() {
     setApplyId(null);
     setExpanded({});
     setShowReset(false);
-    localStorage.removeItem("shortlist-prototype-v2");
+    localStorage.removeItem(`shortlist-prototype-v3-${DOMAIN}`);
   }
   function reopenHistory(entry: HistoryEntry) {
     setPair(entry.jobIds);

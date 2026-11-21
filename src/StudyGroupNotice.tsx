@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { domainLabel, getStudyDomain } from "./study-domains";
 
 export const STUDY_GROUP_STORAGE_KEY = "hci-study-group-v1";
 
@@ -28,11 +29,14 @@ export function getStudyGroup(): number {
 
 export default function StudyGroupNotice() {
   const [group] = useState(getStudyGroup);
+  const step = new URLSearchParams(window.location.search).get("step");
+  const domain = domainLabel(getStudyDomain());
 
   return (
     <section className="study-group-notice" aria-label="PeerSurvey study group">
       <span>Your PeerSurvey assignment</span>
       <strong>Study group {group}</strong>
+      {step && <p>Step {step} of 6 · {domain}</p>}
       <p>
         Enter <b>{group}</b> as your study-group number in PeerSurvey.
       </p>

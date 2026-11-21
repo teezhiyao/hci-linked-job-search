@@ -74,11 +74,13 @@ Each alternative now targets one observable result:
 
 Shared features such as fictional job data, standardized categories, hiring evidence, and the LinkedIn visual shell are controlled constants. The decision mechanism is the independent design difference.
 
-## Remaining work before the two-domain study
+## Two-domain study implementation
 
-- Add the matched customer-support dataset.
-- Add a domain parameter that selects software development or customer support.
-- Connect the six study-group assignments to prototype and domain order, or provide group-specific links from PeerSurvey.
-- Confirm that both datasets contain one reference answer, two near-matches, and a small number of distractors.
-- Test every group sequence in a clean browser session before publishing through Figma Make.
+- The matched customer-support dataset is available through `?domain=support`.
+- Software-development conditions use `?domain=developer`.
+- Domain state is stored separately so completing one task does not affect the other.
+- The landing page converts the persistent group assignment into six ordered condition links.
+- Every link includes the group, domain, and step number.
+- The software-development reference answer is J06; the customer-support reference answer is J04.
 
+Before launching the study, test every group sequence in a clean browser session and verify the corresponding PeerSurvey branching and answer keys.
