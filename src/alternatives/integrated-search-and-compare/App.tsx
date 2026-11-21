@@ -9,7 +9,7 @@ export const studyContent = {
   overview: [
     {
       title: "Scenario",
-      text: "You have not created a shortlist yet. Search for a software-development role in Singapore that uses React, TypeScript, or Node.js, pays at least SGD 5,000 per month, is remote or hybrid with no more than two office days, requires no more than three years of experience, and has recent hiring evidence.",
+      text: "You have not created a shortlist yet. You need a Singapore software-development role using React, TypeScript, or Node.js, with a guaranteed minimum of SGD 5,000 per month, remote or hybrid work with no more than two office days, eligibility for Singapore-based applicants, and employer-confirmed hiring within the past 14 days. You would prefer a role requiring no more than three years of experience.",
     },
     {
       title: "Goal",
@@ -263,7 +263,7 @@ const INITIAL_REQUIREMENTS: Requirements = {
     keywords: "Required",
     salary: "Required",
     arrangement: "Required",
-    experience: "Required",
+    experience: "Preferred",
     eligibility: "Required",
     hiring: "Required",
   },
