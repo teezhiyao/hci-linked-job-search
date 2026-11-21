@@ -13,7 +13,16 @@ export const studyContent = {
   overview: [
     {
       title: "Scenario and goal",
-      text: "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Identify the best match and the next two strongest alternatives. Prioritize all required criteria, then prefer no more than three years of experience.",
+      intro: "You are seeking a Singapore software-development role with:",
+      conditions: [
+        "Required: React, TypeScript, or Node.js",
+        "Required: at least SGD 5,000 per month",
+        "Required: remote or hybrid work with no more than two office days",
+        "Required: eligibility for Singapore-based applicants",
+        "Required: hiring confirmed within the past 14 days",
+        "Preferred: no more than three years of experience",
+      ],
+      goal: "Identify the best match and the next two strongest alternatives. Prioritize all required conditions before the preference.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
@@ -565,7 +574,9 @@ function StudyGuide({
             {studyContent.overview.map((section) => (
               <section className="guide-section" key={section.title}>
                 <h2>{section.title}</h2>
-                <p>{section.text}</p>
+                <p>{section.intro}</p>
+                <ul>{section.conditions.map((condition) => <li key={condition}>{condition}</li>)}</ul>
+                <p><strong>Goal:</strong> {section.goal}</p>
               </section>
             ))}
             <section className="guide-section combined-tasks">

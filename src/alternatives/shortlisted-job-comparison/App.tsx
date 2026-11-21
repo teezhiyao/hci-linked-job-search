@@ -63,8 +63,16 @@ const studyContent = {
   fictionalNotice: "All job data in this prototype is fictional.",
   overview: {
     scenarioTitle: "Scenario and goal",
-    scenario:
-      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Identify the best match and the next two strongest alternatives. Prioritize all required criteria, then prefer no more than three years of experience.",
+    intro: "You are seeking a Singapore software-development role with:",
+    conditions: [
+      "Required: React, TypeScript, or Node.js",
+      "Required: at least SGD 5,000 per month",
+      "Required: remote or hybrid work with no more than two office days",
+      "Required: eligibility for Singapore-based applicants",
+      "Required: hiring confirmed within the past 14 days",
+      "Preferred: no more than three years of experience",
+    ],
+    goal: "Identify the best match and the next two strongest alternatives. Prioritize all required conditions before the preference.",
   },
   submission:
     "When you finish, record your first, second, and third choices in PeerSurvey. This prototype does not collect your response.",
@@ -590,10 +598,12 @@ function StudyGuide({
         <h1>{studyContent.projectName}</h1>
         <StudyGroupNotice />
         <div className="guide-content">
-          <GuideSection
-            title={studyContent.overview.scenarioTitle}
-            text={studyContent.overview.scenario}
-          />
+          <section className="guide-section">
+            <h2>{studyContent.overview.scenarioTitle}</h2>
+            <p>{studyContent.overview.intro}</p>
+            <ul>{studyContent.overview.conditions.map((condition) => <li key={condition}>{condition}</li>)}</ul>
+            <p><strong>Goal:</strong> {studyContent.overview.goal}</p>
+          </section>
           <section className="guide-section combined-tasks">
             <h2>Task</h2>
             {studyContent.tasks.map((task, index) => (
@@ -632,15 +642,6 @@ function StudyGuide({
         />
       )}
     </aside>
-  );
-}
-
-function GuideSection({ title, text }: { title: string; text: string }) {
-  return (
-    <section className="guide-section">
-      <h2>{title}</h2>
-      <p>{text}</p>
-    </section>
   );
 }
 

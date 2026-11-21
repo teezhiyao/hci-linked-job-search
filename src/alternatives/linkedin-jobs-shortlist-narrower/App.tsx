@@ -40,8 +40,16 @@ const studyContent = {
   eyebrow: "Interactive prototype.",
   projectName: "Pairwise shortlist narrowing",
   overview: {
-    scenario:
-      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Identify the best match and the next two strongest alternatives. Prioritize all required criteria, then prefer no more than three years of experience.",
+    intro: "You are seeking a Singapore software-development role with:",
+    conditions: [
+      "Required: React, TypeScript, or Node.js",
+      "Required: at least SGD 5,000 per month",
+      "Required: remote or hybrid work with no more than two office days",
+      "Required: eligibility for Singapore-based applicants",
+      "Required: hiring confirmed within the past 14 days",
+      "Preferred: no more than three years of experience",
+    ],
+    goal: "Identify the best match and the next two strongest alternatives. Prioritize all required conditions before the preference.",
   },
   disclaimer: "All job information in this prototype is fictional.",
   submission:
@@ -566,7 +574,9 @@ export default function App() {
           <div className="guide-content">
             <section className="guide-section">
               <h2>Scenario and goal</h2>
-              <p>{studyContent.overview.scenario}</p>
+              <p>{studyContent.overview.intro}</p>
+              <ul>{studyContent.overview.conditions.map((condition) => <li key={condition}>{condition}</li>)}</ul>
+              <p><strong>Goal:</strong> {studyContent.overview.goal}</p>
             </section>
             <section className="guide-section combined-tasks">
               <h2>Task</h2>
