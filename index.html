@@ -24,7 +24,7 @@
   <body>
     <main>
       <h1>LinkedIn Job Search Design Alternatives</h1>
-      <p>Complete the six tasks below in the assigned order.</p>
+      <p>Complete the three software-development tasks below in the assigned order.</p>
       <section class="assignment" aria-label="PeerSurvey study group">
         <span>Your PeerSurvey assignment</span>
         <strong id="study-group">Assigning study group…</strong>
@@ -60,25 +60,22 @@
         const params = new URLSearchParams(window.location.search);
         const valid = value => {
           const group = Number(value);
-          return Number.isInteger(group) && group >= 1 && group <= 6 ? group : null;
+          return Number.isInteger(group) && group >= 1 && group <= 3 ? group : null;
         };
         const urlGroup = valid(params.get("group"));
         const storedGroup = valid(localStorage.getItem(key));
         const randomValue = window.crypto?.getRandomValues
           ? window.crypto.getRandomValues(new Uint32Array(1))[0]
           : Math.floor(Math.random() * 2 ** 32);
-        const group = urlGroup || storedGroup || (randomValue % 6) + 1;
+        const group = urlGroup || storedGroup || (randomValue % 3) + 1;
         localStorage.setItem(key, String(group));
         document.getElementById("study-group").textContent = `Study group ${group}`;
         document.getElementById("study-group-instruction").textContent =
           `Enter ${group} as your study-group number in PeerSurvey.`;
         const sequences = {
-          1: [["A","developer"],["B","support"],["C","developer"],["A","support"],["B","developer"],["C","support"]],
-          2: [["B","developer"],["C","support"],["A","developer"],["B","support"],["C","developer"],["A","support"]],
-          3: [["C","developer"],["A","support"],["B","developer"],["C","support"],["A","developer"],["B","support"]],
-          4: [["A","support"],["B","developer"],["C","support"],["A","developer"],["B","support"],["C","developer"]],
-          5: [["B","support"],["C","developer"],["A","support"],["B","developer"],["C","support"],["A","developer"]],
-          6: [["C","support"],["A","developer"],["B","support"],["C","developer"],["A","support"],["B","developer"]]
+          1: ["A", "B", "C"],
+          2: ["B", "C", "A"],
+          3: ["C", "A", "B"]
         };
         const prototypes = {
           A: { path: "./integrated-search-and-compare/", name: "Enhanced search workspace", verb: "Find" },
@@ -87,16 +84,15 @@
         };
         const list = document.getElementById("prototype-list");
         list.innerHTML = "";
-        sequences[group].forEach(([prototypeKey, domain], index) => {
+        sequences[group].forEach((prototypeKey, index) => {
           const prototype = prototypes[prototypeKey];
           const target = new URL(prototype.path, window.location.href);
           target.searchParams.set("group", String(group));
-          target.searchParams.set("domain", domain);
           target.searchParams.set("step", String(index + 1));
           const item = document.createElement("li");
           const link = document.createElement("a");
           link.href = target.href;
-          link.innerHTML = `<span>Step ${index + 1} · ${prototype.verb}</span>${prototype.name}<small>${domain === "support" ? "Customer-support task" : "Software-development task"}</small>`;
+          link.innerHTML = `<span>Step ${index + 1} · ${prototype.verb}</span>${prototype.name}<small>Software-development task</small>`;
           item.appendChild(link);
           list.appendChild(item);
         });

@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { domainLabel, getStudyDomain } from "./study-domains";
 
 export const STUDY_GROUP_STORAGE_KEY = "hci-study-group-v1";
 
 function validGroup(value: string | null): number | null {
   const group = Number(value);
-  return Number.isInteger(group) && group >= 1 && group <= 6 ? group : null;
+  return Number.isInteger(group) && group >= 1 && group <= 3 ? group : null;
 }
 
 export function getStudyGroup(): number {
@@ -22,7 +21,7 @@ export function getStudyGroup(): number {
   const randomValue = window.crypto?.getRandomValues
     ? window.crypto.getRandomValues(new Uint32Array(1))[0]
     : Math.floor(Math.random() * 2 ** 32);
-  const group = (randomValue % 6) + 1;
+  const group = (randomValue % 3) + 1;
   localStorage.setItem(STUDY_GROUP_STORAGE_KEY, String(group));
   return group;
 }
@@ -30,13 +29,12 @@ export function getStudyGroup(): number {
 export default function StudyGroupNotice() {
   const [group] = useState(getStudyGroup);
   const step = new URLSearchParams(window.location.search).get("step");
-  const domain = domainLabel(getStudyDomain());
 
   return (
     <section className="study-group-notice" aria-label="PeerSurvey study group">
       <span>Your PeerSurvey assignment</span>
       <strong>Study group {group}</strong>
-      {step && <p>Step {step} of 6 · {domain}</p>}
+      {step && <p>Step {step} of 3 · Software development</p>}
       <p>
         Enter <b>{group}</b> as your study-group number in PeerSurvey.
       </p>

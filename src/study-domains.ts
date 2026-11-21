@@ -16,10 +16,9 @@ export type SharedJob = {
   history: { viewed?: string; saved?: string; applied?: string };
 };
 
-export const getStudyDomain = (): StudyDomain =>
-  new URLSearchParams(window.location.search).get("domain") === "support"
-    ? "support"
-    : "developer";
+// The first study round is fixed to software development. Keep the support
+// dataset below so it can be re-enabled for a later two-domain study.
+export const getStudyDomain = (): StudyDomain => "developer";
 
 export const SUPPORT_SCENARIO =
   "You are seeking a Singapore customer-support role. Required: email or live-chat support; at least SGD 4,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than two years of experience.";
