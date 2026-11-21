@@ -526,27 +526,25 @@ export default function App() {
         style={{ width: guideOpen ? guideWidth : 0 }}
       >
         <div className="guide-inner" style={{ width: guideWidth }}>
-          <div className="guide-head">
-            <div>
-              <p className="guide-eyebrow">{studyContent.eyebrow}</p>
-              <h1>{studyContent.projectName}</h1>
-            </div>
-            <button
-              className="icon-btn guide-close"
-              onClick={() => setGuideOpen(false)}
-              aria-label="Hide guide"
-            >
-              <Icon name="close" size={18} />
+          <div className="guide-top">
+            <span className="prototype-pill">{studyContent.eyebrow}</span>
+            <button className="text-btn" onClick={() => setGuideOpen(false)}>
+              Hide guide
             </button>
           </div>
-          <div className="guide-tabs" role="tablist">
+          <h1>{studyContent.projectName}</h1>
+          <div className="guide-tabs" role="tablist" aria-label="Study guide sections">
             <button
+              role="tab"
+              aria-selected={guideTab === "overview"}
               className={guideTab === "overview" ? "active" : ""}
               onClick={() => setGuideTab("overview")}
             >
               Overview
             </button>
             <button
+              role="tab"
+              aria-selected={guideTab === "tasks"}
               className={guideTab === "tasks" ? "active" : ""}
               onClick={() => setGuideTab("tasks")}
             >

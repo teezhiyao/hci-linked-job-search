@@ -551,33 +551,34 @@ function StudyGuide({
         className={`study-guide ${overlay ? "guide-overlay" : ""}`}
         style={{ width: overlay ? 340 : width }}
       >
-        <div className="guide-top">
-          <div className="guide-label">{studyContent.label}</div>
-          <button
-            className="icon-button"
-            aria-label="Hide guide"
-            title="Hide guide"
-            onClick={() => setVisible(false)}
-          >
-            <Icon name="close" size={18} />
-          </button>
+        <div className="guide-inner">
+          <div className="guide-top">
+            <span className="prototype-pill">{studyContent.label}</span>
+            <button className="text-button" onClick={() => setVisible(false)}>
+              Hide guide
+            </button>
+          </div>
           <h1>{studyContent.projectName}</h1>
-          <div className="guide-tabs" role="tablist">
+          <div className="guide-tabs" role="tablist" aria-label="Study guide sections">
             <button
-              className={tab === "overview" ? "active" : ""}
+              role="tab"
+              aria-selected={tab === "overview"}
               onClick={() => setTab("overview")}
             >
               Overview
             </button>
-            <button className={tab === "tasks" ? "active" : ""} onClick={() => setTab("tasks")}>
+            <button
+              role="tab"
+              aria-selected={tab === "tasks"}
+              onClick={() => setTab("tasks")}
+            >
               Tasks{" "}
               <span>
                 {done}/{studyContent.tasks.length}
               </span>
             </button>
           </div>
-        </div>
-        <div className="guide-content">
+          <div className="guide-content">
           {tab === "overview" ? (
             <>
               {studyContent.overview.map((section) => (
@@ -667,22 +668,24 @@ function StudyGuide({
               </div>
             </>
           )}
-        </div>
-        <div className="guide-footer">
-          <button
-            onClick={() => {
-              if (
-                confirm(
-                  "Reset the entire prototype? Your search, requirements, history, comparison, and task progress will be restored to their initial state.",
-                )
-              ) {
-                localStorage.removeItem(STORAGE_KEY);
-                window.location.reload();
-              }
-            }}
-          >
-            Reset prototype
-          </button>
+          </div>
+          <div className="guide-footer">
+            <button
+              className="reset-button"
+              onClick={() => {
+                if (
+                  confirm(
+                    "Reset the entire prototype? Your search, requirements, history, comparison, and task progress will be restored to their initial state.",
+                  )
+                ) {
+                  localStorage.removeItem(STORAGE_KEY);
+                  window.location.reload();
+                }
+              }}
+            >
+              Reset prototype
+            </button>
+          </div>
         </div>
         {!overlay && (
           <div

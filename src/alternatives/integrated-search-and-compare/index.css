@@ -103,58 +103,69 @@
 
 /* Study guide */
 .study-guide {
-  flex: none;
-  height: 100vh;
-  background: #f8f8f6;
-  color: #252827;
-  border-right: 1px solid #d6d8d5;
-  display: flex;
-  flex-direction: column;
   position: relative;
   z-index: 60;
-  box-shadow: 4px 0 15px rgba(20, 25, 22, 0.04);
+  flex: 0 0 auto;
+  height: 100vh;
+  background: #fbfbfc;
+  color: #191919;
+  border-right: 1px solid #cfd3d7;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+.guide-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 .guide-top {
-  padding: 26px 25px 0;
-  position: relative;
-}
-.guide-top .icon-button {
-  position: absolute;
-  right: 15px;
-  top: 18px;
-}
-.guide-label {
-  text-transform: uppercase;
-  letter-spacing: 0.13em;
-  font-weight: 750;
-  font-size: 10px;
-  color: #68706b;
-  margin-bottom: 13px;
-}
-.guide-top h1 {
-  font-family: Georgia, serif;
-  font-size: 25px;
-  line-height: 1.15;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  max-width: 220px;
-}
-.guide-tabs {
-  margin-top: 24px;
   display: flex;
-  gap: 24px;
-  border-bottom: 1px solid #dcdfdc;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 22px 12px;
 }
-.guide-tabs button {
-  padding: 0 0 11px;
+.prototype-pill {
+  padding: 4px 9px;
+  border: 1px solid #c7d7e8;
+  border-radius: 999px;
+  background: #eef5fb;
+  color: #0a66c2;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.guide-top .text-button {
+  min-height: auto;
+  padding: 4px;
+  color: #0a66c2;
   font-size: 13px;
   font-weight: 650;
-  color: #6e7470;
+  text-decoration: none;
+}
+.guide-inner > h1 {
+  padding: 4px 22px 18px;
+  font-family: inherit;
+  font-size: 22px;
+  line-height: 1.22;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+}
+.guide-tabs {
+  display: flex;
+  gap: 20px;
+  padding: 0 22px;
+  border-bottom: 1px solid #dedede;
+}
+.guide-tabs button {
+  padding: 10px 1px;
+  font-size: 13px;
+  font-weight: 650;
+  color: #666;
   border-bottom: 2px solid transparent;
 }
-.guide-tabs button.active {
-  color: #27322d;
-  border-color: #526f61;
+.guide-tabs button[aria-selected="true"] {
+  color: #111;
+  border-color: #0a66c2;
 }
 .guide-tabs span {
   font-size: 10px;
@@ -166,7 +177,7 @@
 .guide-content {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 25px;
+  padding: 22px;
 }
 .guide-section {
   margin-bottom: 28px;
@@ -202,15 +213,18 @@
   margin-top: 4px;
 }
 .guide-footer {
-  padding: 15px 25px;
-  border-top: 1px solid #dcdfdc;
+  padding: 14px 22px 20px;
+  border-top: 1px solid #e0e0e0;
 }
-.guide-footer button {
-  color: #5d665f;
+.guide-footer .reset-button {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid #b9c2ca;
+  border-radius: 18px;
+  color: #49545e;
+  background: #fff;
   font-weight: 650;
   font-size: 12px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 .resize-handle {
   position: absolute;
