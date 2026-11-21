@@ -6,11 +6,11 @@ The three prototypes use the same LinkedIn-style shell, job information, and dec
 
 | Alternative | Primary purpose | Decision model | Final action |
 |---|---|---|---|
-| Enhanced search workspace | Find a suitable opportunity during discovery | Inspect jobs individually using enriched search information | Save one job |
-| Shortlist comparison table | Evaluate an existing shortlist systematically | Compare all shortlisted jobs simultaneously | Leave one job as Considering |
-| Pairwise shortlist narrowing | Reduce a large saved collection | Decide between two jobs at a time | Leave one job as Kept |
+| Prototype A: Criteria-guided search | Find a suitable opportunity during discovery | Inspect jobs individually using enriched search information | Save one job |
+| Prototype B: Multi-job comparison | Evaluate an existing shortlist systematically | Compare all shortlisted jobs simultaneously | Leave one job as Considering |
+| Prototype C: Pairwise shortlist narrowing | Reduce a large saved collection | Decide between two jobs at a time | Leave one job as Kept |
 
-## Alternative 1: Enhanced search workspace
+## Prototype A: Criteria-guided search
 
 ### Distinct features
 
@@ -28,7 +28,7 @@ This alternative should not provide dedicated simultaneous or pairwise job compa
 
 The comparison checkboxes, Compare selected action, comparison drawer, comparison state, and comparison-directed task language have been removed. The guide now presents one task and directs the final response to PeerSurvey.
 
-## Alternative 2: Shortlist comparison table
+## Prototype B: Multi-job comparison
 
 ### Distinct features
 
@@ -46,7 +46,7 @@ Search remains secondary. The primary activity is simultaneous comparison of the
 
 The study guide now combines scenario, goal, and one task in a single panel. Task progress, completion controls, and Overview or Tasks tabs have been removed. The participant leaves only the matching job as Considering and submits the answer in PeerSurvey.
 
-## Alternative 3: Pairwise shortlist narrowing
+## Prototype C: Pairwise shortlist narrowing
 
 ### Distinct features
 

@@ -12,7 +12,7 @@ This review uses the terminology from CS6750 Lesson 2.5, which consolidates prin
 - **Documentation:** The study guide keeps the scenario, conditions, task, fictional-data notice, and survey instructions available in context.
 - **Feedback:** Viewed, saved, considering, passed, kept, and copied states visibly confirm user actions.
 
-## Alternative 1: Enhanced search workspace
+## Prototype A: Criteria-guided search
 
 Primary principles:
 
@@ -24,7 +24,7 @@ Primary principles:
 
 Main trade-off: greater discoverability may weaken **Simplicity** because filters, requirements, assessments, and details compete for attention.
 
-## Alternative 2: Shortlist comparison table
+## Prototype B: Multi-job comparison
 
 Primary principles:
 
@@ -37,7 +37,7 @@ Primary principles:
 
 Main trade-off: comprehensive structure can weaken **Simplicity** and **Ease and comfort** because a 15-job table is dense and may require horizontal scrolling.
 
-## Alternative 3: Pairwise shortlist narrowing
+## Prototype C: Pairwise shortlist narrowing
 
 Primary principles:
 

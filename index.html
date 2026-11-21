@@ -33,21 +33,21 @@
       <ul id="prototype-list">
         <li>
           <a href="./integrated-search-and-compare/">
-            <span>Alternative 1 · Discover</span>
-            Enhanced search workspace
+            <span>Prototype A · Discover</span>
+            Criteria-guided search
             <small>Evaluate and save a suitable job directly from enriched search results.</small>
           </a>
         </li>
         <li>
           <a href="./shortlisted-job-comparison/">
-            <span>Alternative 2 · Evaluate</span>
-            Shortlist comparison table
+            <span>Prototype B · Evaluate</span>
+            Multi-job comparison
             <small>Assess an existing shortlist together in one persistent comparison matrix.</small>
           </a>
         </li>
         <li>
           <a href="./linkedin-jobs-shortlist-narrower/">
-            <span>Alternative 3 · Narrow</span>
+            <span>Prototype C · Narrow</span>
             Pairwise shortlist narrowing
             <small>Reduce a large shortlist through a sequence of two-job decisions.</small>
           </a>
@@ -78,9 +78,9 @@
           3: ["C", "A", "B"]
         };
         const prototypes = {
-          A: { path: "./integrated-search-and-compare/", name: "Enhanced search workspace", verb: "Find" },
-          B: { path: "./shortlisted-job-comparison/", name: "Shortlist comparison table", verb: "Compare" },
-          C: { path: "./linkedin-jobs-shortlist-narrower/", name: "Pairwise shortlist narrowing", verb: "Narrow" }
+          A: { path: "./integrated-search-and-compare/", name: "Criteria-guided search", verb: "Find", label: "Prototype A" },
+          B: { path: "./shortlisted-job-comparison/", name: "Multi-job comparison", verb: "Compare", label: "Prototype B" },
+          C: { path: "./linkedin-jobs-shortlist-narrower/", name: "Pairwise shortlist narrowing", verb: "Narrow", label: "Prototype C" }
         };
         const list = document.getElementById("prototype-list");
         list.innerHTML = "";
@@ -92,7 +92,7 @@
           const item = document.createElement("li");
           const link = document.createElement("a");
           link.href = target.href;
-          link.innerHTML = `<span>Step ${index + 1} · ${prototype.verb}</span>${prototype.name}<small>Software-development task</small>`;
+          link.innerHTML = `<span>Step ${index + 1} · ${prototype.label} · ${prototype.verb}</span>${prototype.name}<small>Software-development task</small>`;
           item.appendChild(link);
           list.appendChild(item);
         });

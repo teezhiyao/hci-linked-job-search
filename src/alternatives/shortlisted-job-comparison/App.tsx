@@ -59,7 +59,7 @@ type AppState = {
 
 const studyContent = {
   eyebrow: "Interactive prototype.",
-  projectName: "Shortlist comparison table",
+  projectName: "Prototype B — Multi-job comparison",
   fictionalNotice: "All job data in this prototype is fictional.",
   overview: {
     scenarioTitle: "Scenario and goal",

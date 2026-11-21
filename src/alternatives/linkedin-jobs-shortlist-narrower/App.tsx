@@ -38,7 +38,7 @@ type AppState = {
 
 const studyContent = {
   eyebrow: "Interactive prototype.",
-  projectName: "Pairwise shortlist narrowing",
+  projectName: "Prototype C — Pairwise shortlist narrowing",
   overview: {
     intro: "You are seeking a Singapore software-development role with:",
     conditions: [

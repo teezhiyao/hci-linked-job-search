@@ -9,7 +9,7 @@ const STORAGE_KEY = `integrated-search-compare-v5-${DOMAIN}`;
 
 export const studyContent = {
   label: "Interactive prototype",
-  projectName: "Enhanced search workspace",
+  projectName: "Prototype A — Criteria-guided search",
   overview: [
     {
       title: "Scenario and goal",
