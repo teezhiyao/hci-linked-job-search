@@ -1,4 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import StudyGroupNotice from "../../StudyGroupNotice";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
 const STORAGE_KEY = "integrated-search-compare-v2";
@@ -563,6 +564,7 @@ function StudyGuide({
             </button>
           </div>
           <h1>{studyContent.projectName}</h1>
+          <StudyGroupNotice />
           <div className="guide-content">
             {studyContent.overview.map((section) => (
               <section className="guide-section" key={section.title}>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import StudyGroupNotice from "../../StudyGroupNotice";
 
 type Status = "pending" | "kept" | "aside" | "later";
 type View = "shortlist" | "search" | "narrow" | "history";
@@ -548,6 +549,7 @@ export default function App() {
             </button>
           </div>
           <h1>{studyContent.projectName}</h1>
+          <StudyGroupNotice />
           <div className="guide-tabs" role="tablist" aria-label="Study guide sections">
             <button
               role="tab"

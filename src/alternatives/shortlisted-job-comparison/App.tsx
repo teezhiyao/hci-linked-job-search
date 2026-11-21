@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import StudyGroupNotice from "../../StudyGroupNotice";
 
 type Importance = "Required" | "Preferred";
 type CriterionKey = "keywords" | "pay" | "arrangement" | "experience" | "eligibility" | "hiring";
@@ -566,6 +567,7 @@ function StudyGuide({
           </button>
         </div>
         <h1>{studyContent.projectName}</h1>
+        <StudyGroupNotice />
         <div className="guide-tabs" role="tablist">
           {(["overview", "tasks"] as const).map((tab) => (
             <button

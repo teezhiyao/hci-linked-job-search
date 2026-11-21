@@ -14,12 +14,22 @@
       a:hover, a:focus-visible { border-color: #0969da; box-shadow: 0 2px 8px rgb(31 35 40 / 10%); }
       a span { display: block; margin-bottom: 5px; color: #59636e; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
       a small { display: block; margin-top: 7px; color: #59636e; font-size: 14px; font-weight: 400; line-height: 1.45; }
+      .assignment { margin: 28px 0 0; padding: 16px 18px; border: 1px solid #b7cee5; border-radius: 10px; background: #eef5fb; }
+      .assignment span, .assignment strong, .assignment small { display: block; }
+      .assignment span { color: #536b82; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+      .assignment strong { margin: 4px 0; color: #0969da; font-size: 22px; }
+      .assignment small { color: #425466; font-size: 14px; }
     </style>
   </head>
   <body>
     <main>
       <h1>LinkedIn Job Search Design Alternatives</h1>
       <p>Select a prototype to explore.</p>
+      <section class="assignment" aria-label="PeerSurvey study group">
+        <span>Your PeerSurvey assignment</span>
+        <strong id="study-group">Assigning study group…</strong>
+        <small id="study-group-instruction">Keep this page open while your assignment loads.</small>
+      </section>
       <ul>
         <li>
           <a href="./integrated-search-and-compare/">
@@ -44,5 +54,30 @@
         </li>
       </ul>
     </main>
+    <script>
+      (() => {
+        const key = "hci-study-group-v1";
+        const params = new URLSearchParams(window.location.search);
+        const valid = value => {
+          const group = Number(value);
+          return Number.isInteger(group) && group >= 1 && group <= 6 ? group : null;
+        };
+        const urlGroup = valid(params.get("group"));
+        const storedGroup = valid(localStorage.getItem(key));
+        const randomValue = window.crypto?.getRandomValues
+          ? window.crypto.getRandomValues(new Uint32Array(1))[0]
+          : Math.floor(Math.random() * 2 ** 32);
+        const group = urlGroup || storedGroup || (randomValue % 6) + 1;
+        localStorage.setItem(key, String(group));
+        document.getElementById("study-group").textContent = `Study group ${group}`;
+        document.getElementById("study-group-instruction").textContent =
+          `Enter ${group} as your study-group number in PeerSurvey.`;
+        document.querySelectorAll("main a").forEach(link => {
+          const target = new URL(link.href, window.location.href);
+          target.searchParams.set("group", String(group));
+          link.href = target.href;
+        });
+      })();
+    </script>
   </body>
 </html>
