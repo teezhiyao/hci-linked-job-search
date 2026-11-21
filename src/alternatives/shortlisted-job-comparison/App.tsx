@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { FinalEvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
+import { StudySequenceHandoff, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
@@ -1746,7 +1746,7 @@ function App() {
         setHidden={setGuideHidden}
         mobile={mobile}
         onReset={() => setResetOpen(true)}
-        evaluationLog={new URLSearchParams(window.location.search).get("step") === "3" ? <FinalEvaluationLogPanel onFinished={() => trackEvent("task_finished")} /> : null}
+        evaluationLog={<StudySequenceHandoff prototype="comparison-table" onFinished={() => trackEvent("task_finished")} />}
       />
       <div className="application-shell">
         <GlobalNav shortlistCount={state.shortlist.length} />

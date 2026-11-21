@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { FinalEvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
+import { StudySequenceHandoff, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
@@ -600,7 +600,7 @@ export default function App() {
               <strong>Study note</strong>
               <span>{studyContent.disclaimer}</span>
             </div>
-            {new URLSearchParams(window.location.search).get("step") === "3" && <FinalEvaluationLogPanel onFinished={() => trackEvent("task_finished")} />}
+            <StudySequenceHandoff prototype="two-job-comparison" onFinished={() => trackEvent("task_finished")} />
           </div>
           <div className="guide-footer">
             <button className="reset-button" onClick={() => setShowReset(true)}>

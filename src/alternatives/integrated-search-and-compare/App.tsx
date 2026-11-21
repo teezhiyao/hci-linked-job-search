@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { FinalEvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
+import { StudySequenceHandoff, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
@@ -1272,7 +1272,7 @@ export default function App() {
         setWidth={setGuideWidth}
         overlay={overlay}
         resetEvaluation={resetSession}
-        evaluationLog={new URLSearchParams(window.location.search).get("step") === "3" ? <FinalEvaluationLogPanel onFinished={() => trackEvent("task_finished")} /> : null}
+        evaluationLog={<StudySequenceHandoff prototype="enhanced-search" onFinished={() => trackEvent("task_finished")} />}
       />
       <main className="linkedin-app">
         <Header guideVisible={guideVisible} onShowGuide={() => setGuideVisible(true)} />

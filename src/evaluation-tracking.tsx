@@ -78,6 +78,38 @@ function combinedLog() {
   return { version: "1.0", studyGroup: group, dataset: "software-development-v1", exportedAt: new Date().toISOString(), sessions: sessions.map(summarize) };
 }
 
+const prototypes = {
+  "enhanced-search": { path: "../integrated-search-and-compare/", name: "Criteria-guided search" },
+  "comparison-table": { path: "../shortlisted-job-comparison/", name: "Multi-job comparison" },
+  "two-job-comparison": { path: "../linkedin-jobs-shortlist-narrower/", name: "Two-job comparison" },
+} as const;
+const sequences: Record<number, PrototypeId[]> = {
+  1: ["enhanced-search", "comparison-table", "two-job-comparison"],
+  2: ["comparison-table", "two-job-comparison", "enhanced-search"],
+  3: ["two-job-comparison", "enhanced-search", "comparison-table"],
+};
+
+export function StudySequenceHandoff({ prototype, onFinished }: { prototype: PrototypeId; onFinished: () => void }) {
+  const params = new URLSearchParams(window.location.search);
+  const step = Number(params.get("step"));
+  const group = params.get("group");
+  if (step !== 1 && step !== 2 && step !== 3) return null;
+  if (step === 3) return <FinalEvaluationLogPanel onFinished={onFinished} />;
+  const nextStep = step + 1;
+  const currentGroup = Number(group);
+  const order = sequences[currentGroup] || sequences[1];
+  const nextPrototype = order[nextStep - 1];
+  const target = new URL(prototypes[nextPrototype].path, window.location.href);
+  if (group) target.searchParams.set("group", group);
+  target.searchParams.set("step", String(nextStep));
+  return <section className="evaluation-log-panel sequence-handoff">
+    <p className="handoff-step">Step {step} of 3 complete</p>
+    <h2>Continue to the next prototype</h2>
+    <p>When you have finished this task, continue in the same browser tab. Your next assigned prototype is <strong>{prototypes[nextPrototype].name}</strong>.</p>
+    <button type="button" onClick={() => { onFinished(); window.location.assign(target.href); }}>Finish and continue</button>
+  </section>;
+}
+
 export function FinalEvaluationLogPanel({ onFinished }: { onFinished: () => void }) {
   const [ready, setReady] = useState(false);
   const [status, setStatus] = useState<"idle" | "copied" | "manual">("idle");
