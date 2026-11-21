@@ -32,7 +32,8 @@ function summarize(current: Session) {
     step: current.step, dataset: current.dataset,
     summary: { elapsedSeconds, activeSeconds: Math.max(0, elapsedSeconds - hiddenSeconds), jobsOpened: count("job_opened"),
       evidenceOpened: count("evidence_opened"), filtersChanged: count("filter_changed"),
-      decisionChanges: count("decision_changed") + count("pair_decision_confirmed"), undos: count("decision_undone") },
+      decisionChanges: count("decision_changed") + count("pair_decision_confirmed"), undos: count("decision_undone"),
+      taskCompleted: count("task_completed"), taskFinished: count("task_finished") },
     events: current.events,
   };
 }
@@ -89,12 +90,19 @@ const sequences: Record<number, PrototypeId[]> = {
   3: ["two-job-comparison", "enhanced-search", "comparison-table"],
 };
 
-export function StudySequenceHandoff({ prototype, onFinished }: { prototype: PrototypeId; onFinished: () => void }) {
+export function StudySequenceHandoff({ prototype, onFinished, onTaskComplete }: { prototype: PrototypeId; onFinished: () => void; onTaskComplete?: () => void }) {
   const params = new URLSearchParams(window.location.search);
   const step = Number(params.get("step"));
   const group = params.get("group");
+  const [taskComplete, setTaskComplete] = useState(false);
   if (step !== 1 && step !== 2 && step !== 3) return null;
-  if (step === 3) return <FinalEvaluationLogPanel onFinished={onFinished} />;
+  if (!taskComplete) return <section className="evaluation-log-panel task-completion-panel">
+    <p className="handoff-step">Step {step} of 3</p>
+    <h2>Finished the task?</h2>
+    <p>Use the prototype task above first. When you have completed it, mark it complete to unlock the next step.</p>
+    <button type="button" onClick={() => { setTaskComplete(true); onTaskComplete?.(); }}>Complete task</button>
+  </section>;
+  if (step === 3) return <FinalEvaluationLogPanel onFinished={() => { onFinished(); }} />;
   const nextStep = step + 1;
   const currentGroup = Number(group);
   const order = sequences[currentGroup] || sequences[1];

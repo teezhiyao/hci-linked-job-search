@@ -29,6 +29,7 @@ export function getStudyGroup(): number {
 export default function StudyGroupNotice() {
   const [group] = useState(getStudyGroup);
   const step = new URLSearchParams(window.location.search).get("step");
+  const studyHome = new URL("../", window.location.href).href;
 
   return (
     <section className="study-group-notice" aria-label="PeerSurvey study group">
@@ -38,6 +39,9 @@ export default function StudyGroupNotice() {
       <p>
         Enter <b>{group}</b> as your study-group number in PeerSurvey.
       </p>
+      <a className="study-home-link" href={studyHome}>
+        ← Return to study home
+      </a>
     </section>
   );
 }

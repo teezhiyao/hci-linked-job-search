@@ -19,6 +19,8 @@
 .evaluation-log-panel button:disabled { background: #9aa6b2; cursor: not-allowed; }
 .evaluation-log-panel strong, .evaluation-log-panel small { display: block; margin-top: 8px; font-size: 12px; }
 .evaluation-log-panel textarea { width: 100%; margin-top: 8px; box-sizing: border-box; font: 11px/1.35 monospace; }
+.study-home-link { display: inline-block; margin-top: 9px; color: #0a66c2; font-size: 12px; font-weight: 700; text-decoration: none; }
+.study-home-link:hover, .study-home-link:focus-visible { text-decoration: underline; }
 
 .guide-conditions { display: grid; gap: 6px; margin: 8px 0 12px; padding: 0; list-style: none; }
 .guide-conditions li { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 7px; align-items: start; font-size: 12px; line-height: 1.35; color: #46525e; }

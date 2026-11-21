@@ -80,7 +80,7 @@ const studyContent = {
     {
       title: "Identify a suitable role",
       description:
-        "Compare the shortlisted jobs and identify at least one role that meets the required conditions. Record it in PeerSurvey.",
+        "In the comparison table, use the requirement summary and Highlight differences to compare the shortlisted jobs. Open at least one cell to inspect its evidence panel, then mark at least one role Considering. Record the role and the evidence you inspected in PeerSurvey.",
     },
   ],
 };
@@ -626,11 +626,6 @@ function StudyGuide({
             <span>{studyContent.fictionalNotice}</span>
           </div>
           {evaluationLog}
-        </div>
-        <div className="guide-footer">
-          <button className="reset-button" onClick={onReset}>
-            Reset prototype
-          </button>
         </div>
       </div>
       {!mobile && (
@@ -1746,7 +1741,7 @@ function App() {
         setHidden={setGuideHidden}
         mobile={mobile}
         onReset={() => setResetOpen(true)}
-        evaluationLog={<StudySequenceHandoff prototype="comparison-table" onFinished={() => trackEvent("task_finished")} />}
+        evaluationLog={<StudySequenceHandoff prototype="comparison-table" onTaskComplete={() => trackEvent("task_completed")} onFinished={() => trackEvent("task_finished")} />}
       />
       <div className="application-shell">
         <GlobalNav shortlistCount={state.shortlist.length} />

@@ -30,7 +30,7 @@ export const studyContent = {
   tasks: [
     {
       title: "Identify a suitable role",
-      description: "Review the results and save at least one role that meets the required conditions. Record it in PeerSurvey.",
+      description: "Use the search and filters to find a plausible role. Open its details and inspect Compared with your requirements. Save at least one role that meets every required condition, then record the role and one visible assessment in PeerSurvey.",
     },
   ],
 };
@@ -601,24 +601,6 @@ function StudyGuide({
               <span>{studyContent.notice}</span>
             </div>
             {evaluationLog}
-          </div>
-          <div className="guide-footer">
-            <button
-              className="reset-button"
-              onClick={() => {
-                if (
-                  confirm(
-                    "Reset the entire prototype? Your search, requirements, and history will be restored to their initial state.",
-                  )
-                ) {
-                  localStorage.removeItem(STORAGE_KEY);
-                  resetEvaluation();
-                  window.location.reload();
-                }
-              }}
-            >
-              Reset prototype
-            </button>
           </div>
         </div>
         {!overlay && (
@@ -1272,7 +1254,7 @@ export default function App() {
         setWidth={setGuideWidth}
         overlay={overlay}
         resetEvaluation={resetSession}
-        evaluationLog={<StudySequenceHandoff prototype="enhanced-search" onFinished={() => trackEvent("task_finished")} />}
+        evaluationLog={<StudySequenceHandoff prototype="enhanced-search" onTaskComplete={() => trackEvent("task_completed")} onFinished={() => trackEvent("task_finished")} />}
       />
       <main className="linkedin-app">
         <Header guideVisible={guideVisible} onShowGuide={() => setGuideVisible(true)} />

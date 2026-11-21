@@ -600,12 +600,7 @@ export default function App() {
               <strong>Study note</strong>
               <span>{studyContent.disclaimer}</span>
             </div>
-            <StudySequenceHandoff prototype="two-job-comparison" onFinished={() => trackEvent("task_finished")} />
-          </div>
-          <div className="guide-footer">
-            <button className="reset-button" onClick={() => setShowReset(true)}>
-              Reset prototype
-            </button>
+            <StudySequenceHandoff prototype="two-job-comparison" onTaskComplete={() => trackEvent("task_completed")} onFinished={() => trackEvent("task_finished")} />
           </div>
         </div>
         <div
