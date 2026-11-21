@@ -81,7 +81,27 @@ Shared features such as fictional job data, standardized categories, hiring evid
 - Three groups rotate the starting prototype: A--B--C, B--C--A, or C--A--B.
 - The landing page converts the persistent group assignment into three ordered prototype links.
 - Every link includes the group and step number.
-- The software-development reference answer is J06.
+- The curated reference order is J11, J06, then J05.
 - The customer-support dataset remains in the code for a possible later two-domain study, but it is not currently selectable.
 
 Before launching the study, test every group sequence in a clean browser session and verify the corresponding PeerSurvey branching and answer keys.
+
+## Ranked task and evaluation plan
+
+All prototypes use the same 15-job pool and the same decision rule: required criteria take priority, followed by the preferred experience range. The intended top three are:
+
+1. **J11, Riverbank Technology:** meets every required criterion and the preferred experience range.
+2. **J06, Meridian Systems:** meets every required criterion, but its 2--4 year range only partially meets the preference for no more than three years.
+3. **J05, Brightpath Learning:** meets the technology, arrangement, eligibility, hiring, and experience criteria, but its SGD 4,500--5,500 range does not guarantee the required SGD 5,000 minimum.
+
+The remaining listings each have a clearer required-criterion gap, such as stale or missing hiring confirmation, too many office days, ineligible geography, missing salary, or irrelevant technologies. J05 ranks above other partial salary matches because it has the highest lower salary bound among them and satisfies every other criterion.
+
+PeerSurvey should ask participants to enter their first, second, and third choices in order, then collect confidence and a short reason for the first choice. Evaluation can compare:
+
+- **First-choice accuracy:** whether J11 is ranked first.
+- **Top-three recognition:** how many of J11, J06, and J05 appear in the participant's top three.
+- **Ordering accuracy:** whether the three appear in the intended order; partial credit can use rank distance.
+- **Decision time and completion:** whether the participant finishes and how long the task takes.
+- **Confidence and rationale:** whether the participant identifies the decisive evidence and distinguishes required criteria from the experience preference.
+
+Compare these measures by prototype and presentation order. Treat the reference order as a task-specific answer key, while also reviewing participants' explanations for reasonable interpretations or interface-driven misunderstandings.

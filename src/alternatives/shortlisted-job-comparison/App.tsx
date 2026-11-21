@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { CUSTOMER_SUPPORT_JOBS, getStudyDomain } from "../../study-domains";
+import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
 
@@ -63,15 +63,15 @@ const studyContent = {
   overview: {
     scenarioTitle: "Scenario and goal",
     scenario:
-      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Use the comparison table to leave only the job that meets every required criterion under consideration, using no more than three years of experience as a secondary preference.",
+      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Identify the best match and the next two strongest alternatives. Prioritize all required criteria, then prefer no more than three years of experience.",
   },
   submission:
-    "When you finish, record the job left under consideration and your answers in PeerSurvey. This prototype does not collect your response.",
+    "When you finish, record your first, second, and third choices in PeerSurvey. This prototype does not collect your response.",
   tasks: [
     {
-      title: "Compare and select one job",
+      title: "Rank the three strongest matches",
       description:
-        "Compare the shortlisted jobs. Leave the only job that meets every required criterion as Considering and mark the others as Passed.",
+        "Compare the shortlisted jobs, identify your first, second, and third choices, and leave your first choice as Considering. Record all three in PeerSurvey.",
     },
   ],
 };
@@ -227,6 +227,12 @@ const softwareJobs: Job[] = [
     hiringDate: "2026-11-05",
     initialHistory: "Viewed 17 Nov 2026",
   },
+  ...EXTRA_SOFTWARE_JOBS.map((job) => ({
+    id: job.id, company: job.company, title: job.title, exp: job.experience,
+    technologies: job.technologies, responsibilities: job.responsibilities, pay: job.salary,
+    arrangement: job.arrangement, officeDays: job.officeDays, location: job.location,
+    eligibility: job.eligibility, hiringDate: job.hiringDate, initialHistory: "Unseen",
+  })),
 ];
 
 const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
@@ -274,7 +280,7 @@ const initialRequirements: Requirements = {
 
 const initialState: AppState = {
   view: "compare",
-  shortlist: ["J01", "J02", "J04", "J05", "J06", "J10"],
+  shortlist: ["J01", "J02", "J04", "J05", "J06", "J10", "J11", "J12", "J13", "J14", "J15"],
   decisions: {
     J01: "Considering",
     J02: "Considering",
@@ -283,6 +289,11 @@ const initialState: AppState = {
     J06: "Considering",
     J08: "Applied",
     J10: "Considering",
+    J11: "Considering",
+    J12: "Considering",
+    J13: "Considering",
+    J14: "Considering",
+    J15: "Considering",
   },
   passReasons: {},
   viewed: ["J01", "J10"],
@@ -317,7 +328,7 @@ const columnMeta: Record<string, { label: string; desired?: (r: Requirements) =>
   decision: { label: "Your decision" },
 };
 
-const STORAGE_KEY = `shortlisted-job-comparison-v3-${DOMAIN}`;
+const STORAGE_KEY = `shortlisted-job-comparison-v4-${DOMAIN}`;
 const fmtDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-GB", {
     day: "numeric",

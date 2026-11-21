@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { CUSTOMER_SUPPORT_JOBS, getStudyDomain } from "../../study-domains";
+import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
 
@@ -40,16 +40,16 @@ const studyContent = {
   projectName: "Pairwise shortlist narrowing",
   overview: {
     scenario:
-      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Use two-job decisions to leave only the job that meets every required criterion as Kept, using no more than three years of experience as a secondary preference.",
+      "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Identify the best match and the next two strongest alternatives. Prioritize all required criteria, then prefer no more than three years of experience.",
   },
   disclaimer: "All job information in this prototype is fictional.",
   submission:
-    "When you finish, record the job left as Kept and your answers in PeerSurvey. This prototype does not collect your response.",
+    "When you finish, record your first, second, and third choices in PeerSurvey. This prototype does not collect your response.",
   tasks: [
     {
-      title: "Narrow to one job",
+      title: "Narrow and rank the best three",
       description:
-        "Review the jobs in pairs and continue narrowing until only the job that meets every required criterion remains Kept.",
+        "Review the jobs in pairs, identify your first, second, and third choices, and leave your first choice as Kept.",
     },
   ],
 };
@@ -185,6 +185,21 @@ const softwareJobs: Job[] = [
     hiring: "Employer confirmed open 5 Nov 2026",
     history: "Viewed 17 Nov 2026",
   },
+  ...EXTRA_SOFTWARE_JOBS.map((job) => ({
+    id: job.id,
+    company: job.company,
+    title: job.title,
+    experience: `${job.experience[0]}–${job.experience[1]} years`,
+    technologies: job.technologies,
+    responsibilities: job.responsibilities,
+    pay: job.salary ? `${job.salary[0].toLocaleString()}–${job.salary[1].toLocaleString()}` : "Not provided",
+    arrangement: `${job.arrangement}${job.officeDays !== null ? `, ${job.officeDays} office days/week` : ""}, ${job.location}`,
+    eligibility: job.eligibility,
+    hiring: job.hiringDate
+      ? `Employer confirmed open ${new Date(`${job.hiringDate}T12:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`
+      : null,
+    history: "Unseen",
+  })),
 ];
 
 const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
@@ -211,7 +226,7 @@ const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
 
 const jobs = DOMAIN === "support" ? supportJobs : softwareJobs;
 
-const initialShortlist = ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J09", "J10"];
+const initialShortlist = ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J09", "J10", "J11", "J12", "J13", "J14", "J15"];
 const initialState: AppState = {
   shortlist: initialShortlist,
   statuses: Object.fromEntries(initialShortlist.map((id) => [id, "pending"])) as Record<
@@ -326,7 +341,7 @@ function monogram(company: string) {
 
 function loadState(): AppState {
   try {
-    const raw = localStorage.getItem(`shortlist-prototype-v3-${DOMAIN}`);
+    const raw = localStorage.getItem(`shortlist-prototype-v4-${DOMAIN}`);
     return raw ? { ...initialState, ...JSON.parse(raw) } : initialState;
   } catch {
     return initialState;
@@ -358,7 +373,7 @@ export default function App() {
   const dragStart = useRef<{ x: number; width: number } | null>(null);
 
   useEffect(() => {
-    localStorage.setItem(`shortlist-prototype-v3-${DOMAIN}`, JSON.stringify(state));
+    localStorage.setItem(`shortlist-prototype-v4-${DOMAIN}`, JSON.stringify(state));
   }, [state]);
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -515,7 +530,7 @@ export default function App() {
     setApplyId(null);
     setExpanded({});
     setShowReset(false);
-    localStorage.removeItem(`shortlist-prototype-v3-${DOMAIN}`);
+    localStorage.removeItem(`shortlist-prototype-v4-${DOMAIN}`);
   }
   function reopenHistory(entry: HistoryEntry) {
     setPair(entry.jobIds);

@@ -16,6 +16,14 @@ export type SharedJob = {
   history: { viewed?: string; saved?: string; applied?: string };
 };
 
+export const EXTRA_SOFTWARE_JOBS: SharedJob[] = [
+  { id: "J11", company: "Riverbank Technology", title: "Product Software Developer", experience: [1, 3], technologies: ["React", "TypeScript", "Node.js"], responsibilities: ["Build customer-facing product features", "Maintain frontend and API tests"], salary: [5500, 6800], arrangement: "Hybrid", officeDays: 2, location: "Singapore", eligibility: "Singapore-based applicants", hiringDate: "2026-11-18", history: {} },
+  { id: "J12", company: "Cloudline Platforms", title: "Platform Software Developer", experience: [3, 5], technologies: ["TypeScript", "Node.js", "AWS"], responsibilities: ["Build cloud management services", "Improve deployment automation"], salary: [6500, 8500], arrangement: "Remote", officeDays: null, location: "Singapore", eligibility: "Must reside in Singapore", hiringDate: "2026-10-30", history: {} },
+  { id: "J13", company: "Civic Labs", title: "Frontend Product Engineer", experience: [0, 2], technologies: ["React", "TypeScript", "CSS"], responsibilities: ["Develop public-service interfaces", "Run accessibility reviews"], salary: [5000, 6200], arrangement: "Hybrid", officeDays: 3, location: "Singapore", eligibility: "Singapore-based applicants", hiringDate: "2026-11-17", history: {} },
+  { id: "J14", company: "MangoWorks", title: "React UI Engineer", experience: [1, 3], technologies: ["React", "TypeScript", "Storybook"], responsibilities: ["Build reusable interface components", "Maintain a design system"], salary: [5200, 6700], arrangement: "Remote", officeDays: null, location: "Malaysia", eligibility: "Must reside in Malaysia", hiringDate: "2026-11-18", history: {} },
+  { id: "J15", company: "Beacon Analytics", title: "JavaScript Software Developer", experience: [1, 3], technologies: ["TypeScript", "Node.js", "PostgreSQL"], responsibilities: ["Develop reporting workflows", "Build data-export services"], salary: null, arrangement: "Hybrid", officeDays: 1, location: "Singapore", eligibility: "Singapore-based applicants", hiringDate: "2026-11-16", history: {} },
+];
+
 // The first study round is fixed to software development. Keep the support
 // dataset below so it can be re-enabled for a later two-domain study.
 export const getStudyDomain = (): StudyDomain => "developer";

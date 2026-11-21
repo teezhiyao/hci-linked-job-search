@@ -1,10 +1,10 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { CUSTOMER_SUPPORT_JOBS, getStudyDomain } from "../../study-domains";
+import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
 const DOMAIN = getStudyDomain();
-const STORAGE_KEY = `integrated-search-compare-v3-${DOMAIN}`;
+const STORAGE_KEY = `integrated-search-compare-v4-${DOMAIN}`;
 
 export const studyContent = {
   label: "Interactive prototype",
@@ -12,15 +12,15 @@ export const studyContent = {
   overview: [
     {
       title: "Scenario and goal",
-      text: "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Find and save the only job that meets every required criterion, using no more than three years of experience as a secondary preference.",
+      text: "You are seeking a Singapore software-development role requiring React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Identify the best match and the next two strongest alternatives. Prioritize all required criteria, then prefer no more than three years of experience.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
-  submission: "When you finish, record your selected job and answers in PeerSurvey. This prototype does not collect your response.",
+  submission: "When you finish, record your first, second, and third choices in PeerSurvey. This prototype does not collect your response.",
   tasks: [
     {
-      title: "Find and save the matching job",
-      description: "Review the results and save the only job that meets every required criterion. Record the saved job in PeerSurvey.",
+      title: "Choose the best of three matches",
+      description: "Review the results, identify your first, second, and third choices, and save your first choice. Record all three in PeerSurvey.",
     },
   ],
 };
@@ -194,6 +194,7 @@ const SOFTWARE_JOBS: Job[] = [
     hiringDate: "2026-11-05",
     history: { viewed: "17 Nov 2026" },
   },
+  ...EXTRA_SOFTWARE_JOBS,
 ];
 
 const JOBS: Job[] = DOMAIN === "support" ? CUSTOMER_SUPPORT_JOBS : SOFTWARE_JOBS;
