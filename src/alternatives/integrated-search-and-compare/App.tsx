@@ -575,7 +575,10 @@ function StudyGuide({
               <section className="guide-section" key={section.title}>
                 <h2>{section.title}</h2>
                 <p>{section.intro}</p>
-                <ul>{section.conditions.map((condition) => <li key={condition}>{condition}</li>)}</ul>
+                <ul className="guide-conditions">{section.conditions.map((condition) => {
+                  const [label, detail] = condition.split(": ");
+                  return <li key={condition}><span className={`condition-label ${label.toLowerCase()}`}>{label}</span><span>{detail}</span></li>;
+                })}</ul>
                 <p><strong>Goal:</strong> {section.goal}</p>
               </section>
             ))}
