@@ -36,7 +36,7 @@ const studyContent = {
   projectName: "Two-job comparison screen",
   overview: {
     about:
-      "This workflow presents shortlisted jobs in small comparisons and preserves each decision in a review history. It explores whether choosing between two jobs at a time reduces comparison effort while still helping job seekers remember and revise earlier decisions.",
+      "This workflow compares two shortlisted jobs at a time and records each decision. It tests whether pairwise comparison makes narrowing a shortlist easier while allowing users to revisit earlier choices.",
     scenario:
       "You have collected several software-development roles in Singapore and now need a manageable final shortlist. You prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; no more than three years of required experience; and recent evidence that the employer is still hiring.",
     before:

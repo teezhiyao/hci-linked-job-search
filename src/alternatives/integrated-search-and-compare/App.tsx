@@ -9,7 +9,7 @@ export const studyContent = {
   overview: [
     {
       title: "About this prototype",
-      text: "This workspace brings consistent job details, personal requirements, hiring activity, and previous interactions into the search results. It explores whether job seekers can judge compatibility and credibility without repeatedly opening full listings or losing their place.",
+      text: "This workspace shows consistent job details, compatibility, hiring activity, and previous interactions within search results. It tests whether users can evaluate jobs without repeatedly opening listings or losing their place.",
     },
     {
       title: "Your scenario",

@@ -62,7 +62,7 @@ const studyContent = {
   overview: {
     aboutTitle: "About this prototype",
     about:
-      "This persistent comparison workspace aligns shortlisted jobs against the same requirements. It explores whether standardized categories, visible evidence, decision states, and reasons for passing help job seekers assess trade-offs and resume an evaluation across sessions.",
+      "This workspace compares shortlisted jobs using consistent criteria. It tests whether aligned details, decision states, and notes help users assess trade-offs and resume their evaluation later.",
     scenarioTitle: "Your scenario",
     scenario:
       "You previously shortlisted several software-development roles in Singapore. You prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; no more than three years of required experience; and recent evidence that the employer is still hiring.",
