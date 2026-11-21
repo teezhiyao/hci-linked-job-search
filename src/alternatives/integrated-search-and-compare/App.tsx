@@ -5,7 +5,7 @@ import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../.
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
 const DOMAIN = getStudyDomain();
-const STORAGE_KEY = `integrated-search-compare-v5-${DOMAIN}`;
+const STORAGE_KEY = `integrated-search-compare-v6-${DOMAIN}`;
 
 export const studyContent = {
   label: "Interactive prototype",
@@ -30,7 +30,7 @@ export const studyContent = {
   tasks: [
     {
       title: "Identify a suitable role",
-      description: "Use the search and filters to find a plausible role. Open its details and inspect Compared with your requirements. Save at least one role that meets every required condition, then record the role and one visible assessment in PeerSurvey.",
+      description: "Open Edit requirements and fill in the required job criteria, including skills, pay, work arrangement, eligibility, and hiring recency. Save them to filter out jobs that do not meet every required criterion. Open a remaining job, inspect Compared with your requirements, save at least one suitable role, and record the role plus one visible assessment in PeerSurvey.",
     },
   ],
 };
@@ -244,24 +244,24 @@ const reqNames: Record<ReqKey, string> = {
   hiring: "Recent hiring confirmation",
 };
 const INITIAL_REQUIREMENTS: Requirements = {
-  keywords: DOMAIN === "support" ? ["Email", "Live chat"] : ["React", "TypeScript", "Node.js"],
+  keywords: [],
   keywordMode: "Any",
-  salary: DOMAIN === "support" ? 4000 : 5000,
+  salary: 0,
   currency: "SGD",
   payPeriod: "month",
-  arrangements: ["Remote", "Hybrid"],
+  arrangements: [],
   maxOfficeDays: 2,
   minExperience: 0,
-  maxExperience: DOMAIN === "support" ? 2 : 3,
-  eligibility: "Singapore",
-  hiringDays: 14,
+  maxExperience: 0,
+  eligibility: "",
+  hiringDays: 0,
   enabled: {
-    keywords: true,
-    salary: true,
-    arrangement: true,
-    experience: true,
-    eligibility: true,
-    hiring: true,
+    keywords: false,
+    salary: false,
+    arrangement: false,
+    experience: false,
+    eligibility: false,
+    hiring: false,
   },
   importance: {
     keywords: "Required",
@@ -282,11 +282,13 @@ type AppState = {
   history: Record<string, History>;
   selectedId: string;
   requirements: Requirements;
+  requirementsApplied: boolean;
 };
 const initialState: AppState = {
   history: Object.fromEntries(JOBS.map((j) => [j.id, j.history])),
   selectedId: "J01",
   requirements: INITIAL_REQUIREMENTS,
+  requirementsApplied: false,
 };
 
 function loadState(): AppState {
@@ -668,6 +670,15 @@ function RequirementsEditor({
 }) {
   const [draft, setDraft] = useState<Requirements>(() => structuredClone(value));
   const [newKeyword, setNewKeyword] = useState("");
+  const incomplete = reqKeys.some((key) => {
+    if (!draft.enabled[key]) return false;
+    if (key === "keywords") return draft.keywords.length === 0;
+    if (key === "salary") return draft.salary <= 0;
+    if (key === "arrangement") return draft.arrangements.length === 0;
+    if (key === "experience") return draft.maxExperience < draft.minExperience;
+    if (key === "eligibility") return !draft.eligibility.trim();
+    return draft.hiringDays <= 0;
+  });
   const update = <K extends keyof Requirements>(key: K, val: Requirements[K]) =>
     setDraft((d) => ({ ...d, [key]: val }));
   return (
@@ -903,10 +914,11 @@ function RequirementsEditor({
           <button className="secondary" onClick={onClose}>
             Cancel
           </button>
-          <button className="primary" onClick={() => onSave(draft)}>
-            Save requirements
+          <button className="primary" disabled={incomplete} onClick={() => onSave(draft)}>
+            Save and apply filters
           </button>
         </div>
+        {incomplete && <p className="form-help">Complete every enabled criterion before applying the filters.</p>}
       </div>
     </div>
   );
@@ -942,6 +954,7 @@ function RequirementsSummary({ req, onEdit }: { req: Requirements; onEdit: () =>
             </div>
           ))}
       </div>
+      {!reqKeys.some((k) => req.enabled[k]) && <p className="requirements-empty">No requirements configured yet. Use Edit requirements to add criteria.</p>}
     </section>
   );
 }
@@ -1150,10 +1163,9 @@ export default function App() {
   const [guideVisible, setGuideVisible] = useState(true);
   const [guideWidth, setGuideWidth] = useState(300);
   const [overlay, setOverlay] = useState(() => window.innerWidth < 1100);
-  const defaultKeyword = DOMAIN === "support" ? "Customer support" : "Software developer";
-  const [keywordInput, setKeywordInput] = useState(defaultKeyword);
-  const [locationInput, setLocationInput] = useState("Singapore");
-  const [query, setQuery] = useState({ keyword: defaultKeyword, location: "Singapore" });
+  const [keywordInput, setKeywordInput] = useState("");
+  const [locationInput, setLocationInput] = useState("");
+  const [query, setQuery] = useState({ keyword: "", location: "" });
   const [filters, setFilters] = useState({
     experience: "",
     arrangement: "",
@@ -1203,11 +1215,16 @@ export default function App() {
         const h = state.history[j.id];
         const historyMatch =
           !filters.history || (filters.history === "Viewed" ? !!h.viewed : !!h.saved);
+        const requiredCriteriaMatch =
+          !state.requirementsApplied ||
+          reqKeys
+            .filter((key) => state.requirements.enabled[key] && state.requirements.importance[key] === "Required")
+            .every((key) => assess(j, state.requirements, key).status === "Meets");
         return (
-          keywordMatch && locationMatch && expMatch && arrangementMatch && techMatch && historyMatch
+          keywordMatch && locationMatch && expMatch && arrangementMatch && techMatch && historyMatch && requiredCriteriaMatch
         );
       }),
-    [query, filters, state.history],
+    [query, filters, state.history, state.requirements, state.requirementsApplied],
   );
 
   const selected = JOBS.find((j) => j.id === state.selectedId) || jobs[0] || JOBS[0];
@@ -1360,8 +1377,9 @@ export default function App() {
               <h2>
                 {jobs.length} job{jobs.length === 1 ? "" : "s"} found
               </h2>
-              <p>
+                <p>
                 {query.keyword || "All jobs"} in {query.location || "all locations"}
+                {state.requirementsApplied ? " · Required criteria applied" : " · Configure requirements to filter results"}
               </p>
             </div>
           </div>
@@ -1392,7 +1410,7 @@ export default function App() {
                 <Icon name="search" size={30} />
               </div>
               <h2>No jobs match your search</h2>
-              <p>Try different keywords or clear your filters to see all ten fictional roles.</p>
+              <p>Try different keywords, edit your requirements, or clear your search filters to see more fictional roles.</p>
               <button className="primary" onClick={clearFilters}>
                 Clear search and filters
               </button>
@@ -1405,7 +1423,7 @@ export default function App() {
           value={state.requirements}
           onClose={() => setRequirementsOpen(false)}
           onSave={(r) => {
-            setState((s) => ({ ...s, requirements: r }));
+            setState((s) => ({ ...s, requirements: r, requirementsApplied: true }));
             setRequirementsOpen(false);
           }}
         />

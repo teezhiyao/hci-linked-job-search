@@ -590,6 +590,16 @@ body.resizing {
   margin-right: 6px;
   letter-spacing: 0.05em;
 }
+.requirements-empty, .form-help {
+  margin: 10px 0 0;
+  color: #5f6b75;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.form-help {
+  padding: 0 24px 14px;
+  color: #8a4b08;
+}
 .results-heading {
   min-height: 52px;
   display: flex;
