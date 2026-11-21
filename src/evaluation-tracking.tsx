@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type PrototypeId = "enhanced-search" | "comparison-table" | "pairwise-narrowing";
+export type PrototypeId = "enhanced-search" | "comparison-table" | "two-job-comparison";
 type Details = Record<string, string | number | boolean | null | string[]>;
 type EvaluationEvent = { t: number; type: string; details?: Details };
 type Session = { version: "1.0"; sessionId: string; prototype: PrototypeId; studyGroup: number | null; step: number | null; dataset: "software-development-v1"; startedAt: number; events: EvaluationEvent[] };

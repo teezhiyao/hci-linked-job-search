@@ -8,7 +8,7 @@ The three prototypes use the same LinkedIn-style shell, job information, and dec
 |---|---|---|---|
 | Prototype A: Criteria-guided search | Find a suitable opportunity during discovery | Inspect jobs individually using enriched search information | Save one job |
 | Prototype B: Multi-job comparison | Evaluate an existing shortlist systematically | Compare all shortlisted jobs simultaneously | Leave one job as Considering |
-| Prototype C: Pairwise shortlist narrowing | Reduce a large saved collection | Decide between two jobs at a time | Leave one job as Kept |
+| Prototype C: Two-job comparison | Review a large saved collection | Decide between two jobs at a time | Keep at least one suitable job |
 
 ## Prototype A: Criteria-guided search
 
@@ -46,7 +46,7 @@ Search remains secondary. The primary activity is simultaneous comparison of the
 
 The study guide now combines scenario, goal, and one task in a single panel. Task progress, completion controls, and Overview or Tasks tabs have been removed. The participant leaves only the matching job as Considering and submits the answer in PeerSurvey.
 
-## Prototype C: Pairwise shortlist narrowing
+## Prototype C: Two-job comparison
 
 ### Distinct features
 
@@ -62,7 +62,7 @@ This alternative does not use a configurable requirements table or overall match
 
 ### Implemented update
 
-The guide now combines scenario, goal, and one task in a single panel. The task asks participants to narrow until one matching job remains Kept. Task-completion storage and controls have been removed; participants submit the answer in PeerSurvey.
+The guide now combines scenario, goal, and one task in a single panel. The task asks participants to start a two-job comparison, inspect at least one hiring-evidence source, confirm at least one decision, and identify a suitable role. These checkpoints are captured in the evaluation log, while participants submit the role and observed evidence in PeerSurvey.
 
 ## Shared evaluation structure
 
@@ -108,4 +108,4 @@ Compare these measures by prototype and presentation order while reviewing parti
 
 ## Anonymous frontend evaluation log
 
-Each prototype records meaningful task actions in a separate `sessionStorage` session. Logs identify the prototype (`enhanced-search`, `comparison-table`, or `pairwise-narrowing`), study group, sequence step, dataset version, anonymous session ID, elapsed and active time, summary counts, and the underlying event sequence. After completing step 3, the participant explicitly copies one combined log containing all three sessions into PeerSurvey; nothing is transmitted automatically. Page visibility is recorded to distinguish active time from time spent away from the tab, and resetting a prototype also starts a fresh evaluation session.
+Each prototype records meaningful task actions in a separate `sessionStorage` session. Logs identify the prototype (`enhanced-search`, `comparison-table`, or `two-job-comparison`), study group, sequence step, dataset version, anonymous session ID, elapsed and active time, summary counts, and the underlying event sequence. After completing step 3, the participant explicitly copies one combined log containing all three sessions into PeerSurvey; nothing is transmitted automatically. Page visibility is recorded to distinguish active time from time spent away from the tab, and resetting a prototype also starts a fresh evaluation session.

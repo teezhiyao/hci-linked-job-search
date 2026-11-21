@@ -38,7 +38,7 @@ type AppState = {
 
 const studyContent = {
   eyebrow: "Interactive prototype.",
-  projectName: "Prototype C — Pairwise shortlist narrowing",
+  projectName: "Prototype C — Two-job comparison",
   overview: {
     intro: "You are seeking a Singapore software-development role with:",
     conditions: [
@@ -56,9 +56,9 @@ const studyContent = {
     "Record at least one suitable role in PeerSurvey. The combined evaluation log is available after the third prototype.",
   tasks: [
     {
-      title: "Identify a suitable role",
+      title: "Compare and narrow your shortlist",
       description:
-        "Review the jobs in pairs and identify at least one role that meets the required conditions. Record it in PeerSurvey.",
+        "Select Start comparing jobs. In at least one pair, open Show source under Hiring evidence and inspect what appears. Confirm at least one comparison decision, then identify at least one role that meets every required condition. In PeerSurvey, record the role and what the hiring-evidence source showed.",
     },
   ],
 };
@@ -358,7 +358,7 @@ function loadState(): AppState {
 }
 
 export default function App() {
-  const { trackEvent, resetSession } = useEvaluationTracking("pairwise-narrowing");
+  const { trackEvent, resetSession } = useEvaluationTracking("two-job-comparison");
   const [state, setState] = useState<AppState>(loadState);
   const [view, setView] = useState<View>("shortlist");
   const [guideOpen, setGuideOpen] = useState(true);
@@ -448,6 +448,7 @@ export default function App() {
     );
   }
   function beginReview(ids = pending.map((j) => j.id)) {
+    trackEvent("pair_comparison_started", { pendingCount: ids.length });
     setPair(ids.slice(0, 2));
     setEditingHistory(null);
     setView("narrow");
@@ -666,7 +667,15 @@ export default function App() {
             pendingCount={pending.length}
             statuses={state.statuses}
             expanded={expanded}
-            toggleExpanded={(key) => setExpanded((e) => ({ ...e, [key]: !e[key] }))}
+            toggleExpanded={(key) =>
+              setExpanded((current) => {
+                const willExpand = !current[key];
+                trackEvent(willExpand ? "comparison_source_opened" : "comparison_source_closed", {
+                  sourceKey: key,
+                });
+                return { ...current, [key]: willExpand };
+              })
+            }
             onBack={() => navigate("shortlist")}
             onDecision={openDecision}
             complete={reviewComplete}
@@ -869,7 +878,7 @@ function LinkedInHeader({ view, navigate }: { view: View; navigate: (v: View) =>
           My shortlist
         </button>
         <button className={view === "narrow" ? "active" : ""} onClick={() => navigate("narrow")}>
-          Narrow shortlist
+          Compare and narrow
         </button>
         <button className={view === "history" ? "active" : ""} onClick={() => navigate("history")}>
           Review history
@@ -905,7 +914,7 @@ function ShortlistView(props: {
           <p>{props.allJobs.length} saved roles · Continue considering roles before you apply</p>
         </div>
         <button className="primary-btn large" onClick={props.beginReview}>
-          <Icon name="filter" size={17} /> Narrow my shortlist
+          <Icon name="filter" size={17} /> Start comparing jobs
         </button>
       </div>
       <div className="filter-bar">

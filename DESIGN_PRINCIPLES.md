@@ -37,7 +37,7 @@ Primary principles:
 
 Main trade-off: comprehensive structure can weaken **Simplicity** and **Ease and comfort** because a 15-job table is dense and may require horizontal scrolling.
 
-## Prototype C: Pairwise shortlist narrowing
+## Prototype C: Two-job comparison
 
 Primary principles:
 
