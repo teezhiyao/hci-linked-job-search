@@ -9,11 +9,11 @@ export const studyContent = {
   overview: [
     {
       title: "Scenario",
-      text: "You have not created a shortlist yet. You need a Singapore software-development role using React, TypeScript, or Node.js, with a guaranteed minimum of SGD 5,000 per month, remote or hybrid work with no more than two office days, eligibility for Singapore-based applicants, and employer-confirmed hiring within the past 14 days. You would prefer a role requiring no more than three years of experience.",
+      text: "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
     },
     {
       title: "Goal",
-      text: "Find and save the only job that satisfies every required criterion. Before deciding, compare it with at least two other plausible jobs. Use the preferred experience range as a secondary consideration.",
+      text: "Compare three plausible jobs, then find and save the only one that meets every required criterion. Use experience as a secondary preference.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
