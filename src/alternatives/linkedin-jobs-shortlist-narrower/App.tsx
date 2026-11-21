@@ -556,93 +556,79 @@ export default function App() {
           </div>
           <div className="guide-content">
             {guideTab === "overview" ? (
-              <div className="overview-copy">
-                <section>
+              <div>
+                <section className="guide-section">
                   <h2>About this prototype</h2>
                   <p>{studyContent.overview.about}</p>
                 </section>
-                <section>
+                <section className="guide-section">
                   <h2>Your scenario</h2>
                   <p>{studyContent.overview.scenario}</p>
                 </section>
-                <section>
+                <section className="guide-section">
                   <h2>Before you begin</h2>
                   <p>{studyContent.overview.before}</p>
                 </section>
-                <div className="fiction-note">
-                  <span>i</span>
-                  <p>{studyContent.disclaimer}</p>
+                <div className="fictional-note">
+                  <strong>Study note</strong>
+                  <span>{studyContent.disclaimer}</span>
                 </div>
               </div>
             ) : (
-              <div className="task-panel">
-                <div className="task-progress">
+              <div>
+                <div className="progress-row">
                   <span>
                     Task {taskIndex + 1} of {studyContent.tasks.length}
                   </span>
-                  <span>
-                    {Math.round((completedTasks.length / studyContent.tasks.length) * 100)}%
-                    complete
-                  </span>
+                  <strong>
+                    {completedTasks.length}/{studyContent.tasks.length} complete
+                  </strong>
                 </div>
                 <div className="progress-track">
-                  <i
+                  <span
                     style={{
                       width: `${(completedTasks.length / studyContent.tasks.length) * 100}%`,
                     }}
                   />
                 </div>
-                {studyContent.tasks.map((task, i) => (
+                <article className="task-card">
+                  <span className="task-number">TASK {taskIndex + 1}</span>
+                  <h2>{studyContent.tasks[taskIndex].title}</h2>
+                  <p>{studyContent.tasks[taskIndex].description}</p>
+                  <p className="self-report">Completion is self-reported.</p>
                   <button
-                    key={task.title}
-                    className={`task-row ${i === taskIndex ? "expanded" : ""}`}
-                    onClick={() => setTaskIndex(i)}
+                    className="primary wide"
+                    disabled={completedTasks.includes(taskIndex)}
+                    onClick={() =>
+                      setCompletedTasks((c) => (c.includes(taskIndex) ? c : [...c, taskIndex]))
+                    }
                   >
-                    <span className={`task-number ${completedTasks.includes(i) ? "done" : ""}`}>
-                      {completedTasks.includes(i) ? "✓" : i + 1}
-                    </span>
-                    <span>
-                      <strong>{task.title}</strong>
-                      {i === taskIndex && <small>{task.description}</small>}
-                    </span>
-                    <Icon name="chevron" size={16} />
+                    {completedTasks.includes(taskIndex) ? "Completed" : "Mark complete"}
                   </button>
-                ))}
-                <p className="self-report">
-                  Completion is self-reported. Moving between tasks won’t reset the prototype.
-                </p>
+                  <button className="secondary wide">Unable to finish</button>
+                </article>
                 <div className="task-actions">
                   <button
-                    className="secondary-btn"
+                    className="secondary"
                     disabled={taskIndex === 0}
                     onClick={() => setTaskIndex((i) => i - 1)}
                   >
                     Previous
                   </button>
                   <button
-                    className="secondary-btn"
+                    className="secondary"
                     disabled={taskIndex === studyContent.tasks.length - 1}
                     onClick={() => setTaskIndex((i) => i + 1)}
                   >
                     Next
                   </button>
                 </div>
-                <button
-                  className="primary-btn full"
-                  onClick={() => {
-                    setCompletedTasks((c) => (c.includes(taskIndex) ? c : [...c, taskIndex]));
-                    if (taskIndex < studyContent.tasks.length - 1) setTaskIndex(taskIndex + 1);
-                  }}
-                >
-                  Mark complete
-                </button>
-                <button className="text-btn full">Unable to finish</button>
               </div>
             )}
           </div>
           <div className="guide-footer">
-            <button className="reset-btn" onClick={() => setShowReset(true)}>
-              <span>↻</span> Reset prototype
+            <button className="reset-button" onClick={() => setShowReset(true)}>
+              Reset prototype
             </button>
           </div>
         </div>

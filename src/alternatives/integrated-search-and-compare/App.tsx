@@ -587,79 +587,63 @@ function StudyGuide({
                   <p>{section.text}</p>
                 </section>
               ))}
-              <div className="fiction-notice">
+              <div className="fictional-note">
                 <strong>Study note</strong>
-                <p>{studyContent.notice}</p>
+                <span>{studyContent.notice}</span>
               </div>
             </>
           ) : (
             <>
-              <div className="task-progress">
-                <div>
-                  <span>
-                    Task {state.activeTask + 1} of {studyContent.tasks.length}
-                  </span>
-                  <span>{done} finished</span>
-                </div>
-                <div className="progress-track">
-                  <span style={{ width: `${(done / studyContent.tasks.length) * 100}%` }} />
-                </div>
+              <div className="progress-row">
+                <span>
+                  Task {state.activeTask + 1} of {studyContent.tasks.length}
+                </span>
+                <strong>
+                  {done}/{studyContent.tasks.length} complete
+                </strong>
               </div>
-              <div className="task-card">
-                <div className="task-state">
-                  {state.tasks[state.activeTask] === "complete"
-                    ? "Completed"
-                    : state.tasks[state.activeTask] === "unable"
-                      ? "Unable to finish"
-                      : "Current task"}
-                </div>
+              <div className="progress-track">
+                <span style={{ width: `${(done / studyContent.tasks.length) * 100}%` }} />
+              </div>
+              <article className="task-card">
+                <span className="task-number">TASK {state.activeTask + 1}</span>
                 <h2>{task.title}</h2>
                 <p>{task.description}</p>
-                <div className="task-actions">
-                  <button
-                    className="guide-primary"
-                    onClick={() =>
-                      setState((s) => ({
-                        ...s,
-                        tasks: s.tasks.map((v, i) => (i === s.activeTask ? "complete" : v)),
-                      }))
-                    }
-                  >
-                    <Icon name="check" size={16} /> Mark complete
-                  </button>
-                  <button
-                    className="text-button"
-                    onClick={() =>
-                      setState((s) => ({
-                        ...s,
-                        tasks: s.tasks.map((v, i) => (i === s.activeTask ? "unable" : v)),
-                      }))
-                    }
-                  >
-                    Unable to finish
-                  </button>
-                </div>
-              </div>
+                <p className="self-report">Completion is self-reported.</p>
+                <button
+                  className="primary wide"
+                  disabled={state.tasks[state.activeTask] === "complete"}
+                  onClick={() =>
+                    setState((s) => ({
+                      ...s,
+                      tasks: s.tasks.map((v, i) => (i === s.activeTask ? "complete" : v)),
+                    }))
+                  }
+                >
+                  {state.tasks[state.activeTask] === "complete" ? "Completed" : "Mark complete"}
+                </button>
+                <button
+                  className="secondary wide"
+                  onClick={() =>
+                    setState((s) => ({
+                      ...s,
+                      tasks: s.tasks.map((v, i) => (i === s.activeTask ? "unable" : v)),
+                    }))
+                  }
+                >
+                  Unable to finish
+                </button>
+              </article>
               <div className="task-nav">
                 <button
+                  className="secondary"
                   disabled={state.activeTask === 0}
                   onClick={() => setState((s) => ({ ...s, activeTask: s.activeTask - 1 }))}
                 >
                   Previous
                 </button>
-                <div>
-                  {studyContent.tasks.map((_, i) => (
-                    <button
-                      aria-label={`Open task ${i + 1}`}
-                      key={i}
-                      className={i === state.activeTask ? "active" : ""}
-                      onClick={() => setState((s) => ({ ...s, activeTask: i }))}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
                 <button
+                  className="secondary"
                   disabled={state.activeTask === studyContent.tasks.length - 1}
                   onClick={() => setState((s) => ({ ...s, activeTask: s.activeTask + 1 }))}
                 >

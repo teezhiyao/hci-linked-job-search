@@ -1,0 +1,256 @@
+/* Shared study navigation. Keep this aligned across every design alternative. */
+.study-guide {
+  position: relative;
+  z-index: 40;
+  flex: 0 0 auto;
+  height: 100vh;
+  background: #fbfbfc;
+  border-right: 1px solid #cfd3d7;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  color: #191919;
+}
+
+.study-guide .guide-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #fbfbfc;
+}
+
+.study-guide .guide-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 22px 12px;
+}
+
+.study-guide .prototype-pill {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #53606d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.study-guide .guide-top .text-button,
+.study-guide .guide-top .text-btn {
+  min-height: auto;
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: #0a66c2;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.study-guide .guide-inner > h1 {
+  max-width: none;
+  margin: 0;
+  padding: 4px 22px 18px;
+  color: #191919;
+  font-family: inherit;
+  font-size: 22px;
+  line-height: 1.22;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+}
+
+.study-guide .guide-tabs {
+  display: flex;
+  grid-template-columns: none;
+  gap: 20px;
+  margin: 0;
+  padding: 0 22px;
+  border-bottom: 1px solid #dedede;
+}
+
+.study-guide .guide-tabs button {
+  min-height: auto;
+  padding: 10px 1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: #666;
+  font-size: 13px;
+  font-weight: 650;
+  text-transform: capitalize;
+}
+
+.study-guide .guide-tabs button[aria-selected="true"] {
+  color: #111;
+  border-color: #0a66c2;
+}
+
+.study-guide .guide-tabs span {
+  margin-left: 3px;
+  padding: 2px 5px;
+  border-radius: 8px;
+  background: #e6e9e6;
+  font-size: 10px;
+}
+
+.study-guide .guide-content {
+  flex: 1;
+  padding: 22px;
+  overflow-y: auto;
+}
+
+.study-guide .guide-section {
+  margin-bottom: 26px;
+}
+
+.study-guide .guide-section h2 {
+  margin: 0 0 7px;
+  color: #191919;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.study-guide .guide-section p {
+  margin: 0;
+  color: #5b626a;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.study-guide .fictional-note {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border-left: 3px solid #0a66c2;
+  background: #eef5fb;
+  color: #46525e;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.study-guide .progress-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: #66717c;
+  font-size: 11px;
+}
+
+.study-guide .progress-track {
+  height: 4px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #dfe3e7;
+}
+
+.study-guide .progress-track span {
+  display: block;
+  height: 100%;
+  background: #0a66c2;
+  transition: width 0.2s;
+}
+
+.study-guide .task-card {
+  padding: 18px;
+  border: 1px solid #d9dce0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.study-guide .task-number {
+  color: #0a66c2;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.study-guide .task-card h2 {
+  margin: 8px 0;
+  color: #191919;
+  font-family: inherit;
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.study-guide .task-card p {
+  margin: 0;
+  color: #555e67;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.study-guide .task-card .self-report {
+  margin: 18px 0 10px;
+  color: #777;
+  font-size: 11px;
+}
+
+.study-guide .primary,
+.study-guide .secondary {
+  min-height: 36px;
+  padding: 7px 16px;
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 670;
+}
+
+.study-guide .primary {
+  border: 1px solid #0a66c2;
+  background: #0a66c2;
+  color: #fff;
+}
+
+.study-guide .secondary {
+  border: 1px solid #0a66c2;
+  background: #fff;
+  color: #0a66c2;
+}
+
+.study-guide .task-card .wide {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.study-guide .task-nav,
+.study-guide .task-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.study-guide .guide-footer {
+  padding: 14px 22px 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.study-guide .reset-button {
+  width: 100%;
+  min-height: auto;
+  padding: 10px;
+  border: 1px solid #d4b8b8;
+  border-radius: 6px;
+  background: #fff;
+  color: #5d2020;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.study-guide .resize-handle {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+}
+
+.study-guide .resize-handle:hover,
+.study-guide .resize-handle:active {
+  background: rgba(10, 102, 194, 0.2);
+}
