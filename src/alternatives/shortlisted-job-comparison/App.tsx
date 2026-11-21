@@ -280,14 +280,17 @@ const initialRequirements: Requirements = {
 
 const initialState: AppState = {
   view: "compare",
-  shortlist: ["J01", "J02", "J04", "J05", "J06", "J10", "J11", "J12", "J13", "J14", "J15"],
+  shortlist: ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08", "J09", "J10", "J11", "J12", "J13", "J14", "J15"],
   decisions: {
     J01: "Considering",
     J02: "Considering",
+    J03: "Considering",
     J04: "Considering",
     J05: "Considering",
     J06: "Considering",
+    J07: "Considering",
     J08: "Applied",
+    J09: "Considering",
     J10: "Considering",
     J11: "Considering",
     J12: "Considering",
@@ -328,7 +331,7 @@ const columnMeta: Record<string, { label: string; desired?: (r: Requirements) =>
   decision: { label: "Your decision" },
 };
 
-const STORAGE_KEY = `shortlisted-job-comparison-v4-${DOMAIN}`;
+const STORAGE_KEY = `shortlisted-job-comparison-v5-${DOMAIN}`;
 const fmtDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-GB", {
     day: "numeric",

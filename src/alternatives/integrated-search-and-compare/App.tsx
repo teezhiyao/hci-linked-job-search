@@ -4,7 +4,7 @@ import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../.
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
 const DOMAIN = getStudyDomain();
-const STORAGE_KEY = `integrated-search-compare-v4-${DOMAIN}`;
+const STORAGE_KEY = `integrated-search-compare-v5-${DOMAIN}`;
 
 export const studyContent = {
   label: "Interactive prototype",

@@ -226,7 +226,7 @@ const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
 
 const jobs = DOMAIN === "support" ? supportJobs : softwareJobs;
 
-const initialShortlist = ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J09", "J10", "J11", "J12", "J13", "J14", "J15"];
+const initialShortlist = ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08", "J09", "J10", "J11", "J12", "J13", "J14", "J15"];
 const initialState: AppState = {
   shortlist: initialShortlist,
   statuses: Object.fromEntries(initialShortlist.map((id) => [id, "pending"])) as Record<
@@ -341,7 +341,7 @@ function monogram(company: string) {
 
 function loadState(): AppState {
   try {
-    const raw = localStorage.getItem(`shortlist-prototype-v4-${DOMAIN}`);
+    const raw = localStorage.getItem(`shortlist-prototype-v5-${DOMAIN}`);
     return raw ? { ...initialState, ...JSON.parse(raw) } : initialState;
   } catch {
     return initialState;
@@ -373,7 +373,7 @@ export default function App() {
   const dragStart = useRef<{ x: number; width: number } | null>(null);
 
   useEffect(() => {
-    localStorage.setItem(`shortlist-prototype-v4-${DOMAIN}`, JSON.stringify(state));
+    localStorage.setItem(`shortlist-prototype-v5-${DOMAIN}`, JSON.stringify(state));
   }, [state]);
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -530,7 +530,7 @@ export default function App() {
     setApplyId(null);
     setExpanded({});
     setShowReset(false);
-    localStorage.removeItem(`shortlist-prototype-v4-${DOMAIN}`);
+    localStorage.removeItem(`shortlist-prototype-v5-${DOMAIN}`);
   }
   function reopenHistory(entry: HistoryEntry) {
     setPair(entry.jobIds);

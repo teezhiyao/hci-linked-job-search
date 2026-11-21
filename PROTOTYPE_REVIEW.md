@@ -88,7 +88,7 @@ Before launching the study, test every group sequence in a clean browser session
 
 ## Ranked task and evaluation plan
 
-All prototypes use the same 15-job pool and the same decision rule: required criteria take priority, followed by the preferred experience range. The intended top three are:
+All prototypes begin with the same 15-job evaluation pool and use the same decision rule: required criteria take priority, followed by the preferred experience range. Existing history such as Viewed, Saved, or Applied remains visible but does not remove a listing from the pool. The intended top three are:
 
 1. **J11, Riverbank Technology:** meets every required criterion and the preferred experience range.
 2. **J06, Meridian Systems:** meets every required criterion, but its 2--4 year range only partially meets the preference for no more than three years.
