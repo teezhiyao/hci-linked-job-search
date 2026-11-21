@@ -51,9 +51,6 @@ type AppState = {
   notes: Record<string, string>;
   requirements: Requirements;
   columnOrder: string[];
-  taskIndex: number;
-  completedTasks: number[];
-  studyTab: "overview" | "tasks";
 };
 
 const studyContent = {
@@ -63,27 +60,17 @@ const studyContent = {
   overview: {
     scenarioTitle: "Scenario",
     scenario:
-      "You already shortlisted six software-development roles in Singapore. Compare them against your priorities: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; no more than three years of required experience; and recent hiring evidence.",
+      "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
     goalTitle: "Goal",
-    goal: "Use the comparison table to reduce the six-job shortlist to one or two roles worth considering.",
+    goal: "Use the comparison table to leave only the job that meets every required criterion under consideration.",
   },
-  mainTask:
-    "Use the comparison table to reduce the six-job shortlist to one or two roles worth considering.",
+  submission:
+    "When you finish, record the job left under consideration and your answers in PeerSurvey. This prototype does not collect your response.",
   tasks: [
     {
-      title: "Set comparison criteria",
+      title: "Compare and select one job",
       description:
-        "Review the requirements used in the comparison and adjust them if they do not represent the priorities in the scenario.",
-    },
-    {
-      title: "Compare all shortlisted jobs",
-      description:
-        "Identify the strongest candidates and the important trade-offs among them. Inspect supporting evidence where you need more confidence.",
-    },
-    {
-      title: "Record final states",
-      description:
-        "Leave one or two roles as considering and mark the remaining roles as passed. Record a reason when it helps preserve why you made the decision.",
+        "Compare the shortlisted jobs. Leave the only job that meets every required criterion as Considering and mark the others as Passed.",
     },
   ],
 };
@@ -255,9 +242,9 @@ const initialRequirements: Requirements = {
     values: ["Remote", "Hybrid"],
     maxOfficeDays: 2,
   },
-  experience: { enabled: true, importance: "Required", maximum: 3 },
+  experience: { enabled: true, importance: "Preferred", maximum: 3 },
   eligibility: { enabled: true, importance: "Required", value: "Singapore" },
-  hiring: { enabled: true, importance: "Preferred", freshness: 14 },
+  hiring: { enabled: true, importance: "Required", freshness: 14 },
 };
 
 const initialState: AppState = {
@@ -277,9 +264,6 @@ const initialState: AppState = {
   notes: {},
   requirements: initialRequirements,
   columnOrder: ["identity", "skills", "experience", "pay", "arrangement", "hiring", "decision"],
-  taskIndex: 0,
-  completedTasks: [],
-  studyTab: "overview",
 };
 
 const columnMeta: Record<string, { label: string; desired?: (r: Requirements) => string }> = {
@@ -308,7 +292,7 @@ const columnMeta: Record<string, { label: string; desired?: (r: Requirements) =>
   decision: { label: "Your decision" },
 };
 
-const STORAGE_KEY = "shortlisted-job-comparison-v1";
+const STORAGE_KEY = "shortlisted-job-comparison-v2";
 const fmtDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-GB", {
     day: "numeric",
@@ -514,8 +498,6 @@ function StatusBadge({ status }: { status: Assessment }) {
 }
 
 function StudyGuide({
-  state,
-  setState,
   width,
   setWidth,
   hidden,
@@ -523,8 +505,6 @@ function StudyGuide({
   mobile,
   onReset,
 }: {
-  state: AppState;
-  setState: React.Dispatch<React.SetStateAction<AppState>>;
   width: number;
   setWidth: (n: number) => void;
   hidden: boolean;
@@ -553,7 +533,6 @@ function StudyGuide({
         Show guide
       </button>
     );
-  const completed = state.completedTasks.length;
   return (
     <aside
       className={`study-guide ${mobile ? "guide-overlay" : ""}`}
@@ -568,99 +547,31 @@ function StudyGuide({
         </div>
         <h1>{studyContent.projectName}</h1>
         <StudyGroupNotice />
-        <div className="guide-tabs" role="tablist">
-          {(["overview", "tasks"] as const).map((tab) => (
-            <button
-              key={tab}
-              role="tab"
-              aria-selected={state.studyTab === tab}
-              onClick={() => setState((s) => ({ ...s, studyTab: tab }))}
-            >
-              {tab === "overview" ? "Overview" : "Tasks"}
-            </button>
-          ))}
+        <div className="guide-content">
+          <GuideSection
+            title={studyContent.overview.scenarioTitle}
+            text={studyContent.overview.scenario}
+          />
+          <GuideSection title={studyContent.overview.goalTitle} text={studyContent.overview.goal} />
+          <section className="guide-section combined-tasks">
+            <h2>Task</h2>
+            {studyContent.tasks.map((task, index) => (
+              <article className="task-card" key={task.title}>
+                <span className="task-number">STEP {index + 1}</span>
+                <h2>{task.title}</h2>
+                <p>{task.description}</p>
+              </article>
+            ))}
+          </section>
+          <div className="fictional-note peer-survey-note">
+            <strong>Submit in PeerSurvey</strong>
+            <span>{studyContent.submission}</span>
+          </div>
+          <div className="fictional-note">
+            <strong>Study note</strong>
+            <span>{studyContent.fictionalNotice}</span>
+          </div>
         </div>
-        {state.studyTab === "overview" ? (
-          <div className="guide-content">
-            <GuideSection
-              title={studyContent.overview.scenarioTitle}
-              text={studyContent.overview.scenario}
-            />
-            <GuideSection
-              title={studyContent.overview.goalTitle}
-              text={studyContent.overview.goal}
-            />
-            <div className="fictional-note">
-              <strong>Study note</strong>
-              <span>{studyContent.fictionalNotice}</span>
-            </div>
-          </div>
-        ) : (
-          <div className="guide-content">
-            <div className="main-task">
-              <span>Main task</span>
-              <p>{studyContent.mainTask}</p>
-            </div>
-            <div className="progress-row">
-              <span>
-                Subtask {state.taskIndex + 1} of {studyContent.tasks.length}
-              </span>
-              <strong>
-                {completed}/{studyContent.tasks.length} complete
-              </strong>
-            </div>
-            <div className="progress-track">
-              <span style={{ width: `${(completed / studyContent.tasks.length) * 100}%` }} />
-            </div>
-            <article className="task-card">
-              <span className="task-number">SUBTASK {state.taskIndex + 1}</span>
-              <h2>{studyContent.tasks[state.taskIndex].title}</h2>
-              <p>{studyContent.tasks[state.taskIndex].description}</p>
-              <p className="self-report">Completion is self-reported.</p>
-              <button
-                className="primary wide"
-                disabled={state.completedTasks.includes(state.taskIndex)}
-                onClick={() =>
-                  setState((s) => ({
-                    ...s,
-                    completedTasks: [...s.completedTasks, s.taskIndex].filter(
-                      (x, i, a) => a.indexOf(x) === i,
-                    ),
-                  }))
-                }
-              >
-                {state.completedTasks.includes(state.taskIndex) ? "Completed" : "Mark complete"}
-              </button>
-              <button
-                className="secondary wide"
-                onClick={() =>
-                  setState((s) => ({
-                    ...s,
-                    taskIndex: Math.min(studyContent.tasks.length - 1, s.taskIndex + 1),
-                  }))
-                }
-              >
-                Unable to finish
-              </button>
-            </article>
-            <div className="task-nav">
-              <button
-                className="secondary"
-                disabled={state.taskIndex === 0}
-                onClick={() => setState((s) => ({ ...s, taskIndex: s.taskIndex - 1 }))}
-              >
-                Previous
-              </button>
-              <button
-                className="secondary"
-                disabled={state.taskIndex === studyContent.tasks.length - 1}
-                onClick={() => setState((s) => ({ ...s, taskIndex: s.taskIndex + 1 }))}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        )}
         <div className="guide-footer">
           <button className="reset-button" onClick={onReset}>
             Reset prototype
@@ -1770,8 +1681,6 @@ function App() {
   return (
     <div className="prototype-shell">
       <StudyGuide
-        state={state}
-        setState={setState}
         width={guideWidth}
         setWidth={setGuideWidth}
         hidden={guideHidden}
@@ -1791,8 +1700,8 @@ function App() {
       {resetOpen && (
         <Modal title="Reset this prototype?" onClose={() => setResetOpen(false)}>
           <p>
-            This will restore the original shortlist, requirements, notes, decisions, task progress,
-            and guide state. This action cannot be undone.
+            This will restore the original shortlist, requirements, notes, and decisions. This action
+            cannot be undone.
           </p>
           <div className="modal-actions">
             <button className="secondary" onClick={() => setResetOpen(false)}>

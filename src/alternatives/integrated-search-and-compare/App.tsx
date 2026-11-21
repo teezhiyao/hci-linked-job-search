@@ -14,23 +14,15 @@ export const studyContent = {
     },
     {
       title: "Goal",
-      text: "Compare three plausible jobs, then find and save the only one that meets every required criterion. Use experience as a secondary preference.",
+      text: "Find and save the only job that meets every required criterion. Use experience as a secondary preference.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
   submission: "When you finish, record your selected job and answers in PeerSurvey. This prototype does not collect your response.",
   tasks: [
     {
-      title: "Identify three candidates",
-      description: "Review the results and identify the three jobs that come closest to satisfying the required criteria.",
-    },
-    {
-      title: "Find the complete match",
-      description: "Compare the three candidates and determine which single job satisfies every required criterion. Treat the experience range as preferred rather than required.",
-    },
-    {
-      title: "Save your answer",
-      description: "Save that job as your final answer. The task is complete when your selected listing shows the Saved state.",
+      title: "Find and save the matching job",
+      description: "Review the results and save the only job that meets every required criterion. Record the saved job in PeerSurvey.",
     },
   ],
 };
@@ -278,13 +270,11 @@ type Assessment = {
 type AppState = {
   history: Record<string, History>;
   selectedId: string;
-  compared: string[];
   requirements: Requirements;
 };
 const initialState: AppState = {
   history: Object.fromEntries(JOBS.map((j) => [j.id, j.history])),
   selectedId: "J01",
-  compared: [],
   requirements: INITIAL_REQUIREMENTS,
 };
 
@@ -597,7 +587,7 @@ function StudyGuide({
               onClick={() => {
                 if (
                   confirm(
-                    "Reset the entire prototype? Your search, requirements, history, and comparison will be restored to their initial state.",
+                    "Reset the entire prototype? Your search, requirements, and history will be restored to their initial state.",
                   )
                 ) {
                   localStorage.removeItem(STORAGE_KEY);
@@ -956,16 +946,12 @@ function JobCard({
   job,
   history,
   selected,
-  compared,
   onSelect,
-  onCompare,
 }: {
   job: Job;
   history: History;
   selected: boolean;
-  compared: boolean;
   onSelect: () => void;
-  onCompare: () => void;
 }) {
   const state = history.applied
     ? "Applied"
@@ -1002,9 +988,6 @@ function JobCard({
           )}
         </div>
       </button>
-      <label className="compare-check">
-        <input type="checkbox" checked={compared} onChange={onCompare} /> Compare
-      </label>
     </article>
   );
 }
@@ -1157,107 +1140,6 @@ function JobDetails({
   );
 }
 
-function ComparisonDrawer({
-  ids,
-  requirements,
-  history,
-  leftOffset,
-  onClose,
-  onRemove,
-  onSave,
-  onEdit,
-}: {
-  ids: string[];
-  requirements: Requirements;
-  history: Record<string, History>;
-  leftOffset: number;
-  onClose: () => void;
-  onRemove: (id: string) => void;
-  onSave: (id: string) => void;
-  onEdit: () => void;
-}) {
-  const jobs = ids.map((id) => JOBS.find((j) => j.id === id)!);
-  const values: Record<ReqKey, (j: Job) => string> = {
-    keywords: (j) => j.technologies.join(", "),
-    salary: formatSalary,
-    arrangement: formatArrangement,
-    experience: (j) => `${j.experience[0]}–${j.experience[1]} years`,
-    eligibility: (j) => j.eligibility,
-    hiring: (j) => (j.hiringDate ? `Confirmed ${friendlyDate(j.hiringDate)}` : "Not provided"),
-  };
-  return (
-    <section className="comparison-drawer" aria-label="Job comparison" style={{ left: leftOffset }}>
-      <div className="comparison-head">
-        <div>
-          <span className="eyebrow">SIDE-BY-SIDE</span>
-          <h2>
-            Compare jobs <span>{jobs.length} selected</span>
-          </h2>
-        </div>
-        <button className="icon-button" aria-label="Close comparison" onClick={onClose}>
-          <Icon name="close" />
-        </button>
-      </div>
-      <div className="comparison-scroll">
-        <div
-          className="comparison-grid"
-          style={{ gridTemplateColumns: `240px repeat(${jobs.length}, minmax(250px, 1fr))` }}
-        >
-          <div className="compare-requirements pinned">
-            <strong>Your requirements</strong>
-            <button onClick={onEdit}>Edit requirements</button>
-          </div>
-          {jobs.map((j) => (
-            <div className="compare-job-head" key={j.id}>
-              <div className="company-logo">
-                {j.company
-                  .split(" ")
-                  .map((w) => w[0])
-                  .slice(0, 2)
-                  .join("")}
-              </div>
-              <div>
-                <strong>{j.title}</strong>
-                <span>{j.company}</span>
-              </div>
-              <div className="compare-head-actions">
-                <button onClick={() => onSave(j.id)}>
-                  {history[j.id].saved ? "Saved" : "Save job"}
-                </button>
-                <button onClick={() => onRemove(j.id)}>Remove</button>
-              </div>
-            </div>
-          ))}
-          {reqKeys
-            .filter((k) => requirements.enabled[k])
-            .map((key) => (
-              <div
-                className="comparison-row"
-                key={key}
-                style={{ gridColumn: `1 / span ${jobs.length + 1}` }}
-              >
-                <div className="compare-req-cell pinned">
-                  <strong>{reqNames[key]}</strong>
-                  <span>{requirements.importance[key]}</span>
-                </div>
-                {jobs.map((j) => {
-                  const a = assess(j, requirements, key);
-                  return (
-                    <div className="compare-value" key={j.id}>
-                      <Badge status={a.status} />
-                      <strong>{values[key](j)}</strong>
-                      <p>{a.explanation}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function App() {
   const [state, setState] = useState<AppState>(loadState);
   const [guideVisible, setGuideVisible] = useState(true);
@@ -1273,8 +1155,6 @@ export default function App() {
     history: "",
   });
   const [requirementsOpen, setRequirementsOpen] = useState(false);
-  const [comparisonOpen, setComparisonOpen] = useState(false);
-  const [compareNotice, setCompareNotice] = useState(false);
   const [applyJob, setApplyJob] = useState<Job | null>(null);
   const [filterOpen, setFilterOpen] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -1332,20 +1212,6 @@ export default function App() {
         [job.id]: { ...s.history[job.id], viewed: s.history[job.id]?.viewed || "19 Nov 2026" },
       },
     }));
-  const toggleCompare = (id: string) => {
-    if (!state.compared.includes(id) && state.compared.length >= 3) {
-      setCompareNotice(true);
-      window.setTimeout(() => setCompareNotice(false), 2600);
-      return;
-    }
-    setState((s) => {
-      const included = s.compared.includes(id);
-      return {
-        ...s,
-        compared: included ? s.compared.filter((x) => x !== id) : [...s.compared, id],
-      };
-    });
-  };
   const toggleSave = (id: string) =>
     setState((s) => ({
       ...s,
@@ -1480,16 +1346,6 @@ export default function App() {
                 {query.keyword || "All jobs"} in {query.location || "all locations"}
               </p>
             </div>
-            {state.compared.length > 0 && (
-              <button
-                className="compare-action"
-                disabled={state.compared.length < 2}
-                onClick={() => setComparisonOpen(true)}
-              >
-                <Icon name="compare" size={17} />
-                Compare selected ({state.compared.length})
-              </button>
-            )}
           </div>
           {jobs.length ? (
             <div className="search-layout">
@@ -1500,9 +1356,7 @@ export default function App() {
                     job={job}
                     history={state.history[job.id]}
                     selected={selected.id === job.id}
-                    compared={state.compared.includes(job.id)}
                     onSelect={() => selectJob(job)}
-                    onCompare={() => toggleCompare(job.id)}
                   />
                 ))}
               </section>
@@ -1527,20 +1381,6 @@ export default function App() {
             </div>
           )}
         </div>
-        {comparisonOpen && (
-          <ComparisonDrawer
-            ids={state.compared}
-            requirements={state.requirements}
-            history={state.history}
-            leftOffset={guideVisible && !overlay ? guideWidth : 0}
-            onClose={() => setComparisonOpen(false)}
-            onRemove={(id) =>
-              setState((s) => ({ ...s, compared: s.compared.filter((x) => x !== id) }))
-            }
-            onSave={toggleSave}
-            onEdit={() => setRequirementsOpen(true)}
-          />
-        )}
       </main>
       {requirementsOpen && (
         <RequirementsEditor
@@ -1584,11 +1424,6 @@ export default function App() {
               </button>
             </div>
           </div>
-        </div>
-      )}
-      {compareNotice && (
-        <div className="toast" role="status">
-          You can compare up to 3 jobs.
         </div>
       )}
     </div>

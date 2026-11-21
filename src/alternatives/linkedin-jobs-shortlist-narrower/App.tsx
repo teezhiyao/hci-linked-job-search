@@ -37,28 +37,18 @@ const studyContent = {
   projectName: "Pairwise shortlist narrowing",
   overview: {
     scenario:
-      "You casually saved nine software-development roles and now need a manageable shortlist. Prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; no more than three years of required experience; and recent hiring evidence.",
+      "You are seeking a Singapore software-development role. Required: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; Singapore eligibility; and hiring confirmed within 14 days. Preferred: no more than three years of experience.",
     goal:
-      "Use two-job decisions to narrow the nine saved jobs to the two opportunities you would investigate further.",
+      "Use two-job decisions to leave only the job that meets every required criterion as Kept.",
   },
   disclaimer: "All job information in this prototype is fictional.",
-  mainTask:
-    "Use two-job decisions to narrow the nine saved jobs to the two opportunities you would investigate further.",
+  submission:
+    "When you finish, record the job left as Kept and your answers in PeerSurvey. This prototype does not collect your response.",
   tasks: [
     {
-      title: "Start a narrowing round",
+      title: "Narrow to one job",
       description:
-        "Familiarize yourself with the saved roles and begin the narrowing process when you are ready.",
-    },
-    {
-      title: "Decide between pairs",
-      description:
-        "Work through the comparisons until two roles remain strongest. Keep both or defer a decision when the available information does not support a confident choice.",
-    },
-    {
-      title: "Reconsider one decision",
-      description:
-        "Open the review history, revisit at least one comparison, and change or confirm the decision before finalizing your two preferred roles.",
+        "Review the jobs in pairs and continue narrowing until only the job that meets every required criterion remains Kept.",
     },
   ],
 };
@@ -311,33 +301,18 @@ function monogram(company: string) {
 
 function loadState(): AppState {
   try {
-    const raw = localStorage.getItem("shortlist-prototype-v1");
+    const raw = localStorage.getItem("shortlist-prototype-v2");
     return raw ? { ...initialState, ...JSON.parse(raw) } : initialState;
   } catch {
     return initialState;
   }
 }
 
-function loadStudyState() {
-  try {
-    const raw = localStorage.getItem("shortlist-study-v1");
-    return raw
-      ? (JSON.parse(raw) as { taskIndex: number; completedTasks: number[] })
-      : { taskIndex: 0, completedTasks: [] };
-  } catch {
-    return { taskIndex: 0, completedTasks: [] };
-  }
-}
-
 export default function App() {
-  const initialStudy = useMemo(loadStudyState, []);
   const [state, setState] = useState<AppState>(loadState);
   const [view, setView] = useState<View>("shortlist");
   const [guideOpen, setGuideOpen] = useState(true);
   const [guideWidth, setGuideWidth] = useState(300);
-  const [guideTab, setGuideTab] = useState<"overview" | "tasks">("overview");
-  const [taskIndex, setTaskIndex] = useState(initialStudy.taskIndex);
-  const [completedTasks, setCompletedTasks] = useState<number[]>(initialStudy.completedTasks);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [applyId, setApplyId] = useState<string | null>(null);
   const [statusTab, setStatusTab] = useState<Status>("pending");
@@ -358,11 +333,8 @@ export default function App() {
   const dragStart = useRef<{ x: number; width: number } | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("shortlist-prototype-v1", JSON.stringify(state));
+    localStorage.setItem("shortlist-prototype-v2", JSON.stringify(state));
   }, [state]);
-  useEffect(() => {
-    localStorage.setItem("shortlist-study-v1", JSON.stringify({ taskIndex, completedTasks }));
-  }, [taskIndex, completedTasks]);
   useEffect(() => {
     const move = (e: MouseEvent) => {
       if (dragStart.current)
@@ -517,12 +489,8 @@ export default function App() {
     setDetailId(null);
     setApplyId(null);
     setExpanded({});
-    setCompletedTasks([]);
-    setTaskIndex(0);
-    setGuideTab("overview");
     setShowReset(false);
-    localStorage.removeItem("shortlist-prototype-v1");
-    localStorage.removeItem("shortlist-study-v1");
+    localStorage.removeItem("shortlist-prototype-v2");
   }
   function reopenHistory(entry: HistoryEntry) {
     setPair(entry.jobIds);
@@ -550,98 +518,33 @@ export default function App() {
           </div>
           <h1>{studyContent.projectName}</h1>
           <StudyGroupNotice />
-          <div className="guide-tabs" role="tablist" aria-label="Study guide sections">
-            <button
-              role="tab"
-              aria-selected={guideTab === "overview"}
-              className={guideTab === "overview" ? "active" : ""}
-              onClick={() => setGuideTab("overview")}
-            >
-              Overview
-            </button>
-            <button
-              role="tab"
-              aria-selected={guideTab === "tasks"}
-              className={guideTab === "tasks" ? "active" : ""}
-              onClick={() => setGuideTab("tasks")}
-            >
-              Tasks{" "}
-              <span>
-                {completedTasks.length}/{studyContent.tasks.length}
-              </span>
-            </button>
-          </div>
           <div className="guide-content">
-            {guideTab === "overview" ? (
-              <div>
-                <section className="guide-section">
-                  <h2>Scenario</h2>
-                  <p>{studyContent.overview.scenario}</p>
-                </section>
-                <section className="guide-section">
-                  <h2>Goal</h2>
-                  <p>{studyContent.overview.goal}</p>
-                </section>
-                <div className="fictional-note">
-                  <strong>Study note</strong>
-                  <span>{studyContent.disclaimer}</span>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div className="main-task">
-                  <span>Main task</span>
-                  <p>{studyContent.mainTask}</p>
-                </div>
-                <div className="progress-row">
-                  <span>
-                    Subtask {taskIndex + 1} of {studyContent.tasks.length}
-                  </span>
-                  <strong>
-                    {completedTasks.length}/{studyContent.tasks.length} complete
-                  </strong>
-                </div>
-                <div className="progress-track">
-                  <span
-                    style={{
-                      width: `${(completedTasks.length / studyContent.tasks.length) * 100}%`,
-                    }}
-                  />
-                </div>
-                <article className="task-card">
-                  <span className="task-number">SUBTASK {taskIndex + 1}</span>
-                  <h2>{studyContent.tasks[taskIndex].title}</h2>
-                  <p>{studyContent.tasks[taskIndex].description}</p>
-                  <p className="self-report">Completion is self-reported.</p>
-                  <button
-                    className="primary wide"
-                    disabled={completedTasks.includes(taskIndex)}
-                    onClick={() =>
-                      setCompletedTasks((c) => (c.includes(taskIndex) ? c : [...c, taskIndex]))
-                    }
-                  >
-                    {completedTasks.includes(taskIndex) ? "Completed" : "Mark complete"}
-                  </button>
-                  <button className="secondary wide">Unable to finish</button>
+            <section className="guide-section">
+              <h2>Scenario</h2>
+              <p>{studyContent.overview.scenario}</p>
+            </section>
+            <section className="guide-section">
+              <h2>Goal</h2>
+              <p>{studyContent.overview.goal}</p>
+            </section>
+            <section className="guide-section combined-tasks">
+              <h2>Task</h2>
+              {studyContent.tasks.map((task, index) => (
+                <article className="task-card" key={task.title}>
+                  <span className="task-number">STEP {index + 1}</span>
+                  <h2>{task.title}</h2>
+                  <p>{task.description}</p>
                 </article>
-                <div className="task-actions">
-                  <button
-                    className="secondary"
-                    disabled={taskIndex === 0}
-                    onClick={() => setTaskIndex((i) => i - 1)}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className="secondary"
-                    disabled={taskIndex === studyContent.tasks.length - 1}
-                    onClick={() => setTaskIndex((i) => i + 1)}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
+              ))}
+            </section>
+            <div className="fictional-note peer-survey-note">
+              <strong>Submit in PeerSurvey</strong>
+              <span>{studyContent.submission}</span>
+            </div>
+            <div className="fictional-note">
+              <strong>Study note</strong>
+              <span>{studyContent.disclaimer}</span>
+            </div>
           </div>
           <div className="guide-footer">
             <button className="reset-button" onClick={() => setShowReset(true)}>
@@ -853,8 +756,7 @@ export default function App() {
       {showReset && (
         <Dialog title="Reset prototype?" close={() => setShowReset(false)}>
           <p>
-            This will restore all jobs, decisions, task progress, filters, and history to the
-            initial state.
+            This will restore all jobs, decisions, filters, and history to the initial state.
           </p>
           <div className="dialog-actions">
             <button className="secondary-btn" onClick={() => setShowReset(false)}>
