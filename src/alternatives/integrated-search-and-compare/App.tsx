@@ -17,7 +17,7 @@ export const studyContent = {
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
-  mainTask: "Find and save the only job that satisfies every required criterion after comparing three plausible candidates.",
+  submission: "When you finish, record your selected job and answers in PeerSurvey. This prototype does not collect your response.",
   tasks: [
     {
       title: "Identify three candidates",
@@ -279,16 +279,12 @@ type AppState = {
   selectedId: string;
   compared: string[];
   requirements: Requirements;
-  tasks: ("open" | "complete" | "unable")[];
-  activeTask: number;
 };
 const initialState: AppState = {
   history: Object.fromEntries(JOBS.map((j) => [j.id, j.history])),
   selectedId: "J01",
   compared: [],
   requirements: INITIAL_REQUIREMENTS,
-  tasks: studyContent.tasks.map(() => "open"),
-  activeTask: 0,
 };
 
 function loadState(): AppState {
@@ -517,23 +513,18 @@ function Badge({ status }: { status: Assessment["status"] }) {
 }
 
 function StudyGuide({
-  state,
-  setState,
   visible,
   setVisible,
   width,
   setWidth,
   overlay,
 }: {
-  state: AppState;
-  setState: React.Dispatch<React.SetStateAction<AppState>>;
   visible: boolean;
   setVisible: (v: boolean) => void;
   width: number;
   setWidth: (n: number) => void;
   overlay: boolean;
 }) {
-  const [tab, setTab] = useState<"overview" | "tasks">("overview");
   const drag = useRef(false);
   useEffect(() => {
     const move = (e: PointerEvent) => {
@@ -551,8 +542,6 @@ function StudyGuide({
     };
   }, [overlay, setWidth]);
   if (!visible) return null;
-  const done = state.tasks.filter((t) => t !== "open").length;
-  const task = studyContent.tasks[state.activeTask];
   return (
     <>
       {overlay && (
@@ -574,103 +563,31 @@ function StudyGuide({
             </button>
           </div>
           <h1>{studyContent.projectName}</h1>
-          <div className="guide-tabs" role="tablist" aria-label="Study guide sections">
-            <button
-              role="tab"
-              aria-selected={tab === "overview"}
-              onClick={() => setTab("overview")}
-            >
-              Overview
-            </button>
-            <button
-              role="tab"
-              aria-selected={tab === "tasks"}
-              onClick={() => setTab("tasks")}
-            >
-              Tasks{" "}
-              <span>
-                {done}/{studyContent.tasks.length}
-              </span>
-            </button>
-          </div>
           <div className="guide-content">
-          {tab === "overview" ? (
-            <>
-              {studyContent.overview.map((section) => (
-                <section className="guide-section" key={section.title}>
-                  <h2>{section.title}</h2>
-                  <p>{section.text}</p>
-                </section>
+            {studyContent.overview.map((section) => (
+              <section className="guide-section" key={section.title}>
+                <h2>{section.title}</h2>
+                <p>{section.text}</p>
+              </section>
+            ))}
+            <section className="guide-section combined-tasks">
+              <h2>Task steps</h2>
+              {studyContent.tasks.map((task, index) => (
+                <article className="task-card" key={task.title}>
+                  <span className="task-number">STEP {index + 1}</span>
+                  <h2>{task.title}</h2>
+                  <p>{task.description}</p>
+                </article>
               ))}
-              <div className="fictional-note">
-                <strong>Study note</strong>
-                <span>{studyContent.notice}</span>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="main-task">
-                <span>Main task</span>
-                <p>{studyContent.mainTask}</p>
-              </div>
-              <div className="progress-row">
-                <span>
-                  Subtask {state.activeTask + 1} of {studyContent.tasks.length}
-                </span>
-                <strong>
-                  {done}/{studyContent.tasks.length} complete
-                </strong>
-              </div>
-              <div className="progress-track">
-                <span style={{ width: `${(done / studyContent.tasks.length) * 100}%` }} />
-              </div>
-              <article className="task-card">
-                <span className="task-number">SUBTASK {state.activeTask + 1}</span>
-                <h2>{task.title}</h2>
-                <p>{task.description}</p>
-                <p className="self-report">Completion is self-reported.</p>
-                <button
-                  className="primary wide"
-                  disabled={state.tasks[state.activeTask] === "complete"}
-                  onClick={() =>
-                    setState((s) => ({
-                      ...s,
-                      tasks: s.tasks.map((v, i) => (i === s.activeTask ? "complete" : v)),
-                    }))
-                  }
-                >
-                  {state.tasks[state.activeTask] === "complete" ? "Completed" : "Mark complete"}
-                </button>
-                <button
-                  className="secondary wide"
-                  onClick={() =>
-                    setState((s) => ({
-                      ...s,
-                      tasks: s.tasks.map((v, i) => (i === s.activeTask ? "unable" : v)),
-                    }))
-                  }
-                >
-                  Unable to finish
-                </button>
-              </article>
-              <div className="task-nav">
-                <button
-                  className="secondary"
-                  disabled={state.activeTask === 0}
-                  onClick={() => setState((s) => ({ ...s, activeTask: s.activeTask - 1 }))}
-                >
-                  Previous
-                </button>
-                <button
-                  className="secondary"
-                  disabled={state.activeTask === studyContent.tasks.length - 1}
-                  onClick={() => setState((s) => ({ ...s, activeTask: s.activeTask + 1 }))}
-                >
-                  Next
-                </button>
-              </div>
-            </>
-          )}
+            </section>
+            <div className="fictional-note peer-survey-note">
+              <strong>Submit in PeerSurvey</strong>
+              <span>{studyContent.submission}</span>
+            </div>
+            <div className="fictional-note">
+              <strong>Study note</strong>
+              <span>{studyContent.notice}</span>
+            </div>
           </div>
           <div className="guide-footer">
             <button
@@ -678,7 +595,7 @@ function StudyGuide({
               onClick={() => {
                 if (
                   confirm(
-                    "Reset the entire prototype? Your search, requirements, history, comparison, and task progress will be restored to their initial state.",
+                    "Reset the entire prototype? Your search, requirements, history, and comparison will be restored to their initial state.",
                   )
                 ) {
                   localStorage.removeItem(STORAGE_KEY);
@@ -1450,8 +1367,6 @@ export default function App() {
   return (
     <div className="app-shell">
       <StudyGuide
-        state={state}
-        setState={setState}
         visible={guideVisible}
         setVisible={setGuideVisible}
         width={guideWidth}

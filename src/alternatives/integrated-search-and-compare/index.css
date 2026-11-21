@@ -273,6 +273,20 @@ body.resizing {
   background: white;
   padding: 18px;
 }
+
+.combined-tasks .task-card {
+  margin-top: 10px;
+  padding: 14px;
+}
+
+.combined-tasks .task-card h2 {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.peer-survey-note {
+  margin-bottom: 12px;
+}
 .task-state {
   color: #63736b;
   text-transform: uppercase;
