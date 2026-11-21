@@ -62,29 +62,29 @@ const studyContent = {
   overview: {
     aboutTitle: "About this prototype",
     about:
-      "This workspace compares shortlisted jobs using consistent criteria. It tests whether aligned details, decision states, and notes help users assess trade-offs and resume their evaluation later.",
+      "Evaluate an existing shortlist all at once in a persistent table with aligned criteria, evidence, notes, and decision states.",
     scenarioTitle: "Your scenario",
     scenario:
-      "You previously shortlisted several software-development roles in Singapore. You prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; no more than three years of required experience; and recent evidence that the employer is still hiring.",
+      "You already shortlisted six software-development roles in Singapore. Compare them against your priorities: React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid with no more than two office days; no more than three years of required experience; and recent hiring evidence.",
     beforeTitle: "Before you begin",
     before:
       "Think aloud as you compare the roles. Use only the information provided, and treat missing information as part of the decision. There is no single correct answer—the study evaluates how the workspace supports your reasoning.",
   },
   mainTask:
-    "Review your shortlist and decide which one or two jobs are strongest enough to remain under consideration.",
+    "Use the comparison table to reduce the six-job shortlist to one or two roles worth considering.",
   tasks: [
     {
-      title: "Check your priorities",
+      title: "Set comparison criteria",
       description:
         "Review the requirements used in the comparison and adjust them if they do not represent the priorities in the scenario.",
     },
     {
-      title: "Compare the shortlisted jobs",
+      title: "Compare all shortlisted jobs",
       description:
         "Identify the strongest candidates and the important trade-offs among them. Inspect supporting evidence where you need more confidence.",
     },
     {
-      title: "Record your decision",
+      title: "Record final states",
       description:
         "Leave one or two roles as considering and mark the remaining roles as passed. Record a reason when it helps preserve why you made the decision.",
     },

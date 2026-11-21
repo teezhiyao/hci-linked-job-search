@@ -10,8 +10,10 @@
       h1 { margin-bottom: 8px; }
       p { color: #59636e; line-height: 1.6; }
       ul { display: grid; gap: 16px; padding: 0; margin-top: 32px; list-style: none; }
-      a { display: block; padding: 20px; border: 1px solid #d1d9e0; border-radius: 12px; color: #0969da; background: white; font-weight: 600; text-decoration: none; }
+      a { display: block; padding: 20px; border: 1px solid #d1d9e0; border-radius: 12px; color: #0969da; background: white; font-weight: 700; text-decoration: none; }
       a:hover, a:focus-visible { border-color: #0969da; box-shadow: 0 2px 8px rgb(31 35 40 / 10%); }
+      a span { display: block; margin-bottom: 5px; color: #59636e; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+      a small { display: block; margin-top: 7px; color: #59636e; font-size: 14px; font-weight: 400; line-height: 1.45; }
     </style>
   </head>
   <body>
@@ -19,9 +21,27 @@
       <h1>LinkedIn Job Search Design Alternatives</h1>
       <p>Select a prototype to explore.</p>
       <ul>
-        <li><a href="./integrated-search-and-compare/">Enhanced search workspace</a></li>
-        <li><a href="./shortlisted-job-comparison/">Shortlist comparison table</a></li>
-        <li><a href="./linkedin-jobs-shortlist-narrower/">Two-job comparison screen</a></li>
+        <li>
+          <a href="./integrated-search-and-compare/">
+            <span>Alternative 1 · Discover</span>
+            Enhanced search workspace
+            <small>Find and compare promising jobs without leaving the search results.</small>
+          </a>
+        </li>
+        <li>
+          <a href="./shortlisted-job-comparison/">
+            <span>Alternative 2 · Evaluate</span>
+            Shortlist comparison table
+            <small>Assess an existing shortlist together in one persistent comparison matrix.</small>
+          </a>
+        </li>
+        <li>
+          <a href="./linkedin-jobs-shortlist-narrower/">
+            <span>Alternative 3 · Narrow</span>
+            Pairwise shortlist narrowing
+            <small>Reduce a large shortlist through a sequence of two-job decisions.</small>
+          </a>
+        </li>
       </ul>
     </main>
   </body>

@@ -9,11 +9,11 @@ export const studyContent = {
   overview: [
     {
       title: "About this prototype",
-      text: "This workspace shows consistent job details, compatibility, hiring activity, and previous interactions within search results. It tests whether users can evaluate jobs without repeatedly opening listings or losing their place.",
+      text: "Discover and evaluate jobs directly from search using standardized details, requirement checks, and a lightweight comparison drawer.",
     },
     {
       title: "Your scenario",
-      text: "You are looking for a software-development role in Singapore. You prefer React, TypeScript, or Node.js; at least SGD 5,000 per month; remote or hybrid work with no more than two office days; no more than three years of required experience; and recent evidence that the employer is still hiring.",
+      text: "You have not created a shortlist yet. Search for a software-development role in Singapore that uses React, TypeScript, or Node.js, pays at least SGD 5,000 per month, is remote or hybrid with no more than two office days, requires no more than three years of experience, and has recent hiring evidence.",
     },
     {
       title: "Before you begin",
@@ -21,19 +21,19 @@ export const studyContent = {
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
-  mainTask: "Find one job that you would be willing to investigate further and decide whether it is worth pursuing.",
+  mainTask: "Starting from the search results, find and save one job that is worth pursuing.",
   tasks: [
     {
-      title: "Review the search results",
-      description: "Examine the available roles and determine which results appear compatible with your priorities. Notice any missing, outdated, or previously reviewed information that affects your judgment.",
+      title: "Discover suitable results",
+      description: "Use search and filters to identify results that appear compatible with your priorities.",
     },
     {
-      title: "Investigate promising options",
-      description: "Narrow the results to a small set of promising roles and examine the information you need to distinguish between them.",
+      title: "Compare from search",
+      description: "Select two or three promising results and compare the information that distinguishes them.",
     },
     {
-      title: "Choose a role to pursue",
-      description: "Select the strongest option, save it, and be prepared to explain which information supported your choice and what uncertainty remains.",
+      title: "Save one result",
+      description: "Save the strongest option and explain what supported your choice and what uncertainty remains.",
     },
   ],
 };
