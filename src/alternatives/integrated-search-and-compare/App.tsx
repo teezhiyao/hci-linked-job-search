@@ -1,5 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
+import { EvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
@@ -510,12 +511,16 @@ function StudyGuide({
   width,
   setWidth,
   overlay,
+  evaluationLog,
+  resetEvaluation,
 }: {
   visible: boolean;
   setVisible: (v: boolean) => void;
   width: number;
   setWidth: (n: number) => void;
   overlay: boolean;
+  evaluationLog: ReactNode;
+  resetEvaluation: () => void;
 }) {
   const drag = useRef(false);
   useEffect(() => {
@@ -581,6 +586,7 @@ function StudyGuide({
               <strong>Study note</strong>
               <span>{studyContent.notice}</span>
             </div>
+            {evaluationLog}
           </div>
           <div className="guide-footer">
             <button
@@ -592,6 +598,7 @@ function StudyGuide({
                   )
                 ) {
                   localStorage.removeItem(STORAGE_KEY);
+                  resetEvaluation();
                   window.location.reload();
                 }
               }}
@@ -1142,6 +1149,7 @@ function JobDetails({
 }
 
 export default function App() {
+  const { trackEvent, getEvaluationLog, resetSession } = useEvaluationTracking("enhanced-search");
   const [state, setState] = useState<AppState>(loadState);
   const [guideVisible, setGuideVisible] = useState(true);
   const [guideWidth, setGuideWidth] = useState(300);
@@ -1207,7 +1215,8 @@ export default function App() {
   );
 
   const selected = JOBS.find((j) => j.id === state.selectedId) || jobs[0] || JOBS[0];
-  const selectJob = (job: Job) =>
+  const selectJob = (job: Job) => {
+    trackEvent("job_opened", { jobId: job.id });
     setState((s) => ({
       ...s,
       selectedId: job.id,
@@ -1216,7 +1225,9 @@ export default function App() {
         [job.id]: { ...s.history[job.id], viewed: s.history[job.id]?.viewed || "19 Nov 2026" },
       },
     }));
-  const toggleSave = (id: string) =>
+  };
+  const toggleSave = (id: string) => {
+    trackEvent("decision_changed", { jobId: id, action: state.history[id]?.saved ? "unsaved" : "saved" });
     setState((s) => ({
       ...s,
       history: {
@@ -1224,9 +1235,11 @@ export default function App() {
         [id]: { ...s.history[id], saved: s.history[id].saved ? undefined : "19 Nov 2026" },
       },
     }));
+  };
   const search = (e: FormEvent) => {
     e.preventDefault();
     setQuery({ keyword: keywordInput, location: locationInput });
+    trackEvent("filter_changed", { kind: "search", keyword: keywordInput, location: locationInput });
   };
   const clearFilters = () => {
     setFilters({ experience: "", arrangement: "", technology: "", history: "" });
@@ -1244,6 +1257,8 @@ export default function App() {
         width={guideWidth}
         setWidth={setGuideWidth}
         overlay={overlay}
+        resetEvaluation={resetSession}
+        evaluationLog={<EvaluationLogPanel getEvaluationLog={getEvaluationLog} onFinished={(ranking) => trackEvent("task_finished", { ranking })} />}
       />
       <main className="linkedin-app">
         <Header guideVisible={guideVisible} onShowGuide={() => setGuideVisible(true)} />

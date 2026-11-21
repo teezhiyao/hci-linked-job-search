@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
+import { EvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
@@ -349,6 +350,7 @@ function loadState(): AppState {
 }
 
 export default function App() {
+  const { trackEvent, getEvaluationLog, resetSession } = useEvaluationTracking("pairwise-narrowing");
   const [state, setState] = useState<AppState>(loadState);
   const [view, setView] = useState<View>("shortlist");
   const [guideOpen, setGuideOpen] = useState(true);
@@ -422,6 +424,7 @@ export default function App() {
     if (next !== "narrow") setPair([]);
   }
   function openJob(id: string) {
+    trackEvent("job_opened", { jobId: id });
     setDetailId(id);
     setAppState((s) => ({ ...s, viewed: s.viewed.includes(id) ? s.viewed : [...s.viewed, id] }));
   }
@@ -487,6 +490,7 @@ export default function App() {
       note,
       date: "19 Nov 2026",
     };
+    trackEvent("pair_decision_confirmed", { jobIds: [...pair], decision: decision.kind });
     let nextHistory: HistoryEntry[];
     if (editingHistory) {
       const oldIndex = state.history.findIndex((h) => h.id === editingHistory);
@@ -512,6 +516,7 @@ export default function App() {
     setPair(remaining.slice(0, 2).map((j) => j.id));
   }
   function resetAll() {
+    resetSession();
     setState(initialState);
     setView("shortlist");
     setStatusTab("pending");
@@ -581,6 +586,7 @@ export default function App() {
               <strong>Study note</strong>
               <span>{studyContent.disclaimer}</span>
             </div>
+            <EvaluationLogPanel getEvaluationLog={getEvaluationLog} onFinished={(ranking) => trackEvent("task_finished", { ranking })} />
           </div>
           <div className="guide-footer">
             <button className="reset-button" onClick={() => setShowReset(true)}>

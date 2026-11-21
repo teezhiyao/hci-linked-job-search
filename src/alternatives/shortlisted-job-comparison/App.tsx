@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
+import { EvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
@@ -543,6 +544,7 @@ function StudyGuide({
   setHidden,
   mobile,
   onReset,
+  evaluationLog,
 }: {
   width: number;
   setWidth: (n: number) => void;
@@ -550,6 +552,7 @@ function StudyGuide({
   setHidden: (v: boolean) => void;
   mobile: boolean;
   onReset: () => void;
+  evaluationLog: ReactNode;
 }) {
   const dragging = useRef(false);
   useEffect(() => {
@@ -609,6 +612,7 @@ function StudyGuide({
             <strong>Study note</strong>
             <span>{studyContent.fictionalNotice}</span>
           </div>
+          {evaluationLog}
         </div>
         <div className="guide-footer">
           <button className="reset-button" onClick={onReset}>
@@ -707,9 +711,11 @@ function AppNav({
 function SearchView({
   state,
   setState,
+  trackEvent,
 }: {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
+  trackEvent: (type: string, details?: Record<string, string>) => void;
 }) {
   const [selectedId, setSelectedId] = useState("J01");
   const [keyword, setKeyword] = useState(
@@ -737,6 +743,7 @@ function SearchView({
     );
   });
   const select = (id: string) => {
+    trackEvent("job_opened", { jobId: id });
     setSelectedId(id);
     setState((s) => ({ ...s, viewed: [...new Set([...s.viewed, id])] }));
   };
@@ -967,9 +974,11 @@ function DetailGroup({ title, lines }: { title: string; lines: string[] }) {
 function CompareView({
   state,
   setState,
+  trackEvent,
 }: {
   state: AppState;
   setState: React.Dispatch<React.SetStateAction<AppState>>;
+  trackEvent: (type: string, details?: Record<string, string>) => void;
 }) {
   const [filter, setFilter] = useState<"All" | Decision>("All");
   const [highlight, setHighlight] = useState(true);
@@ -1000,6 +1009,7 @@ function CompareView({
   };
   const setDecision = (job: Job, decision: Decision, reason = "") => {
     const previous = state.decisions[job.id] || "Considering";
+    trackEvent("decision_changed", { jobId: job.id, from: previous, to: decision });
     setState((s) => ({
       ...s,
       decisions: { ...s.decisions, [job.id]: decision },
@@ -1105,7 +1115,10 @@ function CompareView({
                     column={key}
                     job={job}
                     state={state}
-                    setEvidence={setEvidence}
+                    setEvidence={(value) => {
+                      trackEvent("evidence_opened", { jobId: value.job.id, criterion: value.key });
+                      setEvidence(value);
+                    }}
                     setDecision={(decision) =>
                       decision === "Passed" ? setPassJob(job) : setDecision(job, decision)
                     }
@@ -1691,6 +1704,7 @@ function Modal({
 }
 
 function App() {
+  const { trackEvent, getEvaluationLog, resetSession } = useEvaluationTracking("comparison-table");
   const [state, setState] = useState<AppState>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -1712,6 +1726,7 @@ function App() {
     return () => window.removeEventListener("resize", resize);
   }, []);
   const reset = () => {
+    resetSession();
     localStorage.removeItem(STORAGE_KEY);
     setState(structuredClone(initialState));
     setGuideWidth(300);
@@ -1727,14 +1742,15 @@ function App() {
         setHidden={setGuideHidden}
         mobile={mobile}
         onReset={() => setResetOpen(true)}
+        evaluationLog={<EvaluationLogPanel getEvaluationLog={getEvaluationLog} onFinished={(ranking) => trackEvent("task_finished", { ranking })} />}
       />
       <div className="application-shell">
         <GlobalNav shortlistCount={state.shortlist.length} />
         <AppNav state={state} setState={setState} />
         {state.view === "search" ? (
-          <SearchView state={state} setState={setState} />
+          <SearchView state={state} setState={setState} trackEvent={trackEvent} />
         ) : (
-          <CompareView state={state} setState={setState} />
+          <CompareView state={state} setState={setState} trackEvent={trackEvent} />
         )}
       </div>
       {resetOpen && (

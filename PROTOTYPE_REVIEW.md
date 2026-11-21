@@ -105,3 +105,7 @@ PeerSurvey should ask participants to enter their first, second, and third choic
 - **Confidence and rationale:** whether the participant identifies the decisive evidence and distinguishes required criteria from the experience preference.
 
 Compare these measures by prototype and presentation order. Treat the reference order as a task-specific answer key, while also reviewing participants' explanations for reasonable interpretations or interface-driven misunderstandings.
+
+## Anonymous frontend evaluation log
+
+Each prototype records meaningful task actions in a separate `sessionStorage` session. Logs identify the prototype (`enhanced-search`, `comparison-table`, or `pairwise-narrowing`), study group, sequence step, dataset version, anonymous session ID, elapsed and active time, the participant's ranked choices, summary counts, and the underlying event sequence. Participants enter three job IDs and explicitly copy the log into PeerSurvey; nothing is transmitted automatically. Page visibility is recorded to distinguish active time from time spent away from the tab, and resetting a prototype also starts a fresh evaluation session.

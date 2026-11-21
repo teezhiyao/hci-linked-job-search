@@ -10,6 +10,16 @@
   color: #191919;
 }
 
+.evaluation-log-panel { margin-top: 18px; padding: 14px; border: 1px solid #b7cee5; border-radius: 8px; background: #f4f8fc; }
+.evaluation-log-panel h2 { margin: 0 0 6px; font-size: 16px; }
+.evaluation-log-panel p { margin: 0 0 10px; font-size: 13px; line-height: 1.45; }
+.evaluation-log-panel label { display: grid; grid-template-columns: 80px 1fr; align-items: center; gap: 8px; margin-top: 7px; font-size: 13px; font-weight: 650; }
+.evaluation-log-panel input { min-width: 0; padding: 7px 8px; border: 1px solid #aeb8c2; border-radius: 5px; font: inherit; text-transform: uppercase; }
+.evaluation-log-panel button { width: 100%; margin-top: 12px; padding: 8px 10px; border: 0; border-radius: 18px; background: #0a66c2; color: white; font-weight: 700; cursor: pointer; }
+.evaluation-log-panel button:disabled { background: #9aa6b2; cursor: not-allowed; }
+.evaluation-log-panel strong, .evaluation-log-panel small { display: block; margin-top: 8px; font-size: 12px; }
+.evaluation-log-panel textarea { width: 100%; margin-top: 8px; box-sizing: border-box; font: 11px/1.35 monospace; }
+
 .study-guide .guide-inner {
   display: flex;
   flex-direction: column;
