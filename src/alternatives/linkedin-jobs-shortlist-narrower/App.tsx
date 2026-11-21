@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { EvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
+import { FinalEvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
@@ -49,16 +49,16 @@ const studyContent = {
       "Required: hiring confirmed within the past 14 days",
       "Preferred: no more than three years of experience",
     ],
-    goal: "Identify the best match and the next two strongest alternatives. Prioritize all required conditions before the preference.",
+    goal: "Identify at least one role that meets the required conditions. Use the preference to distinguish between suitable roles.",
   },
   disclaimer: "All job information in this prototype is fictional.",
   submission:
-    "When you finish, record your first, second, and third choices in PeerSurvey. This prototype does not collect your response.",
+    "Record at least one suitable role in PeerSurvey. The combined evaluation log is available after the third prototype.",
   tasks: [
     {
-      title: "Narrow and rank the best three",
+      title: "Identify a suitable role",
       description:
-        "Review the jobs in pairs, identify your first, second, and third choices, and leave your first choice as Kept.",
+        "Review the jobs in pairs and identify at least one role that meets the required conditions. Record it in PeerSurvey.",
     },
   ],
 };
@@ -358,7 +358,7 @@ function loadState(): AppState {
 }
 
 export default function App() {
-  const { trackEvent, getEvaluationLog, resetSession } = useEvaluationTracking("pairwise-narrowing");
+  const { trackEvent, resetSession } = useEvaluationTracking("pairwise-narrowing");
   const [state, setState] = useState<AppState>(loadState);
   const [view, setView] = useState<View>("shortlist");
   const [guideOpen, setGuideOpen] = useState(true);
@@ -596,7 +596,7 @@ export default function App() {
               <strong>Study note</strong>
               <span>{studyContent.disclaimer}</span>
             </div>
-            <EvaluationLogPanel getEvaluationLog={getEvaluationLog} onFinished={(ranking) => trackEvent("task_finished", { ranking })} />
+            {new URLSearchParams(window.location.search).get("step") === "3" && <FinalEvaluationLogPanel onFinished={() => trackEvent("task_finished")} />}
           </div>
           <div className="guide-footer">
             <button className="reset-button" onClick={() => setShowReset(true)}>

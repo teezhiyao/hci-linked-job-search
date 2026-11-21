@@ -18,6 +18,25 @@ const createSession = (prototype: PrototypeId): Session => ({
   dataset: "software-development-v1", startedAt: Date.now(), events: [{ t: 0, type: "prototype_opened" }],
 });
 
+function summarize(current: Session) {
+  const elapsedSeconds = Math.round((Date.now() - current.startedAt) / 1000);
+  const count = (type: string) => current.events.filter(event => event.type === type).length;
+  let hiddenAt: number | null = null, hiddenSeconds = 0;
+  current.events.forEach(event => {
+    if (event.type === "page_hidden") hiddenAt = event.t;
+    if (event.type === "page_visible" && hiddenAt !== null) { hiddenSeconds += Math.max(0, event.t - hiddenAt); hiddenAt = null; }
+  });
+  if (hiddenAt !== null) hiddenSeconds += Math.max(0, elapsedSeconds - hiddenAt);
+  return {
+    version: current.version, sessionId: current.sessionId, prototype: current.prototype, studyGroup: current.studyGroup,
+    step: current.step, dataset: current.dataset,
+    summary: { elapsedSeconds, activeSeconds: Math.max(0, elapsedSeconds - hiddenSeconds), jobsOpened: count("job_opened"),
+      evidenceOpened: count("evidence_opened"), filtersChanged: count("filter_changed"),
+      decisionChanges: count("decision_changed") + count("pair_decision_confirmed"), undos: count("decision_undone") },
+    events: current.events,
+  };
+}
+
 export function useEvaluationTracking(prototype: PrototypeId) {
   const key = `hci-job-evaluation-v1-${prototype}-g${numberParam("group") ?? "direct"}-s${numberParam("step") ?? "direct"}`;
   const session = useRef<Session | null>(null);
@@ -38,48 +57,39 @@ export function useEvaluationTracking(prototype: PrototypeId) {
     return () => document.removeEventListener("visibilitychange", listener);
   }, [persist, trackEvent]);
   const resetSession = useCallback(() => { session.current = createSession(prototype); persist(); }, [persist, prototype]);
-  const getEvaluationLog = useCallback((ranking: string[]) => {
-    const current = session.current!;
-    const elapsedSeconds = Math.round((Date.now() - current.startedAt) / 1000);
-    const count = (type: string) => current.events.filter(event => event.type === type).length;
-    let hiddenAt: number | null = null, hiddenSeconds = 0;
-    current.events.forEach(event => {
-      if (event.type === "page_hidden") hiddenAt = event.t;
-      if (event.type === "page_visible" && hiddenAt !== null) { hiddenSeconds += Math.max(0, event.t - hiddenAt); hiddenAt = null; }
-    });
-    if (hiddenAt !== null) hiddenSeconds += Math.max(0, elapsedSeconds - hiddenAt);
-    return {
-      version: current.version, sessionId: current.sessionId, prototype: current.prototype, studyGroup: current.studyGroup,
-      step: current.step, dataset: current.dataset,
-      summary: { elapsedSeconds, activeSeconds: Math.max(0, elapsedSeconds - hiddenSeconds), jobsOpened: count("job_opened"),
-        evidenceOpened: count("evidence_opened"), filtersChanged: count("filter_changed"),
-        decisionChanges: count("decision_changed") + count("pair_decision_confirmed"), undos: count("decision_undone"),
-        firstChoice: ranking[0] || null, secondChoice: ranking[1] || null, thirdChoice: ranking[2] || null },
-      events: current.events,
-    };
+  const getEvaluationLog = useCallback(() => {
+    return summarize(session.current!);
   }, []);
   return { trackEvent, getEvaluationLog, resetSession };
 }
 
-export function EvaluationLogPanel({ getEvaluationLog, onFinished }: { getEvaluationLog: (ranking: string[]) => unknown; onFinished: (ranking: string[]) => void }) {
-  const [ranking, setRanking] = useState(["", "", ""]);
+function combinedLog() {
+  const group = numberParam("group");
+  const sessions: Session[] = [];
+  for (let index = 0; index < sessionStorage.length; index += 1) {
+    const key = sessionStorage.key(index);
+    if (!key?.startsWith("hci-job-evaluation-v1-")) continue;
+    try {
+      const session = JSON.parse(sessionStorage.getItem(key) || "null") as Session | null;
+      if (session && (group === null || session.studyGroup === group)) sessions.push(session);
+    } catch { /* ignore invalid stored data */ }
+  }
+  sessions.sort((a, b) => (a.step ?? 99) - (b.step ?? 99));
+  return { version: "1.0", studyGroup: group, dataset: "software-development-v1", exportedAt: new Date().toISOString(), sessions: sessions.map(summarize) };
+}
+
+export function FinalEvaluationLogPanel({ onFinished }: { onFinished: () => void }) {
+  const [ready, setReady] = useState(false);
   const [status, setStatus] = useState<"idle" | "copied" | "manual">("idle");
-  const valid = ranking.every(value => /^J(0[1-9]|1[0-5])$/.test(value)) && new Set(ranking).size === 3;
   const copy = async () => {
-    if (!valid) return;
-    onFinished(ranking);
-    const text = JSON.stringify(getEvaluationLog(ranking), null, 2);
+    const text = JSON.stringify(combinedLog(), null, 2);
     try { await navigator.clipboard.writeText(text); setStatus("copied"); }
     catch { setStatus("manual"); }
   };
   return <section className="evaluation-log-panel">
-    <h2>Finish and copy log</h2><p>Enter your ranked job IDs, then paste the anonymous log into PeerSurvey.</p>
-    {ranking.map((value, index) => <label key={index}>{["1st", "2nd", "3rd"][index]} choice<input value={value} placeholder="e.g. J11" onChange={event => {
-      const next = [...ranking]; next[index] = event.target.value.trim().toUpperCase(); setRanking(next); setStatus("idle");
-    }} /></label>)}
-    {!valid && ranking.some(Boolean) && <small>Enter three different IDs from J01 to J15.</small>}
-    <button type="button" onClick={copy} disabled={!valid}>Copy evaluation log</button>
+    <h2>Finish the study</h2>
+    {!ready ? <><p>After completing this third prototype, continue to the final evaluation log.</p><button type="button" onClick={() => { onFinished(); setReady(true); }}>I have finished prototype 3</button></> : <><p>Copy the combined anonymous log for all three prototypes and paste it into PeerSurvey.</p><button type="button" onClick={copy}>Copy evaluation log</button></>}
     {status === "copied" && <strong>Copied to clipboard.</strong>}
-    {status === "manual" && <textarea readOnly value={JSON.stringify(getEvaluationLog(ranking), null, 2)} rows={8} aria-label="Evaluation log" />}
+    {status === "manual" && <textarea readOnly value={JSON.stringify(combinedLog(), null, 2)} rows={8} aria-label="Evaluation log" />}
   </section>;
 }

@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { EvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
+import { FinalEvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const DOMAIN = getStudyDomain();
@@ -72,15 +72,15 @@ const studyContent = {
       "Required: hiring confirmed within the past 14 days",
       "Preferred: no more than three years of experience",
     ],
-    goal: "Identify the best match and the next two strongest alternatives. Prioritize all required conditions before the preference.",
+    goal: "Identify at least one role that meets the required conditions. Use the preference to distinguish between suitable roles.",
   },
   submission:
-    "When you finish, record your first, second, and third choices in PeerSurvey. This prototype does not collect your response.",
+    "Record at least one suitable role in PeerSurvey. The combined evaluation log is available after the third prototype.",
   tasks: [
     {
-      title: "Rank the three strongest matches",
+      title: "Identify a suitable role",
       description:
-        "Compare the shortlisted jobs, identify your first, second, and third choices, and leave your first choice as Considering. Record all three in PeerSurvey.",
+        "Compare the shortlisted jobs and identify at least one role that meets the required conditions. Record it in PeerSurvey.",
     },
   ],
 };
@@ -1705,7 +1705,7 @@ function Modal({
 }
 
 function App() {
-  const { trackEvent, getEvaluationLog, resetSession } = useEvaluationTracking("comparison-table");
+  const { trackEvent, resetSession } = useEvaluationTracking("comparison-table");
   const [state, setState] = useState<AppState>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -1743,7 +1743,7 @@ function App() {
         setHidden={setGuideHidden}
         mobile={mobile}
         onReset={() => setResetOpen(true)}
-        evaluationLog={<EvaluationLogPanel getEvaluationLog={getEvaluationLog} onFinished={(ranking) => trackEvent("task_finished", { ranking })} />}
+        evaluationLog={new URLSearchParams(window.location.search).get("step") === "3" ? <FinalEvaluationLogPanel onFinished={() => trackEvent("task_finished")} /> : null}
       />
       <div className="application-shell">
         <GlobalNav shortlistCount={state.shortlist.length} />

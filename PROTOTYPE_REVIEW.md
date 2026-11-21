@@ -81,31 +81,31 @@ Shared features such as fictional job data, standardized categories, hiring evid
 - Three groups rotate the starting prototype: A--B--C, B--C--A, or C--A--B.
 - The landing page converts the persistent group assignment into three ordered prototype links.
 - Every link includes the group and step number.
-- The curated reference order is J11, J06, then J05.
+- J11 and J06 meet all required conditions; J11 also fully meets the experience preference.
 - The customer-support dataset remains in the code for a possible later two-domain study, but it is not currently selectable.
 
 Before launching the study, test every group sequence in a clean browser session and verify the corresponding PeerSurvey branching and answer keys.
 
-## Ranked task and evaluation plan
+## Identification task and evaluation plan
 
-All prototypes begin with the same 15-job evaluation pool and use the same decision rule: required criteria take priority, followed by the preferred experience range. Existing history such as Viewed, Saved, or Applied remains visible but does not remove a listing from the pool. The intended top three are:
+All prototypes begin with the same 15-job evaluation pool and use the same decision rule: required conditions take priority, followed by the preferred experience range. Existing history such as Viewed, Saved, or Applied remains visible but does not remove a listing from the pool. Participants only need to identify at least one suitable role.
 
-1. **J11, Riverbank Technology:** meets every required criterion and the preferred experience range.
-2. **J06, Meridian Systems:** meets every required criterion, but its 2--4 year range only partially meets the preference for no more than three years.
-3. **J05, Brightpath Learning:** meets the technology, arrangement, eligibility, hiring, and experience criteria, but its SGD 4,500--5,500 range does not guarantee the required SGD 5,000 minimum.
+- **J11, Riverbank Technology:** meets every required condition and the preferred experience range.
+- **J06, Meridian Systems:** meets every required condition, but its 2--4 year range only partially meets the preference for no more than three years.
+- **J05, Brightpath Learning:** is a plausible near-match, but its SGD 4,500--5,500 range does not guarantee the required SGD 5,000 minimum.
 
-The remaining listings each have a clearer required-criterion gap, such as stale or missing hiring confirmation, too many office days, ineligible geography, missing salary, or irrelevant technologies. J05 ranks above other partial salary matches because it has the highest lower salary bound among them and satisfies every other criterion.
+The remaining listings each have at least one required-condition gap, such as insufficient guaranteed salary, stale or missing hiring confirmation, too many office days, ineligible geography, missing salary, or irrelevant technologies.
 
-PeerSurvey should ask participants to enter their first, second, and third choices in order, then collect confidence and a short reason for the first choice. Evaluation can compare:
+PeerSurvey should ask participants to enter at least one suitable role, then collect confidence and a short reason. Evaluation can compare:
 
-- **First-choice accuracy:** whether J11 is ranked first.
-- **Top-three recognition:** how many of J11, J06, and J05 appear in the participant's top three.
-- **Ordering accuracy:** whether the three appear in the intended order; partial credit can use rank distance.
+- **Identification accuracy:** whether the response includes J11 or J06.
+- **False-positive rate:** whether the response includes jobs that fail a required condition.
+- **Evidence use:** whether the participant inspects the information needed to justify the selected role.
 - **Decision time and completion:** whether the participant finishes and how long the task takes.
 - **Confidence and rationale:** whether the participant identifies the decisive evidence and distinguishes required criteria from the experience preference.
 
-Compare these measures by prototype and presentation order. Treat the reference order as a task-specific answer key, while also reviewing participants' explanations for reasonable interpretations or interface-driven misunderstandings.
+Compare these measures by prototype and presentation order while reviewing participants' explanations for reasonable interpretations or interface-driven misunderstandings.
 
 ## Anonymous frontend evaluation log
 
-Each prototype records meaningful task actions in a separate `sessionStorage` session. Logs identify the prototype (`enhanced-search`, `comparison-table`, or `pairwise-narrowing`), study group, sequence step, dataset version, anonymous session ID, elapsed and active time, the participant's ranked choices, summary counts, and the underlying event sequence. Participants enter three job IDs and explicitly copy the log into PeerSurvey; nothing is transmitted automatically. Page visibility is recorded to distinguish active time from time spent away from the tab, and resetting a prototype also starts a fresh evaluation session.
+Each prototype records meaningful task actions in a separate `sessionStorage` session. Logs identify the prototype (`enhanced-search`, `comparison-table`, or `pairwise-narrowing`), study group, sequence step, dataset version, anonymous session ID, elapsed and active time, summary counts, and the underlying event sequence. After completing step 3, the participant explicitly copies one combined log containing all three sessions into PeerSurvey; nothing is transmitted automatically. Page visibility is recorded to distinguish active time from time spent away from the tab, and resetting a prototype also starts a fresh evaluation session.

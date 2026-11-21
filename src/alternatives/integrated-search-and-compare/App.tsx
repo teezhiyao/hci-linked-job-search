@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import StudyGroupNotice from "../../StudyGroupNotice";
-import { EvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
+import { FinalEvaluationLogPanel, useEvaluationTracking } from "../../evaluation-tracking";
 import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../../study-domains";
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
@@ -22,15 +22,15 @@ export const studyContent = {
         "Required: hiring confirmed within the past 14 days",
         "Preferred: no more than three years of experience",
       ],
-      goal: "Identify the best match and the next two strongest alternatives. Prioritize all required conditions before the preference.",
+      goal: "Identify at least one role that meets the required conditions. Use the preference to distinguish between suitable roles.",
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
-  submission: "When you finish, record your first, second, and third choices in PeerSurvey. This prototype does not collect your response.",
+  submission: "Record at least one suitable role in PeerSurvey. The combined evaluation log is available after the third prototype.",
   tasks: [
     {
-      title: "Choose the best of three matches",
-      description: "Review the results, identify your first, second, and third choices, and save your first choice. Record all three in PeerSurvey.",
+      title: "Identify a suitable role",
+      description: "Review the results and save at least one role that meets the required conditions. Record it in PeerSurvey.",
     },
   ],
 };
@@ -1160,7 +1160,7 @@ function JobDetails({
 }
 
 export default function App() {
-  const { trackEvent, getEvaluationLog, resetSession } = useEvaluationTracking("enhanced-search");
+  const { trackEvent, resetSession } = useEvaluationTracking("enhanced-search");
   const [state, setState] = useState<AppState>(loadState);
   const [guideVisible, setGuideVisible] = useState(true);
   const [guideWidth, setGuideWidth] = useState(300);
@@ -1269,7 +1269,7 @@ export default function App() {
         setWidth={setGuideWidth}
         overlay={overlay}
         resetEvaluation={resetSession}
-        evaluationLog={<EvaluationLogPanel getEvaluationLog={getEvaluationLog} onFinished={(ranking) => trackEvent("task_finished", { ranking })} />}
+        evaluationLog={new URLSearchParams(window.location.search).get("step") === "3" ? <FinalEvaluationLogPanel onFinished={() => trackEvent("task_finished")} /> : null}
       />
       <main className="linkedin-app">
         <Header guideVisible={guideVisible} onShowGuide={() => setGuideVisible(true)} />
