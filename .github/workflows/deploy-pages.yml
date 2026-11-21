@@ -31,20 +31,12 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: alternatives/*/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Build prototypes
-        shell: bash
         run: |
-          set -euo pipefail
-          mkdir -p site
-          cp pages/index.html site/index.html
-          for project in alternatives/*; do
-            slug="$(basename "$project")"
-            pnpm --dir "$project" install --frozen-lockfile
-            FIGMA_PUBLIC_URL="/${{ github.event.repository.name }}/$slug" pnpm --dir "$project" build
-            cp -R "$project/dist" "site/$slug"
-          done
+          pnpm install --frozen-lockfile
+          FIGMA_PUBLIC_URL="/${{ github.event.repository.name }}" pnpm build
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -52,7 +44,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: dist
 
   deploy:
     environment:

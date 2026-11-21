@@ -1,6 +1,6 @@
 # HCI LinkedIn Job Search Prototypes
 
-This repository contains three independently runnable design alternatives exported from Figma Make.
+This repository contains one Figma Make-compatible Vite application with three isolated design alternatives.
 
 ## Design alternatives
 
@@ -8,12 +8,13 @@ This repository contains three independently runnable design alternatives export
 - `linkedin-jobs-shortlist-narrower`
 - `shortlisted-job-comparison`
 
-Each application is stored under `alternatives/`. GitHub Actions builds all three and publishes them under separate paths on one GitHub Pages site.
+Each alternative has its own page and application entry point under `src/alternatives/`. They share one package manifest, build configuration, Figma Make configuration, and GitHub Pages deployment.
 
-## Run an alternative locally
+## Run locally
 
 ```sh
-cd alternatives/<alternative-name>
 pnpm install
 pnpm dev
 ```
+
+Open the root page to select an alternative. Prototype state is isolated by each alternative's existing browser-storage keys.

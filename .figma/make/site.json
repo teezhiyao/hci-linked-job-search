@@ -1,0 +1,10 @@
+{
+  "description": "Explore three interaction alternatives for searching, shortlisting, and comparing LinkedIn job opportunities.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
