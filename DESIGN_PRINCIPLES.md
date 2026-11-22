@@ -24,7 +24,7 @@ Primary principles:
 
 Main trade-off: greater discoverability may weaken **Simplicity** because filters, requirements, assessments, and details compete for attention.
 
-## Prototype B: Multi-job comparison
+## Prototype C: Shortlisted job comparison
 
 Primary principles:
 
@@ -37,7 +37,7 @@ Primary principles:
 
 Main trade-off: comprehensive structure can weaken **Simplicity** and **Ease and comfort** because a 15-job table is dense and may require horizontal scrolling.
 
-## Prototype C: Two-job comparison
+## Prototype B: Shortlist narrowing
 
 Primary principles:
 

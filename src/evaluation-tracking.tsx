@@ -80,14 +80,14 @@ function combinedLog() {
 }
 
 const prototypes = {
-  "enhanced-search": { path: "../integrated-search-and-compare/", name: "Criteria-guided search" },
-  "comparison-table": { path: "../shortlisted-job-comparison/", name: "Multi-job comparison" },
-  "two-job-comparison": { path: "../linkedin-jobs-shortlist-narrower/", name: "Two-job comparison" },
+  "enhanced-search": { path: "../integrated-search-and-compare/", name: "Integrated search and compare" },
+  "comparison-table": { path: "../shortlisted-job-comparison/", name: "Shortlisted job comparison" },
+  "two-job-comparison": { path: "../linkedin-jobs-shortlist-narrower/", name: "Shortlist narrowing" },
 } as const;
 const sequences: Record<number, PrototypeId[]> = {
-  1: ["enhanced-search", "comparison-table", "two-job-comparison"],
-  2: ["comparison-table", "two-job-comparison", "enhanced-search"],
-  3: ["two-job-comparison", "enhanced-search", "comparison-table"],
+  1: ["enhanced-search", "two-job-comparison", "comparison-table"],
+  2: ["two-job-comparison", "comparison-table", "enhanced-search"],
+  3: ["comparison-table", "enhanced-search", "two-job-comparison"],
 };
 
 export function StudySequenceHandoff({ prototype, onFinished, onTaskComplete }: { prototype: PrototypeId; onFinished: () => void; onTaskComplete?: () => void }) {
@@ -107,7 +107,8 @@ export function StudySequenceHandoff({ prototype, onFinished, onTaskComplete }: 
   const currentGroup = Number(group);
   const order = sequences[currentGroup] || sequences[1];
   const nextPrototype = order[nextStep - 1];
-  const target = new URL(prototypes[nextPrototype].path, window.location.href);
+  const base = new URL(import.meta.env.BASE_URL || "/", window.location.origin);
+  const target = new URL(prototypes[nextPrototype].path.replace(/^\.\.\//, ""), base);
   if (group) target.searchParams.set("group", group);
   target.searchParams.set("step", String(nextStep));
   return <section className="evaluation-log-panel sequence-handoff">

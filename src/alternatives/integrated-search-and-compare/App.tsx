@@ -5,11 +5,11 @@ import { CUSTOMER_SUPPORT_JOBS, EXTRA_SOFTWARE_JOBS, getStudyDomain } from "../.
 
 const STUDY_DATE = new Date("2026-11-19T12:00:00");
 const DOMAIN = getStudyDomain();
-const STORAGE_KEY = `integrated-search-compare-v6-${DOMAIN}`;
+const STORAGE_KEY = `integrated-search-compare-v7-${DOMAIN}`;
 
 export const studyContent = {
   label: "Interactive prototype",
-  projectName: "Prototype A — Criteria-guided search",
+  projectName: "Prototype A — Integrated search and compare",
   overview: [
     {
       title: "Scenario and goal",
@@ -244,24 +244,26 @@ const reqNames: Record<ReqKey, string> = {
   hiring: "Recent hiring confirmation",
 };
 const INITIAL_REQUIREMENTS: Requirements = {
-  keywords: [],
+  // Seeded with plausible but intentionally imperfect values. Participants must
+  // review and correct these before applying the required-criteria filter.
+  keywords: DOMAIN === "support" ? ["Email", "Phone"] : ["React", "Vue"],
   keywordMode: "Any",
-  salary: 0,
+  salary: DOMAIN === "support" ? 3500 : 4500,
   currency: "SGD",
   payPeriod: "month",
-  arrangements: [],
-  maxOfficeDays: 2,
+  arrangements: ["Remote", "Hybrid"],
+  maxOfficeDays: 3,
   minExperience: 0,
-  maxExperience: 0,
-  eligibility: "",
-  hiringDays: 0,
+  maxExperience: DOMAIN === "support" ? 4 : 5,
+  eligibility: "Singapore",
+  hiringDays: 30,
   enabled: {
-    keywords: false,
-    salary: false,
-    arrangement: false,
-    experience: false,
-    eligibility: false,
-    hiring: false,
+    keywords: true,
+    salary: true,
+    arrangement: true,
+    experience: true,
+    eligibility: true,
+    hiring: true,
   },
   importance: {
     keywords: "Required",

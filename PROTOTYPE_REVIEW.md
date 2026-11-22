@@ -6,11 +6,11 @@ The three prototypes use the same LinkedIn-style shell, job information, and dec
 
 | Alternative | Primary purpose | Decision model | Final action |
 |---|---|---|---|
-| Prototype A: Criteria-guided search | Find a suitable opportunity during discovery | Inspect jobs individually using enriched search information | Save one job |
-| Prototype B: Multi-job comparison | Evaluate an existing shortlist systematically | Compare all shortlisted jobs simultaneously | Leave one job as Considering |
-| Prototype C: Two-job comparison | Review a large saved collection | Decide between two jobs at a time | Keep at least one suitable job |
+| Prototype A: Integrated search and compare | Find a suitable opportunity during discovery | Configure requirements and inspect jobs individually in search | Save one job |
+| Prototype B: Shortlist narrowing | Review a large saved collection | Decide between two jobs at a time | Keep at least one suitable job |
+| Prototype C: Shortlisted job comparison | Evaluate an existing shortlist systematically | Compare all shortlisted jobs simultaneously | Leave one job as Considering |
 
-## Prototype A: Criteria-guided search
+## Prototype A: Integrated search and compare
 
 ### Distinct features
 
@@ -28,7 +28,7 @@ This alternative should not provide dedicated simultaneous or pairwise job compa
 
 The comparison checkboxes, Compare selected action, comparison drawer, comparison state, and comparison-directed task language have been removed. The guide now presents one task and directs the final response to PeerSurvey.
 
-## Prototype B: Multi-job comparison
+## Prototype B: Shortlist narrowing
 
 ### Distinct features
 
@@ -46,7 +46,7 @@ Search remains secondary. The primary activity is simultaneous comparison of the
 
 The study guide now combines scenario, goal, and one task in a single panel. Task progress, completion controls, and Overview or Tasks tabs have been removed. The participant leaves only the matching job as Considering and submits the answer in PeerSurvey.
 
-## Prototype C: Two-job comparison
+## Prototype C: Shortlisted job comparison
 
 ### Distinct features
 

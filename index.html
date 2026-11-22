@@ -40,16 +40,16 @@
         </li>
         <li>
           <a href="./shortlisted-job-comparison/">
-            <span>Prototype B · Evaluate</span>
-            Multi-job comparison
-            <small>Assess an existing shortlist together in one persistent comparison matrix.</small>
+            <span>Prototype B · Narrow</span>
+            Shortlist narrowing
+            <small>Reduce a saved collection through a sequence of two-job decisions.</small>
           </a>
         </li>
         <li>
           <a href="./linkedin-jobs-shortlist-narrower/">
-            <span>Prototype C · Compare and narrow</span>
-            Two-job comparison
-            <small>Reduce a large shortlist through a sequence of two-job decisions.</small>
+            <span>Prototype C · Evaluate</span>
+            Shortlisted job comparison
+            <small>Assess all saved roles together in one persistent comparison matrix.</small>
           </a>
         </li>
       </ul>
@@ -79,14 +79,15 @@
         };
         const prototypes = {
           A: { path: "./integrated-search-and-compare/", name: "Criteria-guided search", verb: "Find", label: "Prototype A" },
-          B: { path: "./shortlisted-job-comparison/", name: "Multi-job comparison", verb: "Compare", label: "Prototype B" },
-          C: { path: "./linkedin-jobs-shortlist-narrower/", name: "Two-job comparison", verb: "Compare and narrow", label: "Prototype C" }
+          B: { path: "./linkedin-jobs-shortlist-narrower/", name: "Shortlist narrowing", verb: "Compare pairs", label: "Prototype B" },
+          C: { path: "./shortlisted-job-comparison/", name: "Shortlisted job comparison", verb: "Compare all", label: "Prototype C" }
         };
         const list = document.getElementById("prototype-list");
         list.innerHTML = "";
         sequences[group].forEach((prototypeKey, index) => {
           const prototype = prototypes[prototypeKey];
-          const target = new URL(prototype.path, window.location.href);
+          const base = new URL(document.baseURI);
+          const target = new URL(prototype.path, base);
           target.searchParams.set("group", String(group));
           target.searchParams.set("step", String(index + 1));
           const item = document.createElement("li");
