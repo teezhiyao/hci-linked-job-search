@@ -5,7 +5,7 @@ This is one React, Vite, and Tailwind CSS project containing three independent p
 ## Structure
 
 - `index.html` — prototype selector
-- `integrated-search-and-compare/index.html` — Prototype A, integrated search and compare
+- `integrated-search-and-compare/index.html` — Prototype A, integrated job search
 - `linkedin-jobs-shortlist-narrower/index.html` — Prototype B, shortlist narrowing
 - `shortlisted-job-comparison/index.html` — Prototype C, shortlisted job comparison
 - `src/alternatives/<name>/` — each prototype's React entry point, app, and isolated global stylesheet

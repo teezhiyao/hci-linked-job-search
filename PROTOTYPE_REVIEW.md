@@ -4,13 +4,13 @@
 
 The three prototypes use the same LinkedIn-style shell, job information, and decision criteria. Their primary interaction should remain distinct:
 
-| Alternative | Primary purpose | Decision model | Final action |
-|---|---|---|---|
-| Prototype A: Integrated search and compare | Find a suitable opportunity during discovery | Configure requirements and inspect jobs individually in search | Save one job |
-| Prototype B: Shortlist narrowing | Review a large saved collection | Decide between two jobs at a time | Keep at least one suitable job |
-| Prototype C: Shortlisted job comparison | Evaluate an existing shortlist systematically | Compare all shortlisted jobs simultaneously | Leave one job as Considering |
+| Alternative                             | Primary purpose                               | Decision model                                                 | Final action                   |
+| --------------------------------------- | --------------------------------------------- | -------------------------------------------------------------- | ------------------------------ |
+| Prototype A: Integrated job search      | Find a suitable opportunity during discovery  | Configure requirements and inspect jobs individually in search | Save one job                   |
+| Prototype B: Shortlist narrowing        | Review a large saved collection               | Decide between two jobs at a time                              | Keep at least one suitable job |
+| Prototype C: Shortlisted job comparison | Evaluate an existing shortlist systematically | Compare all shortlisted jobs simultaneously                    | Leave one job as Considering   |
 
-## Prototype A: Integrated search and compare
+## Prototype A: Integrated job search
 
 ### Distinct features
 
@@ -32,24 +32,6 @@ The comparison checkboxes, Compare selected action, comparison drawer, compariso
 
 ### Distinct features
 
-- An existing shortlist is displayed in one persistent table.
-- Corresponding criteria are aligned across jobs.
-- Users can highlight differences and reorder columns.
-- Evidence panels explain assessments.
-- Notes and Considering or Passed states preserve decisions.
-
-### Boundary
-
-Search remains secondary. The primary activity is simultaneous comparison of the whole shortlist, rather than individual discovery or repeated two-job decisions.
-
-### Implemented update
-
-The study guide now combines scenario, goal, and one task in a single panel. Task progress, completion controls, and Overview or Tasks tabs have been removed. The participant leaves only the matching job as Considering and submits the answer in PeerSurvey.
-
-## Prototype C: Shortlisted job comparison
-
-### Distinct features
-
 - Jobs are reviewed two at a time.
 - Users can keep, set aside, or postpone jobs.
 - Decisions can include reasons and private notes.
@@ -62,7 +44,25 @@ This alternative does not use a configurable requirements table or overall match
 
 ### Implemented update
 
-The guide now combines scenario, goal, and one task in a single panel. The task asks participants to start a two-job comparison, inspect at least one hiring-evidence source, confirm at least one decision, and identify a suitable role. These checkpoints are captured in the evaluation log, while participants submit the role and observed evidence in PeerSurvey.
+The study guide combines scenario, goal, and one task in a single panel. The task asks participants to start a two-job comparison, inspect at least one hiring-evidence source, confirm at least one decision, and identify a suitable role. These checkpoints are captured in the evaluation log, while participants submit the role and observed evidence in PeerSurvey.
+
+## Prototype C: Shortlisted job comparison
+
+### Distinct features
+
+- An existing shortlist is displayed in one persistent table.
+- Corresponding criteria are aligned across jobs.
+- Users can highlight differences and reorder columns.
+- Evidence panels explain assessments.
+- Notes and Considering or Passed states preserve decisions.
+
+### Boundary
+
+Search remains secondary. The primary activity is simultaneous comparison of the whole shortlist, rather than individual discovery or repeated two-job decisions.
+
+### Implemented update
+
+The study guide combines scenario, goal, and one task in a single panel. The participant uses the comparison matrix, evidence panels, and difference highlighting, leaves at least one suitable job as Considering, and submits the answer in PeerSurvey.
 
 ## Shared evaluation structure
 
@@ -79,8 +79,8 @@ Shared features such as fictional job data, standardized categories, hiring evid
 - The current study is fixed to the software-development dataset.
 - Each prototype keeps its own local state, so completing one task does not affect another prototype.
 - Three groups rotate the starting prototype: A--B--C, B--C--A, or C--A--B.
-- The landing page converts the persistent group assignment into three ordered prototype links.
-- Every link includes the group and step number.
+- The landing page shows the assigned prototype order and exposes one Start task action.
+- Start and handoff URLs preserve the group and step number.
 - J11 and J06 meet all required conditions; J11 also fully meets the experience preference.
 - The customer-support dataset remains in the code for a possible later two-domain study, but it is not currently selectable.
 

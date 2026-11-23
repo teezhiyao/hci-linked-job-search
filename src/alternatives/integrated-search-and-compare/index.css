@@ -590,7 +590,8 @@ body.resizing {
   margin-right: 6px;
   letter-spacing: 0.05em;
 }
-.requirements-empty, .form-help {
+.requirements-empty,
+.form-help {
   margin: 10px 0 0;
   color: #5f6b75;
   font-size: 12px;
@@ -698,6 +699,23 @@ body.resizing {
 }
 .job-card-copy {
   min-width: 0;
+}
+.job-code {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  margin-bottom: 5px;
+  padding: 2px 7px;
+  border: 1px solid #c8d4df;
+  border-radius: 999px;
+  background: #f4f7fa;
+  color: #4f5f6d;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+.detail-brand .job-code {
+  margin: 0 0 0 auto;
 }
 .job-card h3 {
   color: #0a66c2;
@@ -1054,6 +1072,13 @@ body.resizing {
 .criterion-editor.disabled {
   padding-block: 12px;
 }
+.criterion-editor.invalid {
+  margin-inline: -12px;
+  padding-inline: 12px;
+  border-radius: 6px;
+  background: #fff8f7;
+  box-shadow: inset 3px 0 #b42318;
+}
 .criterion-head {
   display: flex;
   justify-content: space-between;
@@ -1105,6 +1130,21 @@ body.resizing {
   background: white;
   color: #24292d;
   font-size: 12px;
+}
+.criterion-fields input[aria-invalid="true"] {
+  border-color: #b42318;
+  box-shadow: 0 0 0 1px #b42318;
+}
+.field-error {
+  color: #b42318;
+  font-size: 10px;
+  font-weight: 600;
+}
+.field-help {
+  margin: 5px 0 0;
+  color: #687178;
+  font-size: 10px;
+  line-height: 1.4;
 }
 .field-row {
   display: flex;
@@ -1193,6 +1233,27 @@ body.resizing {
   position: sticky;
   bottom: 0;
   background: white;
+}
+.validation-summary {
+  margin: 4px 24px 0;
+  padding: 12px 14px;
+  border: 1px solid #e5aaa5;
+  border-radius: 6px;
+  color: #7a271a;
+  background: #fff4f2;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.validation-summary strong {
+  display: block;
+  margin-bottom: 5px;
+}
+.validation-summary ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.validation-summary span {
+  font-weight: 650;
 }
 .apply-modal {
   width: min(440px, 94vw);

@@ -5,98 +5,325 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LinkedIn Job Search Design Alternatives</title>
     <style>
-      :root { font-family: Inter, system-ui, sans-serif; color: #1f2328; background: #f6f8fa; }
-      body { max-width: 760px; margin: 0 auto; padding: 64px 24px; }
-      h1 { margin-bottom: 8px; }
-      p { color: #59636e; line-height: 1.6; }
-      ul { display: grid; gap: 16px; padding: 0; margin-top: 32px; list-style: none; }
-      a { display: block; padding: 20px; border: 1px solid #d1d9e0; border-radius: 12px; color: #0969da; background: white; font-weight: 700; text-decoration: none; }
-      a:hover, a:focus-visible { border-color: #0969da; box-shadow: 0 2px 8px rgb(31 35 40 / 10%); }
-      a span { display: block; margin-bottom: 5px; color: #59636e; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
-      a small { display: block; margin-top: 7px; color: #59636e; font-size: 14px; font-weight: 400; line-height: 1.45; }
-      .assignment { margin: 28px 0 0; padding: 16px 18px; border: 1px solid #b7cee5; border-radius: 10px; background: #eef5fb; }
-      .assignment span, .assignment strong, .assignment small { display: block; }
-      .assignment span { color: #536b82; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-      .assignment strong { margin: 4px 0; color: #0969da; font-size: 22px; }
-      .assignment small { color: #425466; font-size: 14px; }
+      :root {
+        font-family: Inter, system-ui, sans-serif;
+        color: #1f2328;
+        background: #eef3f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 56px 24px;
+        background:
+          radial-gradient(circle at 12% 12%, rgb(10 102 194 / 9%), transparent 28rem),
+          radial-gradient(circle at 90% 88%, rgb(5 80 174 / 7%), transparent 24rem);
+      }
+      main {
+        width: min(900px, 100%);
+        margin: 0 auto;
+        padding: 46px;
+        border: 1px solid #d8e1ea;
+        border-radius: 20px;
+        background: rgb(255 255 255 / 94%);
+        box-shadow: 0 20px 60px rgb(31 35 40 / 10%);
+      }
+      .page-kicker {
+        display: inline-block;
+        margin-bottom: 12px;
+        color: #0969da;
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      h1 {
+        max-width: 680px;
+        margin: 0 0 12px;
+        font-size: clamp(30px, 5vw, 44px);
+        line-height: 1.08;
+        letter-spacing: -0.035em;
+      }
+      .intro {
+        max-width: 720px;
+        margin: 0;
+        color: #59636e;
+        font-size: 16px;
+        line-height: 1.65;
+      }
+      .assignment {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 30px 0 0;
+        padding: 16px 18px;
+        border: 1px solid #c8dcec;
+        border-radius: 12px;
+        background: #f3f8fc;
+      }
+      .assignment span,
+      .assignment strong,
+      .assignment small {
+        display: block;
+      }
+      .assignment span {
+        color: #536b82;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .assignment strong {
+        margin: 3px 0;
+        color: #174f7c;
+        font-size: 20px;
+      }
+      .assignment small {
+        color: #425466;
+        font-size: 14px;
+      }
+      .assignment-mark {
+        display: grid;
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 50%;
+        color: white;
+        background: #0969da;
+        font-size: 15px;
+        font-weight: 750;
+      }
+      .task-order {
+        margin-top: 38px;
+      }
+      .task-order h2 {
+        margin: 0;
+        font-size: 19px;
+        letter-spacing: -0.01em;
+      }
+      .task-order > p {
+        margin: 5px 0 18px;
+        color: #687684;
+        font-size: 13px;
+      }
+      .sequence {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .sequence li {
+        position: relative;
+        display: flex;
+        min-height: 116px;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 17px;
+        border: 1px solid #d6dee7;
+        border-radius: 12px;
+        color: #1f2328;
+        font-size: 14px;
+        font-weight: 700;
+        background: white;
+        box-shadow: 0 4px 14px rgb(31 35 40 / 6%);
+      }
+      .sequence li:not(:last-child)::after {
+        content: "›";
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        right: -21px;
+        display: grid;
+        width: 16px;
+        height: 26px;
+        place-items: center;
+        transform: translateY(-50%);
+        color: #82909e;
+        font-size: 24px;
+        font-weight: 400;
+        background: #f6f9fb;
+      }
+      .sequence .step-number {
+        display: grid;
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 50%;
+        color: #536b82;
+        background: #edf2f6;
+        font-size: 12px;
+      }
+      .sequence li:first-child {
+        border-color: #8db9dc;
+        box-shadow: 0 5px 18px rgb(10 102 194 / 10%);
+      }
+      .sequence li:first-child .step-number {
+        color: white;
+        background: #0969da;
+      }
+      .sequence .prototype-label {
+        display: block;
+        margin-top: 3px;
+      }
+      .sequence small {
+        display: block;
+        margin-top: 5px;
+        color: #59636e;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.4;
+      }
+      .start-task {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        min-width: 142px;
+        min-height: 48px;
+        margin: 34px 0 0 auto;
+        padding: 12px 24px;
+        border: 1px solid #0969da;
+        border-radius: 24px;
+        color: white;
+        background: #0969da;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .start-task:hover,
+      .start-task:focus-visible {
+        background: #0550ae;
+        box-shadow: 0 6px 18px rgb(9 105 218 / 24%);
+        transform: translateY(-1px);
+      }
+      .start-task:focus-visible {
+        outline: 3px solid rgb(9 105 218 / 25%);
+        outline-offset: 3px;
+      }
+      @media (max-width: 700px) {
+        body {
+          padding: 20px 14px;
+        }
+        main {
+          padding: 28px 22px;
+          border-radius: 16px;
+        }
+        .sequence {
+          grid-template-columns: 1fr;
+          gap: 22px;
+        }
+        .sequence li {
+          min-height: 90px;
+        }
+        .sequence li:not(:last-child)::after {
+          top: auto;
+          right: 50%;
+          bottom: -25px;
+          transform: translateX(50%) rotate(90deg);
+        }
+        .start-task {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
     <main>
+      <span class="page-kicker">HCI research study</span>
       <h1>LinkedIn Job Search Design Alternatives</h1>
-      <p>Complete the three prototypes in the assigned order. Each prototype uses different job criteria, so read its scenario before starting. Keep the same browser tab and, after step 3, copy the combined evaluation log into PeerSurvey.</p>
+      <p class="intro">
+        Complete the three prototypes in the assigned order. Each prototype uses different job
+        criteria, so read its scenario before starting. Keep the same browser tab and, after step 3,
+        copy the combined evaluation log into PeerSurvey.
+      </p>
       <section class="assignment" aria-label="PeerSurvey study group">
-        <span>Your PeerSurvey assignment</span>
-        <strong id="study-group">Assigning study group…</strong>
-        <small id="study-group-instruction">Keep this page open while your assignment loads.</small>
+        <div class="assignment-mark" id="study-group-mark" aria-hidden="true">–</div>
+        <div>
+          <span>Your PeerSurvey assignment</span>
+          <strong id="study-group">Assigning study group…</strong>
+          <small id="study-group-instruction"
+            >Keep this page open while your assignment loads.</small
+          >
+        </div>
       </section>
-      <ul id="prototype-list">
-        <li>
-          <a href="./integrated-search-and-compare/">
-            <span>Prototype A · Discover</span>
-            Criteria-guided search
-            <small>Evaluate and save a suitable job directly from enriched search results.</small>
-          </a>
-        </li>
-        <li>
-          <a href="./shortlisted-job-comparison/">
-            <span>Prototype B · Narrow</span>
-            Shortlist narrowing
-            <small>Reduce a saved collection through a sequence of two-job decisions.</small>
-          </a>
-        </li>
-        <li>
-          <a href="./linkedin-jobs-shortlist-narrower/">
-            <span>Prototype C · Evaluate</span>
-            Shortlisted job comparison
-            <small>Assess all saved roles together in one persistent comparison matrix.</small>
-          </a>
-        </li>
-      </ul>
+      <section class="task-order" aria-labelledby="task-order-title">
+        <h2 id="task-order-title">Your task order</h2>
+        <p>Complete each prototype in sequence. Your next task will unlock after each handoff.</p>
+        <ol class="sequence" id="prototype-sequence" aria-live="polite">
+          <li>Preparing your assigned order…</li>
+        </ol>
+      </section>
+      <a class="start-task" id="start-task" href="./integrated-search-and-compare/?step=1"
+        >Start task</a
+      >
     </main>
     <script>
       (() => {
         const key = "hci-study-group-v1";
         const params = new URLSearchParams(window.location.search);
-        const valid = value => {
+        const valid = (value) => {
           const group = Number(value);
           return Number.isInteger(group) && group >= 1 && group <= 3 ? group : null;
         };
         const urlGroup = valid(params.get("group"));
-        const storedGroup = valid(localStorage.getItem(key));
+        let storedGroup = null;
+        try {
+          storedGroup = valid(localStorage.getItem(key));
+        } catch {
+          // Embedded previews can restrict browser storage.
+        }
         const randomValue = window.crypto?.getRandomValues
           ? window.crypto.getRandomValues(new Uint32Array(1))[0]
           : Math.floor(Math.random() * 2 ** 32);
         const group = urlGroup || storedGroup || (randomValue % 3) + 1;
-        localStorage.setItem(key, String(group));
+        try {
+          localStorage.setItem(key, String(group));
+        } catch {
+          // The assigned sequence still works for this page load.
+        }
         document.getElementById("study-group").textContent = `Study group ${group}`;
+        document.getElementById("study-group-mark").textContent = String(group);
         document.getElementById("study-group-instruction").textContent =
           "Your group and task order will be included automatically in the evaluation log.";
         const sequences = {
           1: ["A", "B", "C"],
           2: ["B", "C", "A"],
-          3: ["C", "A", "B"]
+          3: ["C", "A", "B"],
         };
         const prototypes = {
-          A: { path: "./integrated-search-and-compare/", name: "Criteria-guided search", verb: "Find", label: "Prototype A" },
-          B: { path: "./linkedin-jobs-shortlist-narrower/", name: "Shortlist narrowing", verb: "Compare pairs", label: "Prototype B" },
-          C: { path: "./shortlisted-job-comparison/", name: "Shortlisted job comparison", verb: "Compare all", label: "Prototype C" }
+          A: {
+            path: "./integrated-search-and-compare/",
+            label: "Prototype A",
+            name: "Integrated job search",
+          },
+          B: {
+            path: "./linkedin-jobs-shortlist-narrower/",
+            label: "Prototype B",
+            name: "Shortlist narrowing",
+          },
+          C: {
+            path: "./shortlisted-job-comparison/",
+            label: "Prototype C",
+            name: "Shortlisted job comparison",
+          },
         };
-        const list = document.getElementById("prototype-list");
-        list.innerHTML = "";
-        sequences[group].forEach((prototypeKey, index) => {
-          const prototype = prototypes[prototypeKey];
-          const base = new URL(document.baseURI);
-          const target = new URL(prototype.path, base);
-          target.searchParams.set("group", String(group));
-          target.searchParams.set("step", String(index + 1));
-          const item = document.createElement("li");
-          const link = document.createElement("a");
-          link.href = target.href;
-          link.innerHTML = `<span>Step ${index + 1} · ${prototype.label} · ${prototype.verb}</span>${prototype.name}<small>Software-development task</small>`;
-          item.appendChild(link);
-          list.appendChild(item);
-        });
+        const assignedOrder = sequences[group];
+        document.getElementById("prototype-sequence").innerHTML = assignedOrder
+          .map((prototypeKey, index) => {
+            const prototype = prototypes[prototypeKey];
+            return `<li><span class="step-number">${index + 1}</span><div><span class="prototype-label">${prototype.label}</span><small>${prototype.name}</small></div></li>`;
+          })
+          .join("");
+        const firstPrototype = assignedOrder[0];
+        const target = new URL(prototypes[firstPrototype].path, new URL(document.baseURI));
+        target.searchParams.set("group", String(group));
+        target.searchParams.set("step", "1");
+        document.getElementById("start-task").href = target.href;
       })();
     </script>
   </body>

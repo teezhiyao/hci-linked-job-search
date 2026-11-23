@@ -1121,11 +1121,56 @@ input:checked + .switch::after {
   color: #666;
   font-size: 13px;
 }
-.highlight .status-does-not-meet {
-  box-shadow: 0 0 0 1px #e4a596;
+.highlight .comparison-table td.assessment-does-not-meet {
+  color: #5f2118;
+  background: #fbe9e6;
 }
-.highlight .status-partially-meets {
-  box-shadow: 0 0 0 1px #e3c379;
+.highlight .comparison-table td.assessment-partially-meets {
+  color: #624600;
+  background: #fff3cf;
+}
+.highlight .comparison-table .all-requirements-met td {
+  color: #164c31;
+  background: #e5f3e9;
+  opacity: 1;
+}
+.highlight .comparison-table .all-requirements-met .sticky-col {
+  background: #e5f3e9;
+}
+.highlight .comparison-table .all-requirements-met .identity-cell h2,
+.highlight .comparison-table .all-requirements-met .identity-cell p,
+.highlight .comparison-table .all-requirements-met .actual,
+.highlight .comparison-table .all-requirements-met .responsibilities,
+.highlight .comparison-table .all-requirements-met .responsibilities span {
+  color: #164c31;
+}
+.highlight .comparison-table .all-requirements-met .evidence-link {
+  color: #176b42;
+  font-weight: 700;
+}
+.highlight .comparison-table td.assessment-does-not-meet .actual,
+.highlight .comparison-table td.assessment-does-not-meet .responsibilities,
+.highlight .comparison-table td.assessment-does-not-meet .responsibilities span {
+  color: #5f2118;
+}
+.highlight .comparison-table td.assessment-partially-meets .actual,
+.highlight .comparison-table td.assessment-partially-meets .responsibilities,
+.highlight .comparison-table td.assessment-partially-meets .responsibilities span {
+  color: #624600;
+}
+.highlight .comparison-table td.assessment-does-not-meet .evidence-link {
+  color: #8f2f20;
+  font-weight: 700;
+}
+.highlight .comparison-table td.assessment-partially-meets .evidence-link {
+  color: #735300;
+  font-weight: 700;
+}
+.highlight .comparison-table td.assessment-does-not-meet .assessment-cell:focus-visible {
+  outline-color: #9d2d1c;
+}
+.highlight .comparison-table td.assessment-partially-meets .assessment-cell:focus-visible {
+  outline-color: #845800;
 }
 
 /* Panels and modals */

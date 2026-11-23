@@ -26,11 +26,13 @@ export const studyContent = {
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
-  submission: "Complete the three study steps below. Your answers are included in the combined evaluation log after the third prototype.",
+  submission:
+    "Complete the three study steps below. Your answers are included in the combined evaluation log after the third prototype.",
   tasks: [
     {
       title: "Use requirements to identify a suitable role",
-      description: "First test the filter with SGD 100,000 minimum pay. Then correct every criterion to match the scenario, inspect a remaining job, and save the role you would continue considering.",
+      description:
+        "First test the filter with SGD 100,000 minimum pay. Then correct every criterion to match the scenario, inspect a remaining job, and save the role you would continue considering.",
     },
   ],
 };
@@ -244,8 +246,8 @@ const reqNames: Record<ReqKey, string> = {
   hiring: "Recent hiring confirmation",
 };
 const INITIAL_REQUIREMENTS: Requirements = {
-  // Seeded with plausible but intentionally imperfect values. Participants must
-  // review and correct these before applying the required-criteria filter.
+  // Plausible but intentionally imperfect values give participants a concrete
+  // starting point that they must review against the study scenario.
   keywords: DOMAIN === "support" ? ["Email", "Phone"] : ["React", "Vue"],
   keywordMode: "Any",
   salary: DOMAIN === "support" ? 3500 : 4500,
@@ -579,11 +581,20 @@ function StudyGuide({
               <section className="guide-section" key={section.title}>
                 <h2>{section.title}</h2>
                 <p>{section.intro}</p>
-                <ul className="guide-conditions">{section.conditions.map((condition) => {
-                  const [label, detail] = condition.split(": ");
-                  return <li key={condition}><span className={`condition-label ${label.toLowerCase()}`}>{label}</span><span>{detail}</span></li>;
-                })}</ul>
-                <p><strong>Goal:</strong> {section.goal}</p>
+                <ul className="guide-conditions">
+                  {section.conditions.map((condition) => {
+                    const [label, detail] = condition.split(": ");
+                    return (
+                      <li key={condition}>
+                        <span className={`condition-label ${label.toLowerCase()}`}>{label}</span>
+                        <span>{detail}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p>
+                  <strong>Goal:</strong> {section.goal}
+                </p>
               </section>
             ))}
             <section className="guide-section combined-tasks">
@@ -672,15 +683,27 @@ function RequirementsEditor({
 }) {
   const [draft, setDraft] = useState<Requirements>(() => structuredClone(value));
   const [newKeyword, setNewKeyword] = useState("");
-  const incomplete = reqKeys.some((key) => {
-    if (!draft.enabled[key]) return false;
-    if (key === "keywords") return draft.keywords.length === 0;
-    if (key === "salary") return draft.salary <= 0;
-    if (key === "arrangement") return draft.arrangements.length === 0;
-    if (key === "experience") return draft.maxExperience < draft.minExperience;
-    if (key === "eligibility") return !draft.eligibility.trim();
-    return draft.hiringDays <= 0;
+  const [salaryInput, setSalaryInput] = useState(() =>
+    value.salary > 0 ? String(value.salary) : "",
+  );
+  const validationErrors = reqKeys.flatMap<{ key: ReqKey; message: string }>((key) => {
+    if (!draft.enabled[key]) return [];
+    if (key === "keywords" && draft.keywords.length === 0)
+      return [{ key, message: "Add at least one keyword." }];
+    if (key === "salary" && draft.salary <= 0)
+      return [{ key, message: "Enter a minimum pay greater than 0." }];
+    if (key === "arrangement" && draft.arrangements.length === 0)
+      return [{ key, message: "Select at least one work arrangement." }];
+    if (key === "experience" && draft.maxExperience < draft.minExperience)
+      return [{ key, message: "Maximum years must be at least the minimum." }];
+    if (key === "eligibility" && !draft.eligibility.trim())
+      return [{ key, message: "Enter an eligible work location." }];
+    if (key === "hiring" && draft.hiringDays <= 0)
+      return [{ key, message: "Enter a hiring-confirmation period greater than 0." }];
+    return [];
   });
+  const errorsByKey = new Map(validationErrors.map((error) => [error.key, error.message]));
+  const incomplete = validationErrors.length > 0;
   const update = <K extends keyof Requirements>(key: K, val: Requirements[K]) =>
     setDraft((d) => ({ ...d, [key]: val }));
   return (
@@ -707,7 +730,7 @@ function RequirementsEditor({
         <div className="criteria-list">
           {reqKeys.map((key) => (
             <section
-              className={`criterion-editor ${draft.enabled[key] ? "" : "disabled"}`}
+              className={`criterion-editor ${draft.enabled[key] ? "" : "disabled"} ${errorsByKey.has(key) ? "invalid" : ""}`}
               key={key}
             >
               <div className="criterion-head">
@@ -773,6 +796,7 @@ function RequirementsEditor({
                         ))}
                         <input
                           aria-label="Add keyword"
+                          aria-describedby="keyword-entry-help"
                           placeholder="Add keyword"
                           value={newKeyword}
                           onChange={(e) => setNewKeyword(e.target.value)}
@@ -785,6 +809,9 @@ function RequirementsEditor({
                           }}
                         />
                       </div>
+                      <p className="field-help" id="keyword-entry-help">
+                        Type a keyword, then press Enter to add it.
+                      </p>
                       <div className="segmented">
                         <button
                           className={draft.keywordMode === "Any" ? "active" : ""}
@@ -807,9 +834,23 @@ function RequirementsEditor({
                         Minimum
                         <input
                           type="number"
-                          value={draft.salary}
-                          onChange={(e) => update("salary", Number(e.target.value))}
+                          min="1"
+                          inputMode="numeric"
+                          value={salaryInput}
+                          aria-invalid={errorsByKey.has("salary")}
+                          aria-describedby={
+                            errorsByKey.has("salary") ? "salary-validation-error" : undefined
+                          }
+                          onChange={(e) => {
+                            setSalaryInput(e.target.value);
+                            update("salary", e.target.value === "" ? 0 : Number(e.target.value));
+                          }}
                         />
+                        {errorsByKey.has("salary") && (
+                          <span className="field-error" id="salary-validation-error">
+                            {errorsByKey.get("salary")}
+                          </span>
+                        )}
                       </label>
                       <label>
                         Currency
@@ -912,6 +953,18 @@ function RequirementsEditor({
             </section>
           ))}
         </div>
+        {incomplete && (
+          <div className="validation-summary" role="alert">
+            <strong>Complete the following before applying filters:</strong>
+            <ul>
+              {validationErrors.map(({ key, message }) => (
+                <li key={key}>
+                  <span>{reqNames[key]}:</span> {message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="modal-actions">
           <button className="secondary" onClick={onClose}>
             Cancel
@@ -920,7 +973,6 @@ function RequirementsEditor({
             Save and apply filters
           </button>
         </div>
-        {incomplete && <p className="form-help">Complete every enabled criterion before applying the filters.</p>}
       </div>
     </div>
   );
@@ -956,7 +1008,11 @@ function RequirementsSummary({ req, onEdit }: { req: Requirements; onEdit: () =>
             </div>
           ))}
       </div>
-      {!reqKeys.some((k) => req.enabled[k]) && <p className="requirements-empty">No requirements configured yet. Use Edit requirements to add criteria.</p>}
+      {!reqKeys.some((k) => req.enabled[k]) && (
+        <p className="requirements-empty">
+          No requirements configured yet. Use Edit requirements to add criteria.
+        </p>
+      )}
     </section>
   );
 }
@@ -990,6 +1046,7 @@ function JobCard({
             .join("")}
         </div>
         <div className="job-card-copy">
+          <span className="job-code">{job.id}</span>
           <h3>{job.title}</h3>
           <div className="company">{job.company}</div>
           <div className="metadata">
@@ -1038,6 +1095,7 @@ function JobDetails({
               .join("")}
           </div>
           <span>{job.company}</span>
+          <span className="job-code">{job.id}</span>
         </div>
         <h1>{job.title}</h1>
         <p>
@@ -1160,7 +1218,7 @@ function JobDetails({
 }
 
 export default function App() {
-  const { trackEvent, resetSession } = useEvaluationTracking("enhanced-search");
+  const { trackEvent, resetSession, stopTracking } = useEvaluationTracking("enhanced-search");
   const [state, setState] = useState<AppState>(loadState);
   const [guideVisible, setGuideVisible] = useState(true);
   const [guideWidth, setGuideWidth] = useState(300);
@@ -1203,9 +1261,7 @@ export default function App() {
           query.keyword.trim().toLowerCase(),
         );
         const keywordMatch =
-          broadDomainSearch ||
-          terms.length === 0 ||
-          terms.every((t) => searchable.includes(t));
+          broadDomainSearch || terms.length === 0 || terms.every((t) => searchable.includes(t));
         const locationMatch =
           !query.location.trim() ||
           j.location.toLowerCase().includes(query.location.toLowerCase()) ||
@@ -1220,10 +1276,20 @@ export default function App() {
         const requiredCriteriaMatch =
           !state.requirementsApplied ||
           reqKeys
-            .filter((key) => state.requirements.enabled[key] && state.requirements.importance[key] === "Required")
+            .filter(
+              (key) =>
+                state.requirements.enabled[key] &&
+                state.requirements.importance[key] === "Required",
+            )
             .every((key) => assess(j, state.requirements, key).status === "Meets");
         return (
-          keywordMatch && locationMatch && expMatch && arrangementMatch && techMatch && historyMatch && requiredCriteriaMatch
+          keywordMatch &&
+          locationMatch &&
+          expMatch &&
+          arrangementMatch &&
+          techMatch &&
+          historyMatch &&
+          requiredCriteriaMatch
         );
       }),
     [query, filters, state.history, state.requirements, state.requirementsApplied],
@@ -1242,7 +1308,10 @@ export default function App() {
     }));
   };
   const toggleSave = (id: string) => {
-    trackEvent("decision_changed", { jobId: id, action: state.history[id]?.saved ? "unsaved" : "saved" });
+    trackEvent("decision_changed", {
+      jobId: id,
+      action: state.history[id]?.saved ? "unsaved" : "saved",
+    });
     setState((s) => ({
       ...s,
       history: {
@@ -1254,7 +1323,11 @@ export default function App() {
   const search = (e: FormEvent) => {
     e.preventDefault();
     setQuery({ keyword: keywordInput, location: locationInput });
-    trackEvent("filter_changed", { kind: "search", keyword: keywordInput, location: locationInput });
+    trackEvent("filter_changed", {
+      kind: "search",
+      keyword: keywordInput,
+      location: locationInput,
+    });
   };
   const clearFilters = () => {
     setFilters({ experience: "", arrangement: "", technology: "", history: "" });
@@ -1273,7 +1346,17 @@ export default function App() {
         setWidth={setGuideWidth}
         overlay={overlay}
         resetEvaluation={resetSession}
-        evaluationLog={<StudySequenceHandoff prototype="enhanced-search" onTaskComplete={(details) => trackEvent("task_completed", details)} onFinished={() => trackEvent("task_finished")} />}
+        evaluationLog={
+          <StudySequenceHandoff
+            prototype="enhanced-search"
+            onTaskComplete={(details) => trackEvent("task_completed", details)}
+            onFinished={() => trackEvent("task_finished")}
+            onStudyFinished={() => {
+              trackEvent("task_finished");
+              stopTracking();
+            }}
+          />
+        }
       />
       <main className="linkedin-app">
         <Header guideVisible={guideVisible} onShowGuide={() => setGuideVisible(true)} />
@@ -1379,9 +1462,11 @@ export default function App() {
               <h2>
                 {jobs.length} job{jobs.length === 1 ? "" : "s"} found
               </h2>
-                <p>
+              <p>
                 {query.keyword || "All jobs"} in {query.location || "all locations"}
-                {state.requirementsApplied ? " · Required criteria applied" : " · Configure requirements to filter results"}
+                {state.requirementsApplied
+                  ? " · Required criteria applied"
+                  : " · Configure requirements to filter results"}
               </p>
             </div>
           </div>
@@ -1412,7 +1497,10 @@ export default function App() {
                 <Icon name="search" size={30} />
               </div>
               <h2>No jobs match your search</h2>
-              <p>Try different keywords, edit your requirements, or clear your search filters to see more fictional roles.</p>
+              <p>
+                Try different keywords, edit your requirements, or clear your search filters to see
+                more fictional roles.
+              </p>
               <button className="primary" onClick={clearFilters}>
                 Clear search and filters
               </button>

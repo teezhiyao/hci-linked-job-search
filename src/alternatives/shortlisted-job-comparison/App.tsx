@@ -9,6 +9,14 @@ type Importance = "Required" | "Preferred";
 type CriterionKey = "keywords" | "pay" | "arrangement" | "experience" | "eligibility" | "hiring";
 type Assessment = "Meets" | "Does not meet" | "Partially meets" | "Unknown";
 type Decision = "Not reviewed" | "Considering" | "Passed" | "Applied";
+const criterionKeys: CriterionKey[] = [
+  "keywords",
+  "pay",
+  "arrangement",
+  "experience",
+  "eligibility",
+  "hiring",
+];
 
 type Job = {
   id: string;
@@ -237,10 +245,19 @@ const softwareJobs: Job[] = [
     initialHistory: "Viewed 17 Nov 2026",
   },
   ...EXTRA_SOFTWARE_JOBS.map((job) => ({
-    id: job.id, company: job.company, title: job.title, exp: job.experience,
-    technologies: job.technologies, responsibilities: job.responsibilities, pay: job.salary,
-    arrangement: job.arrangement, officeDays: job.officeDays, location: job.location,
-    eligibility: job.eligibility, hiringDate: job.hiringDate, initialHistory: "Unseen",
+    id: job.id,
+    company: job.company,
+    title: job.title,
+    exp: job.experience,
+    technologies: job.technologies,
+    responsibilities: job.responsibilities,
+    pay: job.salary,
+    arrangement: job.arrangement,
+    officeDays: job.officeDays,
+    location: job.location,
+    eligibility: job.eligibility,
+    hiringDate: job.hiringDate,
+    initialHistory: "Unseen",
   })),
 ];
 
@@ -275,7 +292,13 @@ const initialRequirements: Requirements = {
     values: DOMAIN === "support" ? ["Email", "Phone"] : ["React", "Vue"],
     mode: "Any",
   },
-  pay: { enabled: true, importance: "Required", minimum: DOMAIN === "support" ? 3500 : 4500, currency: "SGD", period: "month" },
+  pay: {
+    enabled: true,
+    importance: "Required",
+    minimum: DOMAIN === "support" ? 3500 : 4500,
+    currency: "SGD",
+    period: "month",
+  },
   arrangement: {
     enabled: true,
     importance: "Required",
@@ -289,7 +312,23 @@ const initialRequirements: Requirements = {
 
 const initialState: AppState = {
   view: "compare",
-  shortlist: ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08", "J09", "J10", "J11", "J12", "J13", "J14", "J15"],
+  shortlist: [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11",
+    "J12",
+    "J13",
+    "J14",
+    "J15",
+  ],
   decisions: {
     J01: "Not reviewed",
     J02: "Not reviewed",
@@ -340,7 +379,7 @@ const columnMeta: Record<string, { label: string; desired?: (r: Requirements) =>
   decision: { label: "Your decision" },
 };
 
-const STORAGE_KEY = `shortlisted-job-comparison-v5-${DOMAIN}`;
+const STORAGE_KEY = `shortlisted-job-comparison-v6-${DOMAIN}`;
 const fmtDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-GB", {
     day: "numeric",
@@ -445,13 +484,13 @@ function assess(
     };
   }
   if (key === "eligibility") {
-    const meets = !job.eligibility.toLowerCase().includes("australia");
+    const meets = job.eligibility.toLowerCase().includes(r.eligibility.value.toLowerCase());
     return {
       status: meets ? "Meets" : "Does not meet",
       actual: job.eligibility,
       explanation: meets
-        ? "The stated eligibility includes Singapore."
-        : "The stated eligibility does not include Singapore.",
+        ? `The stated eligibility includes ${r.eligibility.value}.`
+        : `The stated eligibility does not include ${r.eligibility.value}.`,
       excerpt: `“Applications are open to ${job.eligibility.toLowerCase()}.”`,
     };
   }
@@ -601,11 +640,20 @@ function StudyGuide({
           <section className="guide-section">
             <h2>{studyContent.overview.scenarioTitle}</h2>
             <p>{studyContent.overview.intro}</p>
-            <ul className="guide-conditions">{studyContent.overview.conditions.map((condition) => {
-              const [label, detail] = condition.split(": ");
-              return <li key={condition}><span className={`condition-label ${label.toLowerCase()}`}>{label}</span><span>{detail}</span></li>;
-            })}</ul>
-            <p><strong>Goal:</strong> {studyContent.overview.goal}</p>
+            <ul className="guide-conditions">
+              {studyContent.overview.conditions.map((condition) => {
+                const [label, detail] = condition.split(": ");
+                return (
+                  <li key={condition}>
+                    <span className={`condition-label ${label.toLowerCase()}`}>{label}</span>
+                    <span>{detail}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p>
+              <strong>Goal:</strong> {studyContent.overview.goal}
+            </p>
           </section>
           <section className="guide-section combined-tasks">
             <h2>Task</h2>
@@ -829,6 +877,7 @@ function SearchView({
               >
                 <CompanyMark company={job.company} />
                 <div>
+                  <span className="job-id">{job.id}</span>
                   <h2>{job.title}</h2>
                   <p className="company">{job.company}</p>
                   <p>
@@ -989,7 +1038,11 @@ function CompareView({
     .map((id) => jobs.find((j) => j.id === id)!)
     .filter(Boolean)
     .filter((job) => filter === "All" || state.decisions[job.id] === filter);
-  const enabledCount = Object.values(state.requirements).filter((x) => x.enabled).length;
+  const enabledCriteria = criterionKeys.filter((key) => state.requirements[key].enabled);
+  const enabledCount = enabledCriteria.length;
+  const allRequirementsMeet = (job: Job) =>
+    enabledCriteria.length > 0 &&
+    enabledCriteria.every((key) => assess(job, key, state.requirements).status === "Meets");
   const moveColumn = (key: string, dir: number) =>
     setState((s) => {
       const order = [...s.columnOrder],
@@ -1110,7 +1163,15 @@ function CompareView({
           </thead>
           <tbody>
             {shortlistJobs.map((job) => (
-              <tr key={job.id} className={state.decisions[job.id] === "Passed" ? "passed-row" : ""}>
+              <tr
+                key={job.id}
+                className={[
+                  state.decisions[job.id] === "Passed" ? "passed-row" : "",
+                  allRequirementsMeet(job) ? "all-requirements-met" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
                 {state.columnOrder.map((key) => (
                   <ComparisonCell
                     key={key}
@@ -1235,6 +1296,12 @@ function ComparisonCell({
   remove: () => void;
 }) {
   const r = state.requirements;
+  const assessmentCellClass = (...keys: CriterionKey[]) => {
+    const statuses = keys.filter((key) => r[key].enabled).map((key) => assess(job, key, r).status);
+    if (statuses.includes("Does not meet")) return "assessment-does-not-meet";
+    if (statuses.includes("Partially meets")) return "assessment-partially-meets";
+    return "";
+  };
   const criterionButton = (key: CriterionKey, actual?: string) => {
     if (!r[key].enabled) return <span className="disabled-criterion">Criterion disabled</span>;
     const result = assess(job, key, r);
@@ -1260,7 +1327,7 @@ function ComparisonCell({
     );
   if (column === "skills")
     return (
-      <td>
+      <td className={assessmentCellClass("keywords")}>
         <div className="responsibilities">
           {job.responsibilities.map((x) => (
             <span key={x}>{x}</span>
@@ -1269,18 +1336,21 @@ function ComparisonCell({
         {criterionButton("keywords", job.technologies.join(", "))}
       </td>
     );
-  if (column === "experience") return <td>{criterionButton("experience")}</td>;
-  if (column === "pay") return <td>{criterionButton("pay")}</td>;
+  if (column === "experience")
+    return <td className={assessmentCellClass("experience")}>{criterionButton("experience")}</td>;
+  if (column === "pay")
+    return <td className={assessmentCellClass("pay")}>{criterionButton("pay")}</td>;
   if (column === "arrangement")
     return (
-      <td>
+      <td className={assessmentCellClass("arrangement", "eligibility")}>
         <div className="stacked-assessments">
           {criterionButton("arrangement")}
           {criterionButton("eligibility")}
         </div>
       </td>
     );
-  if (column === "hiring") return <td>{criterionButton("hiring")}</td>;
+  if (column === "hiring")
+    return <td className={assessmentCellClass("hiring")}>{criterionButton("hiring")}</td>;
   const decision = state.decisions[job.id] || "Not reviewed";
   return (
     <td className="decision-cell">
@@ -1714,7 +1784,7 @@ function Modal({
 }
 
 function App() {
-  const { trackEvent, resetSession } = useEvaluationTracking("comparison-table");
+  const { trackEvent, resetSession, stopTracking } = useEvaluationTracking("comparison-table");
   const [state, setState] = useState<AppState>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -1752,7 +1822,17 @@ function App() {
         setHidden={setGuideHidden}
         mobile={mobile}
         onReset={() => setResetOpen(true)}
-        evaluationLog={<StudySequenceHandoff prototype="comparison-table" onTaskComplete={(details) => trackEvent("task_completed", details)} onFinished={() => trackEvent("task_finished")} />}
+        evaluationLog={
+          <StudySequenceHandoff
+            prototype="comparison-table"
+            onTaskComplete={(details) => trackEvent("task_completed", details)}
+            onFinished={() => trackEvent("task_finished")}
+            onStudyFinished={() => {
+              trackEvent("task_finished");
+              stopTracking();
+            }}
+          />
+        }
       />
       <div className="application-shell">
         <GlobalNav shortlistCount={state.shortlist.length} />
@@ -1766,8 +1846,8 @@ function App() {
       {resetOpen && (
         <Modal title="Reset this prototype?" onClose={() => setResetOpen(false)}>
           <p>
-            This will restore the original shortlist, requirements, notes, and decisions. This action
-            cannot be undone.
+            This will restore the original shortlist, requirements, notes, and decisions. This
+            action cannot be undone.
           </p>
           <div className="modal-actions">
             <button className="secondary" onClick={() => setResetOpen(false)}>

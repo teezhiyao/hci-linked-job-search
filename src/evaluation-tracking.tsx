@@ -5,7 +5,7 @@ export type Details = Record<string, string | number | boolean | null | string[]
 type EvaluationEvent = { t: number; type: string; details?: Details };
 type Session = {
   version: "1.1"; sessionId: string; prototype: PrototypeId; studyGroup: number | null;
-  step: number | null; dataset: "software-development-v2"; startedAt: number; events: EvaluationEvent[];
+  step: number | null; dataset: "software-development-v2"; startedAt: number; endedAt?: number; events: EvaluationEvent[];
 };
 
 const numberParam = (name: string) => {
@@ -22,7 +22,7 @@ const createSession = (prototype: PrototypeId): Session => ({
 });
 
 function summarize(current: Session) {
-  const elapsedSeconds = Math.round((Date.now() - current.startedAt) / 1000);
+  const elapsedSeconds = Math.round(((current.endedAt ?? Date.now()) - current.startedAt) / 1000);
   const count = (type: string) => current.events.filter(event => event.type === type).length;
   let hiddenAt: number | null = null, hiddenSeconds = 0;
   current.events.forEach(event => {
@@ -47,12 +47,14 @@ function summarize(current: Session) {
 export function useEvaluationTracking(prototype: PrototypeId) {
   const key = `hci-job-evaluation-v2-${prototype}-g${numberParam("group") ?? "direct"}-s${numberParam("step") ?? "direct"}`;
   const session = useRef<Session | null>(null);
+  const stopped = useRef(false);
   if (!session.current) {
     try { session.current = JSON.parse(sessionStorage.getItem(key) || "null") || createSession(prototype); }
     catch { session.current = createSession(prototype); }
   }
   const persist = useCallback(() => { try { sessionStorage.setItem(key, JSON.stringify(session.current)); } catch { /* memory fallback */ } }, [key]);
   const trackEvent = useCallback((type: string, details?: Details) => {
+    if (stopped.current) return;
     const current = session.current!;
     current.events.push({ t: Math.round((Date.now() - current.startedAt) / 1000), type, ...(details && Object.keys(details).length ? { details } : {}) });
     persist();
@@ -63,8 +65,16 @@ export function useEvaluationTracking(prototype: PrototypeId) {
     document.addEventListener("visibilitychange", listener);
     return () => document.removeEventListener("visibilitychange", listener);
   }, [persist, trackEvent]);
-  const resetSession = useCallback(() => { session.current = createSession(prototype); persist(); }, [persist, prototype]);
-  return { trackEvent, resetSession };
+  const resetSession = useCallback(() => { session.current = createSession(prototype); stopped.current = false; persist(); }, [persist, prototype]);
+  const stopTracking = useCallback(() => {
+    if (stopped.current) return;
+    const current = session.current!;
+    current.events.push({ t: Math.round((Date.now() - current.startedAt) / 1000), type: "session_finished" });
+    current.endedAt = Date.now();
+    stopped.current = true;
+    persist();
+  }, [persist]);
+  return { trackEvent, resetSession, stopTracking };
 }
 
 function combinedLog() {
@@ -180,8 +190,8 @@ const studyConfigs: Record<PrototypeId, StudyConfig> = {
 const classify = (config: StudyConfig, selectedJob: string) =>
   config.optimal.includes(selectedJob) ? "optimal" : config.acceptable.includes(selectedJob) ? "acceptable" : selectedJob ? "invalid" : "missing";
 
-export function StudySequenceHandoff({ prototype, onFinished, onTaskComplete }: {
-  prototype: PrototypeId; onFinished: () => void; onTaskComplete?: (details: Details) => void;
+export function StudySequenceHandoff({ prototype, onFinished, onStudyFinished, onTaskComplete }: {
+  prototype: PrototypeId; onFinished: () => void; onStudyFinished: () => void; onTaskComplete?: (details: Details) => void;
 }) {
   const params = new URLSearchParams(window.location.search);
   const step = Number(params.get("step"));
@@ -243,7 +253,7 @@ export function StudySequenceHandoff({ prototype, onFinished, onTaskComplete }: 
     }}>{stage === 2 ? "Complete prototype task" : "Continue"}</button>
   </section>;
 
-  if (step === 3) return <FinalEvaluationLogPanel onFinished={onFinished} />;
+  if (step === 3) return <FinalEvaluationLogPanel onFinished={onStudyFinished} />;
   const nextStep = step + 1;
   const order = sequences[Number(group)] || sequences[1];
   const nextPrototype = order[nextStep - 1];

@@ -12,7 +12,7 @@ This review uses the terminology from CS6750 Lesson 2.5, which consolidates prin
 - **Documentation:** The study guide keeps the scenario, conditions, task, fictional-data notice, and survey instructions available in context.
 - **Feedback:** Viewed, saved, considering, passed, kept, and copied states visibly confirm user actions.
 
-## Prototype A: Criteria-guided search
+## Prototype A: Integrated job search
 
 Primary principles:
 
@@ -23,19 +23,6 @@ Primary principles:
 - **Feedback:** Opening and saving a listing updates its visible state immediately.
 
 Main trade-off: greater discoverability may weaken **Simplicity** because filters, requirements, assessments, and details compete for attention.
-
-## Prototype C: Shortlisted job comparison
-
-Primary principles:
-
-- **Structure:** Corresponding job attributes are aligned in stable rows and columns.
-- **Consistency:** Every listing uses the same categories and assessment vocabulary.
-- **Mapping:** Desired values beneath headings connect personal requirements with each job's actual information.
-- **Perceptibility:** Differences, missing values, decisions, previous activity, and supporting evidence remain visible.
-- **Flexibility:** Users may reorder columns, edit requirements, filter decisions, inspect evidence, and add private notes.
-- **Tolerance:** Passed and removed jobs remain recoverable, and passing is distinct from shortlist removal.
-
-Main trade-off: comprehensive structure can weaken **Simplicity** and **Ease and comfort** because a 15-job table is dense and may require horizontal scrolling.
 
 ## Prototype B: Shortlist narrowing
 
@@ -50,6 +37,19 @@ Primary principles:
 - **Ease and comfort:** Smaller comparisons reduce the information that must be processed at once.
 
 Main trade-off: local simplicity may increase total effort. Repeated comparisons across 15 jobs can produce fatigue and order effects.
+
+## Prototype C: Shortlisted job comparison
+
+Primary principles:
+
+- **Structure:** Corresponding job attributes are aligned in stable rows and columns.
+- **Consistency:** Every listing uses the same categories and assessment vocabulary.
+- **Mapping:** Desired values beneath headings connect personal requirements with each job's actual information.
+- **Perceptibility:** Differences, missing values, decisions, previous activity, and supporting evidence remain visible.
+- **Flexibility:** Users may reorder columns, edit requirements, filter decisions, inspect evidence, and add private notes.
+- **Tolerance:** Passed and removed jobs remain recoverable, and passing is distinct from shortlist removal.
+
+Main trade-off: comprehensive structure can weaken **Simplicity** and **Ease and comfort** because a 15-job table is dense and may require horizontal scrolling.
 
 ## Evaluation implications
 

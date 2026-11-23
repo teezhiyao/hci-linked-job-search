@@ -201,7 +201,9 @@ const softwareJobs: Job[] = [
     experience: `${job.experience[0]}–${job.experience[1]} years`,
     technologies: job.technologies,
     responsibilities: job.responsibilities,
-    pay: job.salary ? `${job.salary[0].toLocaleString()}–${job.salary[1].toLocaleString()}` : "Not provided",
+    pay: job.salary
+      ? `${job.salary[0].toLocaleString()}–${job.salary[1].toLocaleString()}`
+      : "Not provided",
     arrangement: `${job.arrangement}${job.officeDays !== null ? `, ${job.officeDays} office days/week` : ""}, ${job.location}`,
     eligibility: job.eligibility,
     hiring: job.hiringDate
@@ -218,7 +220,9 @@ const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
   experience: `${job.experience[0]}–${job.experience[1]} years`,
   technologies: job.technologies,
   responsibilities: job.responsibilities,
-  pay: job.salary ? `${job.salary[0].toLocaleString()}–${job.salary[1].toLocaleString()}` : "Not provided",
+  pay: job.salary
+    ? `${job.salary[0].toLocaleString()}–${job.salary[1].toLocaleString()}`
+    : "Not provided",
   arrangement: `${job.arrangement}${job.officeDays !== null ? `, ${job.officeDays} office days/week` : ""}, ${job.location}`,
   eligibility: job.eligibility,
   hiring: job.hiringDate
@@ -235,7 +239,23 @@ const supportJobs: Job[] = CUSTOMER_SUPPORT_JOBS.map((job) => ({
 
 const jobs = DOMAIN === "support" ? supportJobs : softwareJobs;
 
-const initialShortlist = ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08", "J09", "J10", "J11", "J12", "J13", "J14", "J15"];
+const initialShortlist = [
+  "J01",
+  "J02",
+  "J03",
+  "J04",
+  "J05",
+  "J06",
+  "J07",
+  "J08",
+  "J09",
+  "J10",
+  "J11",
+  "J12",
+  "J13",
+  "J14",
+  "J15",
+];
 const initialState: AppState = {
   shortlist: initialShortlist,
   statuses: Object.fromEntries(initialShortlist.map((id) => [id, "pending"])) as Record<
@@ -358,7 +378,7 @@ function loadState(): AppState {
 }
 
 export default function App() {
-  const { trackEvent, resetSession } = useEvaluationTracking("two-job-comparison");
+  const { trackEvent, resetSession, stopTracking } = useEvaluationTracking("two-job-comparison");
   const [state, setState] = useState<AppState>(loadState);
   const [view, setView] = useState<View>("shortlist");
   const [guideOpen, setGuideOpen] = useState(true);
@@ -579,11 +599,20 @@ export default function App() {
             <section className="guide-section">
               <h2>Scenario and goal</h2>
               <p>{studyContent.overview.intro}</p>
-              <ul className="guide-conditions">{studyContent.overview.conditions.map((condition) => {
-                const [label, detail] = condition.split(": ");
-                return <li key={condition}><span className={`condition-label ${label.toLowerCase()}`}>{label}</span><span>{detail}</span></li>;
-              })}</ul>
-              <p><strong>Goal:</strong> {studyContent.overview.goal}</p>
+              <ul className="guide-conditions">
+                {studyContent.overview.conditions.map((condition) => {
+                  const [label, detail] = condition.split(": ");
+                  return (
+                    <li key={condition}>
+                      <span className={`condition-label ${label.toLowerCase()}`}>{label}</span>
+                      <span>{detail}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p>
+                <strong>Goal:</strong> {studyContent.overview.goal}
+              </p>
             </section>
             <section className="guide-section combined-tasks">
               <h2>Task</h2>
@@ -603,7 +632,15 @@ export default function App() {
               <strong>Study note</strong>
               <span>{studyContent.disclaimer}</span>
             </div>
-            <StudySequenceHandoff prototype="two-job-comparison" onTaskComplete={(details) => trackEvent("task_completed", details)} onFinished={() => trackEvent("task_finished")} />
+            <StudySequenceHandoff
+              prototype="two-job-comparison"
+              onTaskComplete={(details) => trackEvent("task_completed", details)}
+              onFinished={() => trackEvent("task_finished")}
+              onStudyFinished={() => {
+                trackEvent("task_finished");
+                stopTracking();
+              }}
+            />
           </div>
         </div>
         <div
@@ -817,9 +854,7 @@ export default function App() {
       )}
       {showReset && (
         <Dialog title="Reset prototype?" close={() => setShowReset(false)}>
-          <p>
-            This will restore all jobs, decisions, filters, and history to the initial state.
-          </p>
+          <p>This will restore all jobs, decisions, filters, and history to the initial state.</p>
           <div className="dialog-actions">
             <button className="secondary-btn" onClick={() => setShowReset(false)}>
               Cancel
@@ -1025,6 +1060,7 @@ function JobRow({
         {monogram(job.company)}
       </div>
       <div className="job-main">
+        <span className="job-id">{job.id}</span>
         <button className="job-title" onClick={open}>
           {job.title}
         </button>
@@ -1136,6 +1172,7 @@ function SearchView({
                 {monogram(job.company)}
               </div>
               <div>
+                <span className="job-id">{job.id}</span>
                 <button className="job-title" onClick={() => openJob(job.id)}>
                   {job.title}
                 </button>
