@@ -42,23 +42,23 @@ const studyContent = {
   overview: {
     intro: "You are seeking a Singapore software-development role with:",
     conditions: [
-      "Required: React, TypeScript, or Node.js",
-      "Required: at least SGD 5,000 per month",
+      "Required: React, Node.js, or PostgreSQL",
+      "Required: at least SGD 4,500 per month",
       "Required: remote or hybrid work with no more than two office days",
       "Required: eligibility for Singapore-based applicants",
       "Required: hiring confirmed within the past 14 days",
-      "Preferred: no more than three years of experience",
+      "Preferred: no more than two years of experience",
     ],
     goal: "Identify at least one role that meets the required conditions. Use the preference to distinguish between suitable roles.",
   },
   disclaimer: "All job information in this prototype is fictional.",
   submission:
-    "Record at least one suitable role in PeerSurvey. The combined evaluation log is available after the third prototype.",
+    "Complete the three study steps below. Your answers are included in the combined evaluation log after the third prototype.",
   tasks: [
     {
       title: "Compare and narrow your shortlist",
       description:
-        "Select Start comparing jobs. In at least one pair, open Show source under Hiring evidence and inspect what appears. Confirm at least one comparison decision, then identify at least one role that meets every required condition. In PeerSurvey, record the role and what the hiring-evidence source showed.",
+        "Select Start comparing jobs, inspect the hiring-evidence source for the first pair, compare J05 and J06, and confirm which role should remain in consideration.",
     },
   ],
 };
@@ -448,6 +448,9 @@ export default function App() {
     );
   }
   function beginReview(ids = pending.map((j) => j.id)) {
+    if (ids.length === initialShortlist.length) {
+      ids = ["J05", "J06", ...ids.filter((id) => id !== "J05" && id !== "J06")];
+    }
     trackEvent("pair_comparison_started", { pendingCount: ids.length });
     setPair(ids.slice(0, 2));
     setEditingHistory(null);
@@ -600,7 +603,7 @@ export default function App() {
               <strong>Study note</strong>
               <span>{studyContent.disclaimer}</span>
             </div>
-            <StudySequenceHandoff prototype="two-job-comparison" onTaskComplete={() => trackEvent("task_completed")} onFinished={() => trackEvent("task_finished")} />
+            <StudySequenceHandoff prototype="two-job-comparison" onTaskComplete={(details) => trackEvent("task_completed", details)} onFinished={() => trackEvent("task_finished")} />
           </div>
         </div>
         <div

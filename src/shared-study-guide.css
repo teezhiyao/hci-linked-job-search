@@ -345,3 +345,71 @@
 .study-guide .resize-handle:active {
   background: rgba(10, 102, 194, 0.2);
 }
+.checkpoint-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.checkpoint-panel h2,
+.checkpoint-panel p {
+  margin: 0;
+}
+
+.checkpoint-question {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #d7dde3;
+  border-radius: 8px;
+}
+
+.checkpoint-question legend {
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.checkpoint-question label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.checkpoint-field {
+  display: grid;
+  gap: 5px;
+  color: #40464d;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.checkpoint-field select {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 8px;
+  border: 1px solid #aeb8c2;
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+}
+
+.checkpoint-field input[type="range"] {
+  width: 100%;
+}
+
+.checkpoint-note {
+  color: #687078;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.copy-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 12px 0;
+  font-size: 12px;
+}

@@ -8,7 +8,7 @@ const DOMAIN = getStudyDomain();
 type Importance = "Required" | "Preferred";
 type CriterionKey = "keywords" | "pay" | "arrangement" | "experience" | "eligibility" | "hiring";
 type Assessment = "Meets" | "Does not meet" | "Partially meets" | "Unknown";
-type Decision = "Considering" | "Passed" | "Applied";
+type Decision = "Not reviewed" | "Considering" | "Passed" | "Applied";
 
 type Job = {
   id: string;
@@ -65,22 +65,22 @@ const studyContent = {
     scenarioTitle: "Scenario and goal",
     intro: "You are seeking a Singapore software-development role with:",
     conditions: [
-      "Required: React, TypeScript, or Node.js",
+      "Required: React or TypeScript",
       "Required: at least SGD 5,000 per month",
-      "Required: remote or hybrid work with no more than two office days",
+      "Required: remote or hybrid work with no more than three office days",
       "Required: eligibility for Singapore-based applicants",
       "Required: hiring confirmed within the past 14 days",
-      "Preferred: no more than three years of experience",
+      "Preferred: no more than two years of experience",
     ],
     goal: "Identify at least one role that meets the required conditions. Use the preference to distinguish between suitable roles.",
   },
   submission:
-    "Record at least one suitable role in PeerSurvey. The combined evaluation log is available after the third prototype.",
+    "Complete the three study steps below. Your answers are included in the combined evaluation log after the third prototype.",
   tasks: [
     {
       title: "Identify a suitable role",
       description:
-        "In the comparison table, use the requirement summary and Highlight differences to compare the shortlisted jobs. Open at least one cell to inspect its evidence panel, then mark at least one role Considering. Record the role and the evidence you inspected in PeerSurvey.",
+        "Turn on Highlight differences, correct the pre-filled requirements, open at least one evidence cell, and change a suitable role from Not reviewed to Considering.",
     },
   ],
 };
@@ -272,40 +272,40 @@ const initialRequirements: Requirements = {
   keywords: {
     enabled: true,
     importance: "Required",
-    values: DOMAIN === "support" ? ["Email", "Live chat"] : ["React", "TypeScript", "Node.js"],
+    values: DOMAIN === "support" ? ["Email", "Phone"] : ["React", "Vue"],
     mode: "Any",
   },
-  pay: { enabled: true, importance: "Required", minimum: DOMAIN === "support" ? 4000 : 5000, currency: "SGD", period: "month" },
+  pay: { enabled: true, importance: "Required", minimum: DOMAIN === "support" ? 3500 : 4500, currency: "SGD", period: "month" },
   arrangement: {
     enabled: true,
     importance: "Required",
     values: ["Remote", "Hybrid"],
-    maxOfficeDays: 2,
+    maxOfficeDays: 3,
   },
-  experience: { enabled: true, importance: "Preferred", maximum: DOMAIN === "support" ? 2 : 3 },
+  experience: { enabled: true, importance: "Preferred", maximum: DOMAIN === "support" ? 4 : 5 },
   eligibility: { enabled: true, importance: "Required", value: "Singapore" },
-  hiring: { enabled: true, importance: "Required", freshness: 14 },
+  hiring: { enabled: true, importance: "Required", freshness: 30 },
 };
 
 const initialState: AppState = {
   view: "compare",
   shortlist: ["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08", "J09", "J10", "J11", "J12", "J13", "J14", "J15"],
   decisions: {
-    J01: "Considering",
-    J02: "Considering",
-    J03: "Considering",
-    J04: "Considering",
-    J05: "Considering",
-    J06: "Considering",
-    J07: "Considering",
+    J01: "Not reviewed",
+    J02: "Not reviewed",
+    J03: "Not reviewed",
+    J04: "Not reviewed",
+    J05: "Not reviewed",
+    J06: "Not reviewed",
+    J07: "Not reviewed",
     J08: "Applied",
-    J09: "Considering",
-    J10: "Considering",
-    J11: "Considering",
-    J12: "Considering",
-    J13: "Considering",
-    J14: "Considering",
-    J15: "Considering",
+    J09: "Not reviewed",
+    J10: "Not reviewed",
+    J11: "Not reviewed",
+    J12: "Not reviewed",
+    J13: "Not reviewed",
+    J14: "Not reviewed",
+    J15: "Not reviewed",
   },
   passReasons: {},
   viewed: ["J01", "J10"],
@@ -755,7 +755,7 @@ function SearchView({
       decisions: {
         ...s.decisions,
         [selected.id]:
-          selected.id === "J08" ? "Applied" : s.decisions[selected.id] || "Considering",
+          selected.id === "J08" ? "Applied" : s.decisions[selected.id] || "Not reviewed",
       },
     }));
   return (
@@ -980,7 +980,7 @@ function CompareView({
   trackEvent: (type: string, details?: Record<string, string>) => void;
 }) {
   const [filter, setFilter] = useState<"All" | Decision>("All");
-  const [highlight, setHighlight] = useState(true);
+  const [highlight, setHighlight] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
   const [evidence, setEvidence] = useState<{ job: Job; key: CriterionKey } | null>(null);
   const [passJob, setPassJob] = useState<Job | null>(null);
@@ -1007,7 +1007,7 @@ function CompareView({
     });
   };
   const setDecision = (job: Job, decision: Decision, reason = "") => {
-    const previous = state.decisions[job.id] || "Considering";
+    const previous = state.decisions[job.id] || "Not reviewed";
     trackEvent("decision_changed", { jobId: job.id, from: previous, to: decision });
     setState((s) => ({
       ...s,
@@ -1050,7 +1050,7 @@ function CompareView({
       </section>
       <div className="comparison-toolbar">
         <div className="decision-filters" role="group" aria-label="Filter by decision">
-          {(["All", "Considering", "Passed", "Applied"] as const).map((x) => (
+          {(["All", "Not reviewed", "Considering", "Passed", "Applied"] as const).map((x) => (
             <button key={x} className={filter === x ? "active" : ""} onClick={() => setFilter(x)}>
               {x}{" "}
               <span>
@@ -1065,7 +1065,10 @@ function CompareView({
           <input
             type="checkbox"
             checked={highlight}
-            onChange={(e) => setHighlight(e.target.checked)}
+            onChange={(e) => {
+              setHighlight(e.target.checked);
+              trackEvent("differences_toggled", { enabled: String(e.target.checked) });
+            }}
           />
           <span className="switch" />
           Highlight differences
@@ -1144,6 +1147,13 @@ function CompareView({
           requirements={state.requirements}
           onClose={() => setEditorOpen(false)}
           onSave={(requirements) => {
+            trackEvent("requirements_saved", {
+              keywords: requirements.keywords.values.join(", "),
+              minimumPay: String(requirements.pay.minimum),
+              maxOfficeDays: String(requirements.arrangement.maxOfficeDays),
+              maxExperience: String(requirements.experience.maximum),
+              hiringDays: String(requirements.hiring.freshness),
+            });
             setState((s) => ({ ...s, requirements }));
             setEditorOpen(false);
           }}
@@ -1271,7 +1281,7 @@ function ComparisonCell({
       </td>
     );
   if (column === "hiring") return <td>{criterionButton("hiring")}</td>;
-  const decision = state.decisions[job.id] || "Considering";
+  const decision = state.decisions[job.id] || "Not reviewed";
   return (
     <td className="decision-cell">
       <label>
@@ -1281,6 +1291,7 @@ function ComparisonCell({
           disabled={decision === "Applied"}
           onChange={(e) => setDecision(e.target.value as Decision)}
         >
+          <option>Not reviewed</option>
           <option>Considering</option>
           <option>Passed</option>
           {decision === "Applied" && <option>Applied</option>}
@@ -1741,7 +1752,7 @@ function App() {
         setHidden={setGuideHidden}
         mobile={mobile}
         onReset={() => setResetOpen(true)}
-        evaluationLog={<StudySequenceHandoff prototype="comparison-table" onTaskComplete={() => trackEvent("task_completed")} onFinished={() => trackEvent("task_finished")} />}
+        evaluationLog={<StudySequenceHandoff prototype="comparison-table" onTaskComplete={(details) => trackEvent("task_completed", details)} onFinished={() => trackEvent("task_finished")} />}
       />
       <div className="application-shell">
         <GlobalNav shortlistCount={state.shortlist.length} />

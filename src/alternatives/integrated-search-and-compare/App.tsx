@@ -9,7 +9,7 @@ const STORAGE_KEY = `integrated-search-compare-v7-${DOMAIN}`;
 
 export const studyContent = {
   label: "Interactive prototype",
-  projectName: "Prototype A — Integrated search and compare",
+  projectName: "Prototype A — Integrated job search",
   overview: [
     {
       title: "Scenario and goal",
@@ -26,11 +26,11 @@ export const studyContent = {
     },
   ],
   notice: "All jobs, companies, and listing details in this prototype are fictional.",
-  submission: "Record at least one suitable role in PeerSurvey. The combined evaluation log is available after the third prototype.",
+  submission: "Complete the three study steps below. Your answers are included in the combined evaluation log after the third prototype.",
   tasks: [
     {
-      title: "Identify a suitable role",
-      description: "Open Edit requirements and fill in the required job criteria, including skills, pay, work arrangement, eligibility, and hiring recency. Save them to filter out jobs that do not meet every required criterion. Open a remaining job, inspect Compared with your requirements, save at least one suitable role, and record the role plus one visible assessment in PeerSurvey.",
+      title: "Use requirements to identify a suitable role",
+      description: "First test the filter with SGD 100,000 minimum pay. Then correct every criterion to match the scenario, inspect a remaining job, and save the role you would continue considering.",
     },
   ],
 };
@@ -1273,7 +1273,7 @@ export default function App() {
         setWidth={setGuideWidth}
         overlay={overlay}
         resetEvaluation={resetSession}
-        evaluationLog={<StudySequenceHandoff prototype="enhanced-search" onTaskComplete={() => trackEvent("task_completed")} onFinished={() => trackEvent("task_finished")} />}
+        evaluationLog={<StudySequenceHandoff prototype="enhanced-search" onTaskComplete={(details) => trackEvent("task_completed", details)} onFinished={() => trackEvent("task_finished")} />}
       />
       <main className="linkedin-app">
         <Header guideVisible={guideVisible} onShowGuide={() => setGuideVisible(true)} />
@@ -1425,6 +1425,19 @@ export default function App() {
           value={state.requirements}
           onClose={() => setRequirementsOpen(false)}
           onSave={(r) => {
+            const matchingJobs = JOBS.filter((job) =>
+              reqKeys
+                .filter((key) => r.enabled[key] && r.importance[key] === "Required")
+                .every((key) => assess(job, r, key).status === "Meets"),
+            );
+            trackEvent("requirements_saved", {
+              minimumPay: r.salary,
+              keywords: r.keywords,
+              maxOfficeDays: r.maxOfficeDays,
+              maxExperience: r.maxExperience,
+              hiringDays: r.hiringDays,
+              matchingJobs: matchingJobs.length,
+            });
             setState((s) => ({ ...s, requirements: r, requirementsApplied: true }));
             setRequirementsOpen(false);
           }}

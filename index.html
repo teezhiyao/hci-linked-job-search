@@ -24,7 +24,7 @@
   <body>
     <main>
       <h1>LinkedIn Job Search Design Alternatives</h1>
-      <p>Start with step 1 and use the handoff button at the end of each task to continue in the assigned order. Keep the same browser tab. After step 3, copy the combined evaluation log into PeerSurvey.</p>
+      <p>Complete the three prototypes in the assigned order. Each prototype uses different job criteria, so read its scenario before starting. Keep the same browser tab and, after step 3, copy the combined evaluation log into PeerSurvey.</p>
       <section class="assignment" aria-label="PeerSurvey study group">
         <span>Your PeerSurvey assignment</span>
         <strong id="study-group">Assigning study group…</strong>
@@ -71,7 +71,7 @@
         localStorage.setItem(key, String(group));
         document.getElementById("study-group").textContent = `Study group ${group}`;
         document.getElementById("study-group-instruction").textContent =
-          `Enter ${group} as your study-group number in PeerSurvey.`;
+          "Your group and task order will be included automatically in the evaluation log.";
         const sequences = {
           1: ["A", "B", "C"],
           2: ["B", "C", "A"],
