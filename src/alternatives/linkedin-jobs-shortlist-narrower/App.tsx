@@ -763,6 +763,7 @@ export default function App() {
             <span>Decision saved.</span>
             <button
               onClick={() => {
+                trackEvent("decision_undone", { jobIds: [...undoPair] });
                 setState(undoState);
                 setUndoState(null);
                 setPair(undoPair);

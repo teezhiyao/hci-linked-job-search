@@ -4,7 +4,7 @@ This review uses the terminology from CS6750 Lesson 2.5, which consolidates prin
 
 ## Principles shared across alternatives
 
-- **Consistency:** The alternatives use the same 15 fictional jobs, criteria, terminology, standardized categories, LinkedIn-style shell, and study scenario.
+- **Consistency:** The alternatives use the same 15 fictional jobs, criterion categories, terminology, standardized fields, and LinkedIn-style shell. Their similarly structured scenarios use different values so participants cannot reuse one answer.
 - **Perceptibility:** Salary, experience, arrangement, eligibility, hiring evidence, missing information, prior activity, and decisions are shown explicitly.
 - **Mapping:** Listing information is organized around applicants' real decision criteria rather than the source job-description structure.
 - **Structure:** Responsibilities, technologies, experience, salary, arrangement, eligibility, and hiring evidence are grouped consistently.
@@ -53,6 +53,6 @@ Main trade-off: comprehensive structure can weaken **Simplicity** and **Ease and
 
 ## Evaluation implications
 
-The alternatives intentionally emphasize different principles, so the evaluation should examine trade-offs instead of assuming that one design is universally superior. Useful measures include whether participants identify a suitable role, active task time, number of jobs and evidence panels inspected, decision changes or undo actions, confidence, and explanations of the decisive criteria.
+The alternatives intentionally emphasize different principles, so the evaluation should examine trade-offs instead of assuming that one design is universally superior. Measures include whether participants identify a suitable role, checkpoint comprehension, required-feature use, active task time, jobs and evidence panels inspected, decision changes or undo actions, confidence, ease, and explanations of the decisive criteria.
 
 The final evaluation log is kept separate from the product interface in the study guide. Each prototype records a distinct anonymous session containing its prototype identifier, study group, sequence step, dataset version, summary measures, and events. After step 3, the participant copies one combined log containing all three sessions into PeerSurvey.

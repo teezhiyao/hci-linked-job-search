@@ -4,7 +4,7 @@ export type PrototypeId = "enhanced-search" | "comparison-table" | "two-job-comp
 export type Details = Record<string, string | number | boolean | null | string[]>;
 type EvaluationEvent = { t: number; type: string; details?: Details };
 type Session = {
-  version: "1.1"; sessionId: string; prototype: PrototypeId; studyGroup: number | null;
+  version: "1.1" | "1.2"; sessionId: string; prototype: PrototypeId; studyGroup: number | null;
   step: number | null; dataset: "software-development-v2"; startedAt: number; endedAt?: number; events: EvaluationEvent[];
 };
 
@@ -17,7 +17,7 @@ const newId = () => {
   return Array.from(crypto.getRandomValues(new Uint32Array(6)), value => alphabet[value % alphabet.length]).join("");
 };
 const createSession = (prototype: PrototypeId): Session => ({
-  version: "1.1", sessionId: newId(), prototype, studyGroup: numberParam("group"), step: numberParam("step"),
+  version: "1.2", sessionId: newId(), prototype, studyGroup: numberParam("group"), step: numberParam("step"),
   dataset: "software-development-v2", startedAt: Date.now(), events: [{ t: 0, type: "prototype_opened" }],
 });
 
@@ -30,6 +30,29 @@ function summarize(current: Session) {
     if (event.type === "page_visible" && hiddenAt !== null) { hiddenSeconds += Math.max(0, event.t - hiddenAt); hiddenAt = null; }
   });
   if (hiddenAt !== null) hiddenSeconds += Math.max(0, elapsedSeconds - hiddenAt);
+  const hasEvent = (type: string, matches?: (details: Details) => boolean) =>
+    current.events.some(event => event.type === type && (!matches || matches(event.details || {})));
+  const requiredFeatureUse = current.prototype === "enhanced-search"
+    ? {
+        extremePayApplied: hasEvent("requirements_saved", details => details.minimumPay === 100000),
+        scenarioRequirementsApplied: hasEvent("requirements_saved", details => details.matchingJobs === 2),
+        jobInspected: hasEvent("job_opened"),
+        roleSaved: hasEvent("decision_changed", details => details.action === "saved"),
+      }
+    : current.prototype === "two-job-comparison"
+      ? {
+          comparisonStarted: hasEvent("pair_comparison_started"),
+          hiringSourceOpened: hasEvent("comparison_source_opened", details =>
+            typeof details.sourceKey === "string" && details.sourceKey.endsWith("-hiring")),
+          firstPairDecisionConfirmed: hasEvent("pair_decision_confirmed", details =>
+            Array.isArray(details.jobIds) && details.jobIds.includes("J05") && details.jobIds.includes("J06")),
+        }
+      : {
+          differencesHighlighted: hasEvent("differences_toggled", details => details.enabled === "true"),
+          requirementsSaved: hasEvent("requirements_saved"),
+          evidenceInspected: hasEvent("evidence_opened"),
+          roleMarkedConsidering: hasEvent("decision_changed", details => details.to === "Considering"),
+        };
   return {
     version: current.version, sessionId: current.sessionId, prototype: current.prototype, studyGroup: current.studyGroup,
     step: current.step, dataset: current.dataset,
@@ -39,6 +62,8 @@ function summarize(current: Session) {
       filtersChanged: count("filter_changed"), requirementsSaved: count("requirements_saved"),
       decisionChanges: count("decision_changed") + count("pair_decision_confirmed"),
       undos: count("decision_undone"), taskCompleted: count("task_completed"), taskFinished: count("task_finished"),
+      requiredFeatureUse,
+      allRequiredFeaturesUsed: Object.values(requiredFeatureUse).every(Boolean),
     },
     events: current.events,
   };
@@ -89,7 +114,7 @@ function combinedLog() {
     } catch { /* ignore invalid stored data */ }
   }
   sessions.sort((a, b) => (a.step ?? 99) - (b.step ?? 99));
-  return { version: "1.1", studyGroup: group, dataset: "software-development-v2", exportedAt: new Date().toISOString(), sessions: sessions.map(summarize) };
+  return { version: "1.2", studyGroup: group, dataset: "software-development-v2", exportedAt: new Date().toISOString(), sessions: sessions.map(summarize) };
 }
 
 const prototypes = {
@@ -109,6 +134,7 @@ type StudyConfig = {
   taskTitle: string; taskInstruction: string; taskQuestion: string;
   taskOptions: { value: string; label: string }[]; taskCorrect: string;
   detailLabel: string; detailOptions: string[]; optimal: string[]; acceptable: string[];
+  selectableJobs?: string[];
 };
 
 const jobOptions = Array.from({ length: 15 }, (_, index) => `J${String(index + 1).padStart(2, "0")}`);
@@ -124,7 +150,7 @@ const studyConfigs: Record<PrototypeId, StudyConfig> = {
     ],
     learnCorrect: "none",
     taskTitle: "Configure and inspect the scenario",
-    taskInstruction: "Return to Edit requirements and change every criterion to match the scenario. Apply the requirements, then open a remaining job and inspect Compared with your requirements.",
+    taskInstruction: "Return to Edit requirements and change every criterion to match the scenario. Apply the requirements, open a remaining job, inspect Compared with your requirements, and save the role you would continue considering.",
     taskQuestion: "How many roles remain after the required criteria are applied?",
     taskOptions: [
       { value: "0", label: "0" }, { value: "1", label: "1" },
@@ -158,6 +184,7 @@ const studyConfigs: Record<PrototypeId, StudyConfig> = {
     detailLabel: "Most influential factor",
     detailOptions: ["Responsibilities", "Technologies", "Experience", "Pay", "Work arrangement", "Eligibility", "Hiring evidence"],
     optimal: ["J05"], acceptable: ["J06", "J11"],
+    selectableJobs: ["J05", "J06"],
   },
   "comparison-table": {
     scenarioId: "C-shortlist-table",
@@ -172,7 +199,7 @@ const studyConfigs: Record<PrototypeId, StudyConfig> = {
     ],
     learnCorrect: "emphasis",
     taskTitle: "Configure and inspect the comparison table",
-    taskInstruction: "Correct the pre-filled requirements, inspect the aligned assessments, and open at least one evidence cell.",
+    taskInstruction: "Correct the pre-filled requirements, inspect the aligned assessments, open at least one evidence cell, and mark a suitable role as Considering.",
     taskQuestion: "What happens to a job that does not meet a criterion?",
     taskOptions: [
       { value: "labelled", label: "It remains visible with a labelled assessment" },
@@ -204,6 +231,7 @@ export function StudySequenceHandoff({ prototype, onFinished, onStudyFinished, o
   const [detail, setDetail] = useState("");
   const [confidence, setConfidence] = useState("");
   const [ease, setEase] = useState("");
+  const selectableJobs = config.selectableJobs || jobOptions;
   if (step !== 1 && step !== 2 && step !== 3) return null;
 
   if (stage < 3) return <section className="evaluation-log-panel checkpoint-panel">
@@ -222,7 +250,7 @@ export function StudySequenceHandoff({ prototype, onFinished, onStudyFinished, o
       <label className="checkpoint-field">Selected job code
         <select value={selectedJob} onChange={event => setSelectedJob(event.target.value)}>
           <option value="">Select a job</option>
-          {jobOptions.map(job => <option key={job}>{job}</option>)}
+          {selectableJobs.map(job => <option key={job}>{job}</option>)}
         </select>
       </label>
       <label className="checkpoint-field">{config.detailLabel}

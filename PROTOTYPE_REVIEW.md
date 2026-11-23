@@ -2,7 +2,7 @@
 
 ## Evaluation model
 
-The three prototypes use the same LinkedIn-style shell, job information, and decision criteria. Their primary interaction should remain distinct:
+The three prototypes use the same LinkedIn-style shell, 15-job pool, and categories of decision criteria. Each has a similarly structured scenario with different threshold values and a different preferred answer, while its primary interaction remains distinct:
 
 | Alternative                             | Primary purpose                               | Decision model                                                 | Final action                   |
 | --------------------------------------- | --------------------------------------------- | -------------------------------------------------------------- | ------------------------------ |
@@ -68,7 +68,7 @@ The study guide combines scenario, goal, and one task in a single panel. The par
 
 Each alternative now targets one observable result:
 
-1. Find the job that meets every required criterion.
+1. Find a job that meets every required criterion in that prototype's scenario.
 2. Complete the alternative-specific final action: Saved, Considering, or Kept.
 3. Record the selected job, ease rating, and confidence rating in PeerSurvey.
 
@@ -88,15 +88,15 @@ Before launching the study, test every group sequence in a clean browser session
 
 ## Identification task and evaluation plan
 
-All prototypes begin with the same 15-job evaluation pool and use the same decision rule: required conditions take priority, followed by the preferred experience range. Existing history such as Viewed, Saved, or Applied remains visible but does not remove a listing from the pool. Participants only need to identify at least one suitable role.
+All prototypes begin with the same 15-job evaluation pool and use the same decision rule: required conditions take priority, followed by the preferred experience range. The criterion values vary across the 3 scenarios to reduce answer reuse. Existing history such as Viewed, Saved, or Applied remains visible but does not remove a listing from the pool. Participants only need to identify at least one suitable role.
 
-- **J11, Riverbank Technology:** meets every required condition and the preferred experience range.
-- **J06, Meridian Systems:** meets every required condition, but its 2--4 year range only partially meets the preference for no more than three years.
-- **J05, Brightpath Learning:** is a plausible near-match, but its SGD 4,500--5,500 range does not guarantee the required SGD 5,000 minimum.
+- **Prototype A:** J11 is optimal; J06 meets the required conditions but only partially meets the experience preference.
+- **Prototype B:** J05 is optimal; J06 meets the required conditions but only partially meets the experience preference.
+- **Prototype C:** J13 is optimal; J06 and J11 meet the required conditions but only partially meet the experience preference.
 
 The remaining listings each have at least one required-condition gap, such as insufficient guaranteed salary, stale or missing hiring confirmation, too many office days, ineligible geography, missing salary, or irrelevant technologies.
 
-PeerSurvey should ask participants to enter at least one suitable role, then collect confidence and a short reason. Evaluation can compare:
+The embedded prototype questions collect the selected role, immediate confidence, ease and comprehension answers in the evaluation log. PeerSurvey collects comparative ratings, ranking and qualitative feedback. Evaluation can compare:
 
 - **Identification accuracy:** whether the response includes J11 or J06.
 - **False-positive rate:** whether the response includes jobs that fail a required condition.

@@ -1250,6 +1250,7 @@ function CompareView({
           <span>{undo.message}</span>
           <button
             onClick={() => {
+              trackEvent("decision_undone");
               undo.action();
               setUndo(null);
             }}
